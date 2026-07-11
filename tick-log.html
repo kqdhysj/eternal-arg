@@ -3,75 +3,140 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tick · 系统日志</title>
+<title>Tick · 系统日志 — 永恒号</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#fff;color:#111;font-family:'Courier New',monospace;font-size:13px;line-height:2;max-width:800px;margin:0 auto;padding:60px 32px}
-.header{border-bottom:1px solid #ddd;padding-bottom:16px;margin-bottom:32px}
-.header h1{font-size:16px;font-weight:400;letter-spacing:2px}
-.header p{font-size:12px;color:#666;margin-top:4px}
-.entry{margin-bottom:4px;padding:4px 0}
-.entry .ts{color:#999;margin-right:16px}
-.entry .tag{font-size:11px;padding:1px 6px;border-radius:2px;margin-right:8px}
-.tag-info{background:#e8f0e8;color:#3a6030}
+body{background:#f4f5f6;color:#1a1a1a;font-family:'Courier New','PingFang SC','Microsoft YaHei',monospace;line-height:1.8}
+.topbar{background:#1a1a2e;color:#fff;font-size:11px;padding:6px 0;text-align:center;letter-spacing:1px}
+.navbar{background:#fff;border-bottom:1px solid #e0e0e0;position:sticky;top:0;z-index:100}
+.navbar .inner{max-width:1000px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding:10px 20px}
+.navbar .brand{font-size:20px;font-weight:900;letter-spacing:2px;color:#1a1a2e;font-family:'PingFang SC','Microsoft YaHei',sans-serif}
+.navbar .brand span{color:#c44;font-weight:400}
+.navbar nav a{color:#666;text-decoration:none;margin-left:20px;font-size:12px;font-family:'PingFang SC','Microsoft YaHei',sans-serif;transition:color .2s}
+.navbar nav a:hover{color:#c44}
+main{max-width:960px;margin:0 auto;padding:40px 20px 60px}
+.page-header{background:#fff;border:1px solid #e0e0e0;padding:24px 32px;margin-bottom:24px;border-radius:2px}
+.page-header h1{font-size:18px;font-weight:700;letter-spacing:2px;color:#1a1a2e}
+.page-header .meta{font-size:11px;color:#888;margin-top:6px;display:flex;gap:24px;flex-wrap:wrap}
+.page-header .meta .stat{display:flex;align-items:center;gap:6px}
+.page-header .meta .stat .dot{width:6px;height:6px;border-radius:50%;background:#4a4}
+.log-panel{background:#fff;border:1px solid #e0e0e0;border-radius:2px;overflow:hidden}
+.log-panel .toolbar{background:#f8f8f8;border-bottom:1px solid #e8e8e8;padding:8px 16px;display:flex;gap:12px;align-items:center;font-size:10px;color:#888}
+.log-panel .toolbar .filter{color:#333;font-weight:600}
+.log-panel .toolbar .filter.active{color:#c44}
+.log-panel .toolbar .sep{color:#ddd}
+.log-body{padding:20px 24px;font-size:12px;line-height:2.2;max-height:70vh;overflow-y:auto}
+.entry{padding:3px 0;border-bottom:1px solid #f5f5f5;transition:background .2s}
+.entry:hover{background:#fafafa}
+.entry .ts{color:#999;margin-right:14px;white-space:nowrap}
+.entry .tag{font-size:10px;padding:1px 6px;border-radius:2px;margin-right:8px;font-weight:600}
+.tag-info{background:#e8f4e8;color:#3a7030}
 .tag-warn{background:#fff8e8;color:#8a6030}
 .tag-crit{background:#ffe8e8;color:#8a2020}
 .tag-data{background:#e8e8f8;color:#3030a0}
-.empty{color:#ccc;font-style:italic}
-footer{margin-top:48px;padding-top:16px;border-top:1px solid #ddd;font-size:11px;color:#999}
-footer a{color:#666;text-decoration:none}
+.entry.empty{color:#ccc;font-style:italic;text-align:center;border:none;padding:12px 0;font-size:16px;letter-spacing:4px}
+.entry.empty .ts{display:none}
+footer{background:#1a1a2e;color:rgba(255,255,255,.4);padding:28px 20px;text-align:center;font-size:11px;font-family:'PingFang SC','Microsoft YaHei',sans-serif}
+footer .copy{color:rgba(255,255,255,.6);margin-bottom:6px}
+footer a{color:rgba(255,255,255,.3);text-decoration:none}
+@media(max-width:640px){.log-body{font-size:11px;padding:14px 12px}.entry .ts{display:block;margin-bottom:2px}}
 </style>
 </head>
 <body>
 
-<div class="header">
-  <h1>TICK::SYSLOG</h1>
-  <p>永恒号 · 自动日志记录系统 · 启动日：第1年第1小时</p>
-  <p>当前状态：在线。最后记录：第97年第6月。</p>
+<div class="topbar">永恒号 · 自动日志记录系统 · Tick v2.4.1</div>
+<div class="navbar">
+  <div class="inner">
+    <div class="brand">TICK<span>::SYSLOG</span></div>
+    <nav><a href="index.html">船舰终端</a><a href="blog.html">陈远博客</a><a href="archive.html">项目档案</a><a href="node-7f.html">隔离节点7F</a></nav>
+  </div>
 </div>
 
-<div class="entry"><span class="ts">第1年 第1小时</span><span class="tag tag-info">INFO</span>系统引导完成。所有模块正常。乘客上传：50/50。等待出发指令。</div>
-<div class="entry"><span class="ts">第1年 第1小时</span><span class="tag tag-warn">WARN</span>上传队列计数异常：51。管理员手动覆盖为 50。覆盖者：林晨。</div>
-<div class="entry"><span class="ts">第1年 第1小时</span><span class="tag tag-data">DATA</span>附加条目：隔离节点 0x2B。来源：地球·外部终端。授权码：■■■■。</div>
-<div class="entry empty"><span class="ts">...</span></div>
-<div class="entry"><span class="ts">第10年 第7月</span><span class="tag tag-info">INFO</span>例行维护完成。所有系统正常。</div>
-<div class="entry empty"><span class="ts">...</span></div>
-<div class="entry"><span class="ts">第35年 第8月</span><span class="tag tag-warn">WARN</span>C区配电柜负载异常：+3.1%%。来源不明。</div>
-<div class="entry empty"><span class="ts">...</span></div>
-<div class="entry"><span class="ts">第50年 第1月</span><span class="tag tag-warn">WARN</span>节点 0x2B 心跳信号首次检测。间隔：72小时。标记：正常（自动）。</div>
-<div class="entry"><span class="ts">第50年 第11月</span><span class="tag tag-data">DATA</span>心跳信号规律性确认。脉冲目标：地球方向。中继节点未注册。</div>
-<div class="entry empty"><span class="ts">...</span></div>
-<div class="entry"><span class="ts">第72年 第1月</span><span class="tag tag-info">INFO</span>林汐请求访问节点 0x2B 路由表。已批准（只读）。</div>
-<div class="entry empty"><span class="ts">...</span></div>
-<div class="entry"><span class="ts">第90年 第3月</span><span class="tag tag-warn">WARN</span>陈远终端凌晨 02:17 远程登录。来源：内部节点 0x2B。凭证：备用密码。</div>
-<div class="entry"><span class="ts">第90年 第6月</span><span class="tag tag-warn">WARN</span>C区配电柜发现不明设备。型号：7F-A3-02-1953。</div>
-<div class="entry empty"><span class="ts">...</span></div>
-<div class="entry"><span class="ts">第95年 第1月</span><span class="tag tag-warn">WARN</span>管理员凭证被用于登录陈远终端。时间：02:17。来源：0x2B。</div>
-<div class="entry"><span class="ts">第95年 第7月</span><span class="tag tag-warn">WARN</span>管理员凭证被用于登录陈远终端。操作：读取齿轮标签照片。</div>
-<div class="entry"><span class="ts">第95年 第12月</span><span class="tag tag-warn">WARN</span>管理员凭证再次登录陈远终端。操作：浏览维护日志及博客。</div>
-<div class="entry empty"><span class="ts">...</span></div>
-<div class="entry"><span class="ts">第96年 第3月</span><span class="tag tag-warn">WARN</span>数据库写入操作被拒。权限不足。时间：02:17。</div>
-<div class="entry"><span class="ts">第96年 第7月</span><span class="tag tag-warn">WARN</span>异常频率上升。每次均发生在 02:17 至 02:19。来源未记录。</div>
-<div class="entry"><span class="ts">第96年 第11月</span><span class="tag tag-crit">CRIT</span>林汐监控脚本被关闭。操作者：管理员。来源：内部。</div>
-<div class="entry"><span class="ts">第97年 第1月</span><span class="tag tag-crit">CRIT</span>监控脚本及备份全部删除。操作者：管理员。</div>
-<div class="entry empty"><span class="ts">...</span></div>
-<div class="entry"><span class="ts">第97年 第5月</span><span class="tag tag-warn">WARN</span>陈远终端被禁言。原因：未授权通讯。执行者：管理员。</div>
-<div class="entry"><span class="ts">第97年 第5月</span><span class="tag tag-crit">CRIT</span>C区配电柜不明设备消失。柜门内侧残留粘合剂痕迹。</div>
-<div class="entry empty"><span class="ts">...</span></div>
-<div class="entry"><span class="ts">第97年 第6月 02:17:00</span><span class="tag tag-crit">CRIT</span>能量路由被手动修改。目标：C区配电柜。操作者：LINCHEN。来源：0x2B。</div>
-<div class="entry"><span class="ts">第97年 第6月 02:17:03</span><span class="tag tag-crit">CRIT</span>用户 LINCHEN 从内部节点 0x2B 登录。凭证：旧token（第1年生成）。</div>
-<div class="entry"><span class="ts">第97年 第6月 02:17:08</span><span class="tag tag-crit">CRIT</span>执行：route modify --dest C7 --priority 1</div>
-<div class="entry"><span class="ts">第97年 第6月 02:17:14</span><span class="tag tag-crit">CRIT</span>执行：protection disable --target main_db</div>
-<div class="entry"><span class="ts">第97年 第6月 02:17:17</span><span class="tag tag-crit">CRIT</span>用户 LINCHEN 登出。会话持续：14秒。</div>
-<div class="entry"><span class="ts">第97年 第6月 02:17:20</span><span class="tag tag-crit">CRIT</span>外部高能射线暴抵达。主数据库全损。50/50 意识单元丢失。</div>
-<div class="entry"><span class="ts">第97年 第6月 02:17:21</span><span class="tag tag-info">INFO</span>隔离节点 7F 自动切换至独立供电。幸存单元：1（林汐）。</div>
-<div class="entry"><span class="ts">第97年 第6月 02:18:00</span><span class="tag tag-warn">WARN</span>中继站 #7 加密链路被远程清除。操作来源：地球。</div>
-<div class="entry empty"><span class="ts">...</span></div>
-<div class="entry"><span class="ts">第97年 第9小时</span><span class="tag tag-info">INFO</span>管理员林晨手动唤醒。系统恢复运行。</div>
+<main>
+
+<div class="page-header">
+  <h1>Tick · 系统事件日志</h1>
+  <div class="meta">
+    <div class="stat"><span class="dot"></span> 在线</div>
+    <span>启动：第1年第1小时</span>
+    <span>最后记录：第97年第6月</span>
+    <span>总条目：23条已索引</span>
+  </div>
+</div>
+
+<div class="log-panel">
+  <div class="toolbar">
+    <span>筛选：</span>
+    <span class="filter active">全部</span><span class="sep">|</span>
+    <span class="filter">INFO</span><span class="sep">|</span>
+    <span class="filter">WARN</span><span class="sep">|</span>
+    <span class="filter">CRIT</span><span class="sep">|</span>
+    <span class="filter">DATA</span>
+    <span style="margin-left:auto;color:#aaa">日志级别：INFO · WARN · CRIT · DATA</span>
+  </div>
+
+<div class="log-body">
+
+<div class="entry"><span class="ts">第1年 第1小时 08:17:00</span><span class="tag tag-info">INFO</span>系统引导完成。Tick v2.4.1 上线。所有模块正常。乘客上传：50/50。等待出发指令。完整日志归档：tick-log.html</div>
+<div class="entry"><span class="ts">第1年 第1小时 08:17:04</span><span class="tag tag-warn">WARN</span>上传队列计数异常：检测到 51 条上传记录。管理员手动覆盖为 50。覆盖者：林晨。覆盖时间：出发前72小时。</div>
+<div class="entry"><span class="ts">第1年 第1小时 08:17:09</span><span class="tag tag-data">DATA</span>附加条目详情——目标节点：0x2B。上传来源：地球·外部终端。授权码：■■■■。该节点不在主数据库注册表中。</div>
+<div class="entry empty">···</div>
+
+<div class="entry"><span class="ts">第10年 第7月 14:30:00</span><span class="tag tag-info">INFO</span>十年例行维护完成。所有子系统正常。主数据库：50/50 在线。隔离节点7F：在线。未知节点0x2B：静默。</div>
+<div class="entry empty">···</div>
+
+<div class="entry"><span class="ts">第35年 第8月 11:15:00</span><span class="tag tag-warn">WARN</span>C区配电柜负载异常：超出标准值 3.1%。排查三天未定位来源。标记为"持续监控"。</div>
+<div class="entry empty">···</div>
+
+<div class="entry"><span class="ts">第50年 第1月 02:17:03</span><span class="tag tag-warn">WARN</span>节点 0x2B 心跳信号首次检测。脉冲间隔：72小时。来源方向：C区配电柜。标记：正常（自动分类）。复核建议：人工确认。</div>
+<div class="entry"><span class="ts">第50年 第11月 02:17:08</span><span class="tag tag-data">DATA</span>心跳信号规律性确认：72小时间隔偏差 &lt;0.01秒。脉冲目标：地球方向。中继节点未在公开名录中注册。</div>
+<div class="entry empty">···</div>
+
+<div class="entry"><span class="ts">第72年 第1月 09:00:00</span><span class="tag tag-info">INFO</span>林汐（隔离节点7F）请求访问节点 0x2B 路由表。已批准——只读权限。访问时长：4.7秒。</div>
+<div class="entry empty">···</div>
+
+<div class="entry"><span class="ts">第90年 第3月 02:17:12</span><span class="tag tag-warn">WARN</span>陈远终端被远程登录。时间：02:17。来源IP：内部节点 0x2B。认证方式：备用密码。登录后操作：读取C区维护日志、齿轮标签照片、工程博客。</div>
+<div class="entry"><span class="ts">第90年 第6月 16:22:00</span><span class="tag tag-warn">WARN</span>C区配电柜内部发现不明设备。型号识别为信号转发器。序列号：7F-A3-02-1953。设备交由陈远评估。详见拆解报告：relay-7f-a3.html</div>
+<div class="entry empty">···</div>
+
+<div class="entry"><span class="ts">第95年 第1月 02:17:00</span><span class="tag tag-warn">WARN</span>管理员凭证（LINCHEN）被用于登录陈远终端。来源：0x2B。注意：林晨本人在休眠舱中。</div>
+<div class="entry"><span class="ts">第95年 第7月 02:17:03</span><span class="tag tag-warn">WARN</span>管理员凭证再次登录陈远终端。操作：读取齿轮标签照片。</div>
+<div class="entry"><span class="ts">第95年 第12月 02:17:06</span><span class="tag tag-warn">WARN</span>管理员凭证第三次登录陈远终端。操作：浏览维护日志及工程博客。总计登录次数：3。均发生在 02:17。</div>
+<div class="entry empty">···</div>
+
+<div class="entry"><span class="ts">第96年 第3月 02:17:00</span><span class="tag tag-warn">WARN</span>主数据库写入操作被拒绝——权限不足。操作来源未记录。时间：02:17。频率：每月1-2次。</div>
+<div class="entry"><span class="ts">第96年 第7月 02:17:18</span><span class="tag tag-warn">WARN</span>异常操作频率上升。每次均发生在 02:17:00 至 02:19:00 之间。来源持续未记录。</div>
+<div class="entry"><span class="ts">第96年 第11月 03:05:00</span><span class="tag tag-crit">CRIT</span>林汐自建监控脚本被终止。终止者：管理员权限。脚本在 02:17 前后各捕获到一次异常数据包。</div>
+<div class="entry empty">···</div>
+
+<div class="entry"><span class="ts">第97年 第1月 19:40:00</span><span class="tag tag-crit">CRIT</span>监控脚本及其本地备份全部被删除。删除者：管理员权限。林汐开始通过个人日志记录异常。HSDK 前缀日志文件开始持续增长。</div>
+<div class="entry empty">···</div>
+
+<div class="entry"><span class="ts">第97年 第5月 08:15:00</span><span class="tag tag-warn">WARN</span>陈远终端通讯权限被禁言。原因：未授权通讯（接收方：林汐）。执行者：管理员权限。</div>
+<div class="entry"><span class="ts">第97年 第5月 14:00:00</span><span class="tag tag-crit">CRIT</span>C区配电柜不明设备（7F-A3-02-1953）消失。柜门内侧残留粘合剂痕迹。设备最后已知位置：柜门内侧走线后方。取走时间：今日上午。取走者身份未知。</div>
+<div class="entry empty">···</div>
+
+<div class="entry"><span class="ts">第97年 第6月 02:16:58</span><span class="tag tag-crit">CRIT</span>能量路由被手动修改。新目标：C区配电柜——优先级提升至最高。操作者凭证：LINCHEN。来源IP：内部节点 0x2B。</div>
+<div class="entry"><span class="ts">第97年 第6月 02:17:03</span><span class="tag tag-crit">CRIT</span>用户 LINCHEN 从内部节点 0x2B 登录。使用第1年生成的旧token——该token从未被激活过。</div>
+<div class="entry"><span class="ts">第97年 第6月 02:17:08</span><span class="tag tag-crit">CRIT</span>执行指令：route modify --dest C7 --priority 1</div>
+<div class="entry"><span class="ts">第97年 第6月 02:17:14</span><span class="tag tag-crit">CRIT</span>执行指令：protection disable --target main_db。主数据库保护层：已关闭。</div>
+<div class="entry"><span class="ts">第97年 第6月 02:17:17</span><span class="tag tag-crit">CRIT</span>用户 LINCHEN 登出。会话持续时间：<strong>14秒</strong>。</div>
+<div class="entry"><span class="ts">第97年 第6月 02:17:20</span><span class="tag tag-crit">CRIT</span>&#9888; 外部高能射线暴抵达。主数据库——全损。50/50 意识单元：丢失。</div>
+<div class="entry"><span class="ts">第97年 第6月 02:17:21</span><span class="tag tag-info">INFO</span>隔离节点 7F 自动切换至独立供电回路。幸存单元：1（林汐）。节点 7F 物理位置与主数据库不重叠——攻击未覆盖。</div>
+<div class="entry"><span class="ts">第97年 第6月 02:18:00</span><span class="tag tag-warn">WARN</span>深空量子中继站 #7 加密链路被远程清除。操作来源：地球。清除用时：39秒。</div>
+<div class="entry empty">···</div>
+
+<div class="entry"><span class="ts">第97年 第9小时 00:00:00</span><span class="tag tag-info">INFO</span>管理员林晨手动唤醒。备用能源：72%。生命维持：正常。系统状态：紧急模式。日志结束。</div>
+
+</div></div>
+
+</main>
 
 <footer>
-  <p>Tick v2.4.1 · 永恒号辅助系统 · 日志结束</p>
-  <p><a href="index.html">← 船舰终端</a></p>
+  <div class="copy">Tick v2.4.1 &middot; 永恒号辅助系统 &middot; 日志归档完毕</div>
+  <p>全部 23 条索引记录 · 时间跨度：第1年 至 第97年第9小时 · 记录未篡改</p>
+  <p style="margin-top:8px"><a href="index.html">← 船舰终端</a></p>
 </footer>
+
 </body>
 </html>
