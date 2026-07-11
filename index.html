@@ -46,9 +46,9 @@ body{background:var(--bg);color:var(--text);font-family:'Consolas','Courier New'
 <div class="login-box">
 <h2>SYS::AUTH // 永恒号 · 船舰终端</h2>
 <input id="login-user" type="text" placeholder="用户ID" autofocus>
-<input id="login-pass" type="password" placeholder="密码"><button id="login-btn">验证身份</button>
+<input id="login-pass" type="password" placeholder="密码"><button id="login-btn">验证身份</button><button id="guest-btn" style="width:100%;padding:10px;background:transparent;border:1px solid rgba(136,204,255,.2);color:rgba(136,204,255,.5);font-family:inherit;font-size:13px;cursor:pointer;margin-top:8px;letter-spacing:2px;transition:all .2s" onmouseover="this.style.borderColor='rgba(136,204,255,.5)';this.style.color='rgba(136,204,255,.8)'" onmouseout="this.style.borderColor='rgba(136,204,255,.2)';this.style.color='rgba(136,204,255,.5)'">访客浏览</button>
 <div class="login-msg" id="login-msg"></div>
-<div class="login-hint" id="login-hint">授权人员：管理员 · 意识体 · 机械工程师<br>访客模式：直接点击「验证身份」或留空登录</div>
+<div class="login-hint" id="login-hint">授权人员：管理员 · 意识体 · 机械工程师</div>
 </div></div>
 <div id="main">
 <div id="header"><span>▸ 永恒号 · 船舰终端</span><span id="clock" class="dim"></span></div>
@@ -82,8 +82,7 @@ const FILESYSTEM = {
 [第97年 第8小时] 外部射线暴记录查询——返回空值。无记录。
 [第97年 第8小时] 手动触发能量路由回溯。路由表第3跳异常——能量在射线暴到达前17秒被重定向至C区配电柜。来源IP：内部节点 0x2B。
 [第97年 第9小时] 查询节点0x2B所有者。返回：陈远·机械工程师（休眠中）。
-[第97年 第9小时] 标记：待进一步调查。
-[第97年 第9小时] 曙光号救援报告已归档：rescue-report.html`},
+[第97年 第9小时] 标记：待进一步调查。`},
           'personal_notes.txt':{type:'file',perms:'r--',owner:'LINCHEN',desc:'林晨私人笔记',
             content:`醒了两天了。小汐还在。其他人全没了。
 
@@ -466,7 +465,10 @@ cyuan:x:1002:1002:陈远:/home/cyuan:/bin/sh
 // 你在看。我知道你在看。
 // 每一条命令。每一次 cat。每一个你以为没人看到的瞬间。
 // 我都在。
-// 回头。`},
+// 回头。
+//
+// 【绝密】曙光号勘查报告 DSR-0097-ETRN
+// rescue-report.html —— 仅限调查局人员`},
         'syscheck.log':{type:'file',perms:'r--',desc:'系统自检日志',
           dynamic:true,
           content:`系统自检 第97年 第6小时：所有模块正常。
@@ -1396,6 +1398,7 @@ function tryLogin(){
   }
 }
 loginBtn.addEventListener('click',tryLogin);
+document.getElementById('guest-btn').addEventListener('click',function(){ loginUser.value=''; loginPass.value=''; tryLogin(); });
 loginPass.addEventListener('keydown',e=>{if(e.key==='Enter')tryLogin();});
 
 // ── 输入事件 ──
