@@ -70,7 +70,7 @@ const FILESYSTEM = {
 「...他们在名单上写的是50个人。但我数过上传队列。是51。」
 「...转发器的信号一直在。我没关——因为我想知道它在跟谁说话。」
 「...那个人认识我。或者说——认识我太爷爷。纸条上的字是我太爷爷的笔迹。」
-「...如果你看到这条——去查 0x2B。还有，新华星际社的记者在出发前联系过我。他们的页面：about-xinhua.html。有一篇报道没发出来。」`},
+「...如果你看到这条——去查 0x2B。还有，新华星际社的记者在出发前联系过我——新华星际社——有一篇报道没发出来。他们的页面只能通过发射日新闻的链接找到。」`},
           }},
         }},
         'lxi':{type:'dir',perms:'rwx',owner:'LINXI',desc:'林汐 · 隔离节点',children:{
@@ -762,7 +762,7 @@ const WEB_CACHE = {
   'news':          {url:'launch-news.html',   desc:'新华星际社 · 永恒号发射报道', locked:false},
   'node-7f':       {url:'node-7f.html',       desc:'林汐 · 隔离节点7F日记', locked:false},
   'tick-log':      {url:'tick-log.html',      desc:'Tick系统日志 · 23条索引记录', locked:false},
-  'about':         {url:'about-xinhua.html',  desc:'新华星际社 · 关于我们', locked:false},
+  // 'about' removed from cache — only accessible via launch-news.html
   'relay':         {url:'relay-7f-a3.html',   desc:'信号转发器拆解记录 · 7F-A3-02-1953', locked:false},
   'passenger-51':  {url:'passenger-51.html',  desc:'[受限] 节点0x2B日志', locked:true},
   'rescue':        {url:'rescue-report.html', desc:'[绝密] 曙光号救援报告', locked:true},
