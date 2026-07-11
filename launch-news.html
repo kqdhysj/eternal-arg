@@ -3,68 +3,152 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>人类星际移民启程 · 永恒号今日发射</title>
+<title>人类星际移民启程 · 永恒号今日发射 — 新华星际社</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#f2f2f2;color:#222;font-family:'PingFang SC','Microsoft YaHei',sans-serif;line-height:1.8;max-width:700px;margin:0 auto;padding:40px 20px}
-.masthead{border-bottom:4px double #222;padding-bottom:12px;margin-bottom:32px}
-.masthead .paper{font-size:32px;font-weight:900;letter-spacing:4px}
-.masthead .date{font-size:12px;color:#666;margin-top:4px}
-h1{font-size:24px;font-weight:700;line-height:1.4;margin-bottom:8px}
-.subtitle{font-size:14px;color:#555;margin-bottom:24px;border-bottom:1px solid #ddd;padding-bottom:16px}
-p{margin-bottom:16px;text-align:justify}
-.comments{margin-top:40px;border-top:1px solid #ddd;padding-top:20px}
-.comments h3{font-size:14px;color:#666;margin-bottom:16px}
-.comment{background:#fff;padding:12px 16px;margin-bottom:8px;border-radius:2px;font-size:13px}
-.comment .user{font-weight:600;color:#333}
-.comment .time{font-size:11px;color:#999;margin-left:8px}
-.comment.deleted{background:#fff0f0;color:#999;text-decoration:line-through}
-.comment.deleted .reason{text-decoration:none;font-size:11px;color:#c00;display:block;margin-top:4px}
-.disclaimer{font-size:11px;color:#999;margin-top:32px;padding:12px;border:1px solid #eee;background:#fafafa}
-a{color:#666}
+body{background:#f4f5f6;color:#1a1a1a;font-family:'PingFang SC','Microsoft YaHei','Noto Serif SC',serif;line-height:1.8}
+.topbar{background:#1a1a2e;color:#fff;font-size:12px;padding:6px 0;text-align:center;letter-spacing:1px}
+.topbar span{color:#888}
+.navbar{background:#fff;border-bottom:1px solid #e0e0e0;position:sticky;top:0;z-index:100}
+.navbar .inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding:12px 20px}
+.navbar .brand{font-size:22px;font-weight:900;letter-spacing:2px;color:#1a1a2e}
+.navbar .brand span{color:#c44;font-weight:400}
+.navbar nav a{color:#555;text-decoration:none;margin-left:24px;font-size:13px;transition:color .2s}
+.navbar nav a:hover{color:#c44}
+.layout{max-width:1100px;margin:0 auto;display:flex;gap:40px;padding:32px 20px 60px}
+.main{flex:1;min-width:0}
+.sidebar{width:300px;flex-shrink:0}
+.hero{background:linear-gradient(135deg,#0a0a1a 0%,#1a2a4a 40%,#0d1a30 70%,#0a0a1a 100%);color:#fff;padding:60px 32px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 80%,rgba(200,180,100,.15),transparent 60%)}
+.hero .badge{display:inline-block;border:1px solid rgba(255,255,255,.3);padding:4px 16px;font-size:11px;letter-spacing:3px;margin-bottom:20px;position:relative}
+.hero h1{font-size:36px;font-weight:900;line-height:1.3;max-width:800px;margin:0 auto;position:relative}
+.hero .hero-sub{font-size:16px;color:rgba(255,255,255,.6);margin-top:16px;position:relative}
+.hero .byline{font-size:12px;color:rgba(255,255,255,.4);margin-top:24px;position:relative}
+.article{padding:32px 0}
+.article p{margin-bottom:18px;font-size:16px;text-align:justify}
+.article .pullquote{border-left:4px solid #c44;padding:16px 24px;margin:28px 0;background:#fafafa;font-size:18px;color:#444;font-style:italic}
+.article .img-placeholder{background:#e8eaed;padding:40px;text-align:center;margin:24px 0;color:#999;font-size:13px;border-radius:2px}
+.sidebar .card{background:#fff;padding:20px;margin-bottom:16px;border:1px solid #e8e8e8;border-radius:2px}
+.sidebar .card h4{font-size:13px;color:#999;letter-spacing:2px;margin-bottom:12px;text-transform:uppercase}
+.sidebar .card .story{display:block;font-size:14px;color:#333;text-decoration:none;padding:8px 0;border-bottom:1px solid #f0f0f0;transition:color .2s}
+.sidebar .card .story:last-child{border-bottom:none}
+.sidebar .card .story:hover{color:#c44}
+.sidebar .card .story .s-time{font-size:11px;color:#999;display:block}
+.comments{margin-top:40px;border-top:2px solid #e0e0e0;padding-top:24px}
+.comments h3{font-size:16px;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.comments h3 .count{background:#c44;color:#fff;font-size:11px;padding:2px 8px;border-radius:10px}
+.comment{background:#fff;padding:16px 20px;margin-bottom:10px;border:1px solid #e8e8e8;border-radius:2px}
+.comment .c-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.comment .avatar{width:32px;height:32px;border-radius:50%;background:#ddd;display:flex;align-items:center;justify-content:center;font-size:14px;color:#888}
+.comment .c-user{font-weight:600;font-size:13px}
+.comment .c-time{font-size:11px;color:#999}
+.comment .c-body{font-size:14px;color:#333}
+.comment .c-actions{font-size:11px;color:#999;margin-top:8px;display:flex;gap:16px}
+.comment .c-actions span{cursor:pointer}
+.comment.deleted{background:#fff5f5;border-color:#fcc}
+.comment.deleted .c-body{color:#aaa;text-decoration:line-through}
+.comment.deleted .c-reason{text-decoration:none;font-size:11px;color:#c44;display:block;margin-top:8px;padding:6px 10px;background:#fff0f0;border-radius:2px}
+.footer{background:#1a1a2e;color:rgba(255,255,255,.4);padding:32px 20px;text-align:center;font-size:12px;margin-top:40px}
+.footer .copy{color:rgba(255,255,255,.6);margin-bottom:8px}
+.footer a{color:rgba(255,255,255,.3);text-decoration:none}
+@media(max-width:768px){.layout{flex-direction:column}.sidebar{width:100%}}
 </style>
 </head>
 <body>
 
-<div class="masthead">
-  <div class="paper">新华星际社</div>
-  <div class="date">第1年 第1小时 · 酒泉航天港</div>
+<div class="topbar"><span>第1年 第1小时 · 酒泉航天港 · 即时报道</span></div>
+<div class="navbar">
+  <div class="inner">
+    <div class="brand">新华星际<span>社</span></div>
+    <nav><a href="#">首页</a><a href="#">深空</a><a href="#">科技</a><a href="#">社会</a><a href="#">评论</a></nav>
+  </div>
 </div>
 
-<h1>人类首艘星际移民船「永恒号」今日启程</h1>
-<div class="subtitle">50名船员 + 50名数字意识将前往开普勒-186f，航程预计约600年</div>
+<div class="hero">
+  <div class="badge">特别报道 · 即时新闻</div>
+  <h1>人类首艘星际移民船「永恒号」今日启程</h1>
+  <div class="hero-sub">50名船员 · 50名数字意识 · 开普勒-186f · 航程 600 年</div>
+  <div class="byline">新华星际社记者 · 酒泉航天港发射现场 · 第1年 第1小时</div>
+</div>
 
-<p>今天上午，人类历史上首艘跨世代星际移民船「永恒号」在酒泉航天港成功发射。搭载 50 名船员（物理休眠）+ 50 名意识上传者（数字层），目的地为距地球约 500 光年的开普勒-186f。</p>
+<div class="layout">
+<main class="main">
+<div class="article">
 
-<p>永恒号采用「物理休眠+数字层活跃」双态航行模式：船员身体在休眠舱中保存，意识在主数据库中继续工作与生活。到达目的地后，身体唤醒，意识与身体重新同步。</p>
+  <p>今天上午 08:17，人类历史上首艘跨世代星际移民船「永恒号」在酒泉航天港点火升空。搭载 50 名船员（物理休眠状态）+ 50 名意识上传者（数字意识层），目的地为距地球约 500 光年的开普勒-186f。这是人类文明首次向系外行星发射有人移民船。</p>
 
-<p>项目总工程师在发射前接受采访时表示：「永恒号是人类文明的备份。无论地球上发生什么——开普勒上都会有一群人在海边看日出。」</p>
+  <p>永恒号全长 847 米，采用「物理休眠 + 数字层活跃」的双态航行模式：船员身体在独立休眠舱中保存，意识通过上传技术映射至主数据库，在虚拟环境中继续工作、研究与日常生活。抵达目的地后，身体将被唤醒，意识与身体完成同步。</p>
 
-<p>船员家属在航天港观景台目送飞船升空。一位年长的军装老人站在人群后排，没有和其他家属一起挥手。他手里攥着一张纸条，一直在看。记者试图采访，他摆了摆手，转身走了。</p>
+  <div class="pullquote">「永恒号是人类文明的备份。无论地球上发生什么——600 年后，会有一群人在开普勒的海边看日出。」——项目总工程师，发射前采访</div>
 
-<p>永恒号预计将在第 600 年左右抵达目的地。地球将保持深空量子链路与飞船通讯。</p>
+  <p>据项目组透露，永恒号搭载了闭环生态循环系统、深空量子通讯链路以及一座可容纳 50 名数字意识并行运行的数据库。船上配备三名核心管理人员：管理员林晨（指挥权限）、数据管理员林汐（隔离节点 7F）、以及机械工程师陈远（C 区至 E 区维护）。</p>
+
+  <p>在出发前的意识上传阶段，所有船员的数字副本均已完成校验。项目发言人表示：「每位船员都是自愿者，他们将在虚拟环境中度过航程——对他们而言，距离将只是数据流中的一个参数。」</p>
+
+  <div class="img-placeholder">[ 永恒号于酒泉航天港发射升空 · 新华社航拍照片 ]<br>飞船升空后约 180 秒进入预定轨道，信号正常。</div>
+
+  <p>航天港观景台上，数百名船员家属目送飞船消失在晨光中。人群中，一位年长的军装老人独自站在后排，没有和其他家属一起挥手。他手里攥着一张纸条，从头到尾没有抬头。记者试图上前采访，他摆了摆手，转身走进了通道。有家属认出了他——「那是陈远的太爷爷。他不爱说话。」</p>
+
+  <p>永恒号预计将在第 600 年前后抵达开普勒-186f。在此期间，地球将维持深空量子链路与飞船保持通讯。信号延迟将随着距离拉大而增长——但项目组表示，即便延迟达到数十年，「连接不会断」。</p>
+
+</div>
 
 <div class="comments">
-  <h3>读者评论（3条）</h3>
+  <h3>读者评论 <span class="count">4</span></h3>
+
   <div class="comment">
-    <span class="user">星际迷航者</span><span class="time">出发后 2 小时</span>
-    <p>600年。等他们到了，地球上的我们都变成灰了。祝好运。</p>
+    <div class="c-head"><div class="avatar">&#9733;</div><div class="c-user">星际迷航者</div><div class="c-time">出发后 2 小时</div></div>
+    <div class="c-body">600年。等他们到了，地球上的我们都变成灰了。但想想那颗星球上会有人类文明的火种——值了。祝一路顺风。</div>
+    <div class="c-actions"><span>&#9650; 128</span><span>&#9660;</span><span>回复</span></div>
   </div>
+
   <div class="comment">
-    <span class="user">老工程师</span><span class="time">出发后 3 小时</span>
-    <p>军装老人是我父亲。他那天回来之后一句话没说。把纸条锁进抽屉里。我后来偷偷打开看了——上面写的是「一九五三年七月二十七日」。不是退伍日。是上前线那天。还有一个他没说过的工作单位。查不到。</p>
+    <div class="c-head"><div class="avatar">&#9874;</div><div class="c-user">老工程师</div><div class="c-time">出发后 3 小时</div></div>
+    <div class="c-body">军装老人是我父亲。他那天回来之后一句话没说，把纸条锁进抽屉里。我后来偷偷打开看了——上面写的是「一九五三年七月二十七日」。不是退伍日。是上前线那天。还有一个工作单位的名字，我查不到那个单位。不存在于任何公开档案里。</div>
+    <div class="c-actions"><span>&#9650; 56</span><span>&#9660;</span><span>回复</span></div>
   </div>
+
+  <div class="comment">
+    <div class="c-head"><div class="avatar">&#9679;</div><div class="c-user">航天港夜班调度</div><div class="c-time">出发后 4 小时</div></div>
+    <div class="c-body">昨晚我值班。上传队列的计数器我亲眼看到的——跳到了 51。不是 50。系统显示第 51 号上传完成，目标是一个不在主数据库里的独立节点。我截图了。今早再看——那条记录没了。计数器显示 50。有人改过。</div>
+    <div class="c-actions"><span>&#9650; 203</span><span>&#9660;</span><span>回复 <span style="color:#c44">3条回复被折叠</span></span></div>
+  </div>
+
   <div class="comment deleted">
-    <span class="user">匿名用户</span><span class="time">出发后 5 小时</span>
-    <p>第 51 个上传者呢？为什么官方名单上只有 50 人？我在航天港工作，上传队列显示的是 51。不是笔误。</p>
-    <span class="reason">※ 此评论已被删除。删除时间：出发后 6 小时。操作者：管理员。</span>
+    <div class="c-head"><div class="avatar">&#9632;</div><div class="c-user">匿名用户</div><div class="c-time">出发后 5 小时 · 已删除</div></div>
+    <div class="c-body">第 51 号上传者的身份到底是什么？为什么上传来源显示的是外部终端——不是船上的任何一个端口。是谁从外面把一个人塞进了永恒号。而且那个人的目标节点编号是 0x2B——这不像是随机分配的。像是预先留好的位置。</div>
+    <div class="c-reason">※ 此评论于出发后 6 小时被管理员删除。删除时该评论已获 417 赞同。快照恢复自永恒号通讯缓存。</div>
   </div>
 </div>
+</main>
 
-<div class="disclaimer">
-  <p>本页面缓存自永恒号通讯系统 · 原始发布日期：第1年 第1小时</p>
-  <p>页面数据在射线暴后从路由缓存中恢复。评论区第三条在出发当天被远程删除。</p>
-  <p><a href="index.html">← 船舰终端</a></p>
+<aside class="sidebar">
+  <div class="card">
+    <h4>相关报道</h4>
+    <a class="story" href="#">永恒号船员完整名单公布 · 50人来自14个国家<span class="s-time">出发前 72 小时</span></a>
+    <a class="story" href="#">意识上传技术：从实验室到星际移民<span class="s-time">出发前 1 周</span></a>
+    <a class="story" href="#">开普勒-186f：人类的下一个家园<span class="s-time">出发前 3 周</span></a>
+    <a class="story" href="#">深空量子通讯：如何在 500 光年外保持联系<span class="s-time">出发前 1 月</span></a>
+  </div>
+  <div class="card">
+    <h4>船员档案</h4>
+    <a class="story" href="#">林晨 · 永恒号管理员 · 指挥权限<span class="s-time">30岁 · 前深空任务指挥官</span></a>
+    <a class="story" href="#">林汐 · 数据管理员 · 隔离节点7F<span class="s-time">24岁 · 最年轻的意识上传志愿者</span></a>
+    <a class="story" href="#">陈远 · 机械工程师 · C-E区<span class="s-time">32岁 · 三代航天世家</span></a>
+  </div>
+  <div class="card">
+    <h4>热门评论</h4>
+    <a class="story" href="#">「第 51 个上传者呢？」<span class="s-time">417 赞 · 已被删除</span></a>
+    <a class="story" href="#">「我父亲那天回来后一句话没说」<span class="s-time">56 赞</span></a>
+  </div>
+</aside>
+</div>
+
+<div class="footer">
+  <div class="copy">新华星际社 · 第1年 第1小时</div>
+  <p>本页面缓存自永恒号深空通讯链路 · 原始发布日：第1年 第1小时</p>
+  <p>页面数据在射线暴后从路由缓存中恢复。评论区第四条在出发当天被远程删除。删除操作来源：管理员权限。</p>
+  <p style="margin-top:12px"><a href="index.html">← 返回船舰终端</a></p>
 </div>
 
 </body>
