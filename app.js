@@ -335,7 +335,26 @@ cyuan:x:1002:1002:陈远:/home/cyuan:/bin/sh
 清除操作来源：地球。
 
 「自然宇宙现象」是上面要求写的措词。这份报告本身——就是证据。`},
-        'password_hint.txt':{type:'file',perms:'r--',desc:'系统提示 · 密码线索',
+        'crew_manifest_recovered.txt':{type:'file',perms:'r--',desc:'船员名单（缓存恢复版）',
+            content:`\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501
+  永恒号 · 船员名单（缓存恢复版）
+  数据来源：系统缓存 · 恢复时间：第97年
+\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501
+
+  01. 林晨 · 管理员 · 指挥权限
+  02. 林汐 · 数据管理员 · 隔离节点7F
+  03. 陈远 · 机械工程师 · C区维护
+  ...
+  48. 王建国 · 生命维持系统
+  49. 李芳 · 通讯系统
+  50. 张明 · 导航系统
+  [51. ■■■■■■ · 未注册 · 隔离节点0x2B]  ← 恢复自缓存
+
+\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501
+注意：本版本恢复自系统缓存。与出发时公布的官方名单存在差异。
+差异处已用 ← 标注。使用 diff 命令对比两份名单。
+`},
+          'password_hint.txt':{type:'file',perms:'r--',desc:'系统提示 · 密码线索',
             content:`授权账号的密码不是随机生成的。它们藏在这艘船的故事里。
 
 林晨（LINCHEN）：他最在意的人。全部小写。
@@ -919,6 +938,8 @@ const commands = {
     print('  /notes [add|read|clear]  调查笔记','dim');
     print('  /logs [记录ID]     查看通讯记录','dim');
     print('  /decrypt_logs <ID> <密码>  解密通讯记录','dim');
+    print('  /chmod +r <文件>   修改文件读取权限','dim');
+    print('  /diff <文件1> <文件2>  对比两个文件','dim');
     print('  /decrypt <文件> <密码>    解密文件','dim');
     print('  /cache [页面ID]    打开系统缓存的网页','dim');
     print('  /clear             清屏','dim');
@@ -1260,6 +1281,34 @@ const commands = {
       print(`chmod: ${target}: -r 已生效。`, 'ok');
     } else {
       print('chmod: 支持 +r（添加读权限）或 -r（移除读权限）', 'err');
+    }
+  },
+
+  diff(args){
+    if(!args[0]||!args[1]){print('diff <文件1> <文件2>', 'err');return;}
+    const f1 = resolvePath(args[0]); const f2 = resolvePath(args[1]);
+    const n1 = getNode(f1); const n2 = getNode(f2);
+    if(!n1||n1.type==='dir'){print(`diff: ${f1}: 文件不存在`, 'err');return;}
+    if(!n2||n2.type==='dir'){print(`diff: ${f2}: 文件不存在`, 'err');return;}
+    if(!canRead(n1,f1)){print(`diff: ${f1}: 权限不足`, 'err');return;}
+    if(!canRead(n2,f2)){print(`diff: ${f2}: 权限不足`, 'err');return;}
+    const l1 = n1.content.split('\n'); const l2 = n2.content.split('\n');
+    print(`对比 ${f1} ↔ ${f2}`, 'sys');
+    let diffs = 0;
+    const max = Math.max(l1.length, l2.length);
+    for(let i=0;i<max;i++){
+      const a = l1[i]||''; const b = l2[i]||'';
+      if(a!==b){
+        diffs++;
+        print(`${i+1}c${i+1}`, 'warn');
+        if(a) print(`< ${a}`, 'dim');
+        if(b) print(`> ${b}`, 'ok');
+      }
+    }
+    if(diffs===0) print('文件相同。', 'dim');
+    else print(`── ${diffs} 处差异。`, 'sys');
+    if(diffs===1 && l1[48]===l2[48] && (l1[49]||'').includes('50') && (l2[49]||'').includes('51')){
+      print('\n第 50 行附近只有一处差异——一个新的条目被添加了。', 'ghost');
     }
   },
 
