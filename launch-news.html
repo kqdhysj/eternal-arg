@@ -66,6 +66,32 @@ body{background:#f4f5f6;color:#1a1a1a;font-family:'PingFang SC','Microsoft YaHei
 .expandable::after{content:' +';color:#999;font-size:11px;margin-left:4px}
 .expandable.open::after{content:' -';color:#c44}
 .footer a{color:rgba(255,255,255,.3);text-decoration:none}
+.cookie-banner{position:fixed;bottom:0;left:0;right:0;background:#1a1a2e;color:rgba(255,255,255,.85);padding:16px 24px;font-size:12px;z-index:999;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+.cookie-banner button{background:#c44;color:#fff;border:none;padding:6px 16px;border-radius:2px;cursor:pointer;font-size:11px}
+.cookie-banner .btn-ghost{background:transparent;color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.2)}
+.pop-trending{max-width:1100px;margin:0 auto;padding:8px 20px;font-size:11px;color:#888;display:flex;gap:16px;align-items:center;overflow:hidden}
+.pop-trending .hot{color:#c44;font-weight:700}
+.pop-trending a{color:#555;text-decoration:none;white-space:nowrap;transition:color .2s}
+.pop-trending a:hover{color:#c44}
+.recommend-bar{max-width:1100px;margin:24px auto 0;padding:0 20px}
+.recommend-bar h4{font-size:12px;color:#999;letter-spacing:1px;margin-bottom:12px}
+.recommend-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.recommend-card{background:#fff;border:1px solid #e8e8e8;padding:12px;border-radius:2px;transition:box-shadow .2s;cursor:pointer}
+.recommend-card:hover{box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.recommend-card .rc-label{font-size:9px;color:#aaa;letter-spacing:1px;margin-bottom:4px}
+.recommend-card .rc-title{font-size:13px;color:#333;font-weight:600;line-height:1.5}
+.recommend-card .rc-source{font-size:10px;color:#999;margin-top:4px}
+.notification-prompt{position:fixed;top:16px;right:16px;background:#fff;border:1px solid #e0e0e0;padding:14px 18px;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.12);font-size:12px;z-index:998;max-width:260px;animation:slideIn .4s ease}
+.notification-prompt .bell{font-size:18px;margin-bottom:6px}
+.notification-prompt strong{display:block;margin-bottom:4px}
+.notification-prompt span{color:#888;font-size:11px}
+.notification-prompt .btns{margin-top:10px;display:flex;gap:8px}
+.notification-prompt .btns button{padding:5px 14px;border-radius:3px;font-size:11px;cursor:pointer}
+.notification-prompt .btn-yes{background:#c44;color:#fff;border:none}
+.notification-prompt .btn-no{background:#fff;color:#888;border:1px solid #ddd}
+@keyframes slideIn{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
+@media(max-width:768px){.recommend-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.recommend-grid{grid-template-columns:1fr}}
 .ad{background:#fff;border:1px solid #e8e8e8;overflow:hidden;margin-bottom:16px;border-radius:2px}
 .ad-label{font-size:9px;color:#bbb;text-align:center;padding:4px 0 0;letter-spacing:1px}
 .ad-banner{padding:16px 20px;display:flex;align-items:center;gap:16px}
@@ -109,6 +135,17 @@ body{background:#f4f5f6;color:#1a1a1a;font-family:'PingFang SC','Microsoft YaHei
   </div>
 </div>
 <div class="overlay" id="nav-overlay"></div>
+
+<div class="pop-trending">
+  <span class="hot">&#9650; 热门</span>
+  <a href="#">永恒号发射</a><span>·</span>
+  <a href="#">意识上传伦理争议</a><span>·</span>
+  <a href="#">第51号上传者身份</a><span>·</span>
+  <a href="#">开普勒-186f是否宜居</a><span>·</span>
+  <a href="#">深空量子通讯协议</a><span>·</span>
+  <a href="#">酒泉航天港周边房价</a><span>·</span>
+  <a href="#">林汐 · 最年轻上传者</a>
+</div>
 
 <div class="top-ad">
   <div class="ad">
@@ -311,11 +348,37 @@ body{background:#f4f5f6;color:#1a1a1a;font-family:'PingFang SC','Microsoft YaHei
 </aside>
 </div>
 
+<div class="recommend-bar">
+  <h4>为你推荐</h4>
+  <div class="recommend-grid">
+    <div class="recommend-card"><div class="rc-label">广告 · 量子云</div><div class="rc-title">你的意识值得一个备份。99.99% 持久性。</div><div class="rc-source">quantumcloud.io</div></div>
+    <div class="recommend-card"><div class="rc-label">赞助内容</div><div class="rc-title">开普勒海景房：600年后你醒来第一眼看到的风景</div><div class="rc-source">kepler-realty.com</div></div>
+    <div class="recommend-card"><div class="rc-label">相关报道</div><div class="rc-title">她没来送行——林汐的最后一位访客说了什么</div><div class="rc-source">新华星际社</div></div>
+    <div class="recommend-card"><div class="rc-label">广告 · 深空通</div><div class="rc-title">家庭量子套餐 · 500光年无延迟 · 首月免</div><div class="rc-source">deepcomm.cn</div></div>
+  </div>
+</div>
+
 <div class="footer">
   <div class="copy">新华星际社 · 第1年 第1小时</div>
   <p>本页面缓存自永恒号深空通讯链路 · 原始发布日：第1年 第1小时</p>
   <p>页面数据在射线暴后从路由缓存中恢复。评论区第四条在出发当天被远程删除。删除操作来源：管理员权限。</p>
   <p style="margin-top:12px"><a href="index.html">← 返回船舰终端</a> · <a href="about-xinhua.html">关于新华星际社</a></p>
+</div>
+
+<div class="cookie-banner" id="cookie-banner">
+  <span>本网站使用意识追踪 Cookie 以优化您的浏览体验。继续使用即表示您同意我们的数字隐私政策——包括但不限于情绪状态分析、注意力热图与潜意识偏好匹配。</span>
+  <button onclick="document.getElementById('cookie-banner').style.display='none'">全部接受</button>
+  <button class="btn-ghost" onclick="document.getElementById('cookie-banner').style.display='none'">仅必要</button>
+</div>
+
+<div class="notification-prompt" id="notif-prompt">
+  <div class="bell">&#128276;</div>
+  <strong>开启深空推送通知</strong>
+  <span>第一时间获取永恒号航行状态、能量预警及船员动态。</span>
+  <div class="btns">
+    <button class="btn-yes" onclick="document.getElementById('notif-prompt').style.display='none'">允许</button>
+    <button class="btn-no" onclick="document.getElementById('notif-prompt').style.display='none'">以后再说</button>
+  </div>
 </div>
 
 <script>
