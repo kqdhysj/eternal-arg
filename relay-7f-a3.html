@@ -73,13 +73,49 @@ footer a{color:#666;text-decoration:none}
 </div>
 
 <div class="section">
-  <h2>四、推测结论</h2>
+  <h2>四、信号频谱分析</h2>
+  <div style="background:#f8f4e8;border:1px solid #e0d8c8;padding:16px 20px;margin:12px 0;font-family:'Courier New',monospace;font-size:10px;line-height:1.6;overflow-x:auto;white-space:pre">
+  FREQ (GHz)  POWER (dBm)   INTERVAL       DIRECTION       NOTE
+  ─────────────────────────────────────────────────────────────
+  2.417       -42.3         72.00h         地球方向        定位脉冲·规律
+  2.418       -38.7         不规律          地球方向        加密指令·仅3次
+  2.419       -61.2         72.00h         节点0x2B        心跳·持续47年
+  ─────────────────────────────────────────────────────────────
+  ※ 2.417GHz 信号功率恒定。2.418GHz 仅在收到指令时激活——
+    三次激活时间对应三次管理员凭证伪造登录。2.419GHz 为
+    转发器上行链路——维持节点0x2B与地球的连接。
+  </div>
+</div>
+
+<div class="section">
+  <h2>五、批注</h2>
+  <div style="background:#fffef8;border:1px solid #e0d8c8;padding:16px 20px;margin:12px 0;font-size:13px;line-height:2">
+    <p style="color:#c44;font-family:'Courier New',monospace;font-size:11px">[手写批注 · 陈远 · 红色墨水]</p>
+    <p style="color:#a22">&#9744; 该设备设计者知道我会打开这个配电柜。不是随机放置的——是留给我的。</p>
+    <p style="color:#a22">&#9744; 1953。太爷爷上前线那年。设计者知道这个日期对我的意义。不是巧合——是信息。</p>
+    <p style="color:#a22">&#9744; 为什么用7F作为前缀？7F是林汐的隔离节点。是发送者想让我去找她——还是想让我把她也卷进来？</p>
+    <p style="color:#a22">&#9744; 最终决定：拆不掉。备用电源依赖这条支线——拆了飞船会不稳定。它就是被设计成拆不掉的。放回去。等。</p>
+  </div>
+</div>
+
+<div class="section">
+  <h2>六、推测结论</h2>
   <p>该设备在永恒号出发前被安装。安装者具有以下条件：</p>
   <p>· 能够进入C区配电柜（出发前或出发时）</p>
   <p>· 了解船舰内部网络协议及管理员凭证格式</p>
   <p>· 知道「1953」这一日期的含义及与陈远太爷爷的关联</p>
   <p>· 预谋在射线暴攻击时关闭数据库保护——该设备在暴发前 17 秒执行了此操作</p>
   <p>该设备与节点 0x2B 维持心跳连接长达 47 年。脉冲目标指向地球方向的一个退役军用中继站。该中继站在出发前 72 小时被远程激活——激活来源未记录。</p>
+</div>
+
+<div class="section">
+  <h2>七、拆除风险评估</h2>
+  <table class="spec-table">
+    <tr><td>拆除可行性</td><td style="color:#c44">否——电源线并联至生命维持系统</td></tr>
+    <tr><td>拆除后果</td><td>备用电源回路不稳定——预计波动 ±15%。隔离节点7F可能在波动中离线。</td></tr>
+    <tr><td>设计意图</td><td>该设备被故意接入生命维持备用回路。设计者不希望它被拆除——宁可牺牲备用电源冗余也要保持设备在线。</td></tr>
+    <tr><td>评估结论</td><td style="color:#c44">不可拆除。放回原位。继续监控。</td></tr>
+  </table>
 </div>
 
 <div class="note">注：本文档为草稿。拆解完成后，设备被放回原位。第97年第5月，设备消失。残留粘合剂痕迹。取走者身份未知。</div>
