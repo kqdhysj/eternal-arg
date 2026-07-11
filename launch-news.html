@@ -50,6 +50,12 @@ body{background:#f4f5f6;color:#1a1a1a;font-family:'PingFang SC','Microsoft YaHei
 .comment.deleted .c-reason{text-decoration:none;font-size:11px;color:#c44;display:block;margin-top:8px;padding:6px 10px;background:#fff0f0;border-radius:2px}
 .footer{background:#1a1a2e;color:rgba(255,255,255,.4);padding:32px 20px;text-align:center;font-size:12px;margin-top:40px}
 .footer .copy{color:rgba(255,255,255,.6);margin-bottom:8px}
+.panel{display:none;padding:12px 0;border-bottom:1px solid #f0f0f0;margin-bottom:8px}
+.panel p{font-size:13px;color:#555;line-height:1.8;margin-bottom:8px}
+.panel.open{display:block}
+.expandable{cursor:pointer;position:relative}
+.expandable::after{content:' +';color:#999;font-size:11px;margin-left:4px}
+.expandable.open::after{content:' -';color:#c44}
 .footer a{color:rgba(255,255,255,.3);text-decoration:none}
 @media(max-width:768px){.layout{flex-direction:column}.sidebar{width:100%}}
 </style>
@@ -125,16 +131,39 @@ body{background:#f4f5f6;color:#1a1a1a;font-family:'PingFang SC','Microsoft YaHei
 <aside class="sidebar">
   <div class="card">
     <h4>相关报道</h4>
-    <a class="story" href="#">永恒号船员完整名单公布 · 50人来自14个国家<span class="s-time">出发前 72 小时</span></a>
-    <a class="story" href="#">意识上传技术：从实验室到星际移民<span class="s-time">出发前 1 周</span></a>
-    <a class="story" href="#">开普勒-186f：人类的下一个家园<span class="s-time">出发前 3 周</span></a>
-    <a class="story" href="#">深空量子通讯：如何在 500 光年外保持联系<span class="s-time">出发前 1 月</span></a>
+    <a class="story expandable" data-panel="panel-crew-list">永恒号船员完整名单公布 · 50人来自14个国家<span class="s-time">出发前 72 小时</span></a>
+    <div class="panel" id="panel-crew-list">
+      <p>永恒号搭载 50 名正式船员，来自 14 个国家，平均年龄 31 岁。名单按职能分为指挥管理（3人）、工程技术（7人）、科研医疗（15人）、后勤支援（25人）四个组别。所有船员均通过为期三年的联合训练，包括深空生存、意识上传适应、跨文化协作等模块。</p>
+      <p>但据航天港调度记录显示——上传队列实际计数为<strong>51</strong>。第 51 号条目在出发前 1 天被管理员手动注释。该条目指向一个不在主数据库中的独立节点：<strong>0x2B</strong>。</p>
+    </div>
+    <a class="story expandable" data-panel="panel-upload-tech">意识上传技术：从实验室到星际移民<span class="s-time">出发前 1 周</span></a>
+    <div class="panel" id="panel-upload-tech">
+      <p>永恒号采用的意识上传技术基于量子态映射原理——将人类神经连接组以亚原子精度扫描并重建于数字基质中。上传后的意识保留完整的记忆、人格和自我认知。在数字层中，意识可以继续学习、工作、社交——与物理存在无异。</p>
+      <p>技术争议点在于「原件」问题：上传后的数字意识是否仍是同一个人？永恒号项目采用了「连续自我」模型——上传过程保持意识连续，不存在中断或复制。但反对者指出，该模型的验证数据来自短期实验，从未在 600 年尺度上测试。</p>
+    </div>
+    <a class="story expandable" data-panel="panel-kepler">开普勒-186f：人类的下一个家园<span class="s-time">出发前 3 周</span></a>
+    <div class="panel" id="panel-kepler">
+      <p>开普勒-186f 位于天鹅座，距地球约 500 光年。它是人类发现的第一颗位于宜居带内的类地行星，表面温度、大气成分和液态水存在概率均符合移民条件。永恒号将在抵达后部署预置的生态舱和大气改造设备。</p>
+      <p>项目总工程师在最后一次新闻发布会上被问及「如果到了发现不适合居住怎么办」。他回答：「那我们就改造它。人类花了五万年改造地球——再花六百年改造一颗新星。不亏。」</p>
+    </div>
   </div>
   <div class="card">
-    <h4>船员档案</h4>
-    <a class="story" href="#">林晨 · 永恒号管理员 · 指挥权限<span class="s-time">30岁 · 前深空任务指挥官</span></a>
-    <a class="story" href="#">林汐 · 数据管理员 · 隔离节点7F<span class="s-time">24岁 · 最年轻的意识上传志愿者</span></a>
-    <a class="story" href="#">陈远 · 机械工程师 · C-E区<span class="s-time">32岁 · 三代航天世家</span></a>
+    <h4>核心船员档案</h4>
+    <a class="story expandable" data-panel="panel-linchen">林晨 · 永恒号管理员 · 指挥权限<span class="s-time">30岁 · 前深空任务指挥官</span></a>
+    <div class="panel" id="panel-linchen">
+      <p>林晨，30岁，前联合深空局任务指挥官。曾执行三次小行星带深空探测任务。在永恒号上担任管理员，拥有最高指挥权限。训练记录显示其应急决策评级为 A+，心理韧性评分 94/100。</p>
+      <p>个人备注：「我上船的原因很简单——我妹妹在上面。」</p>
+    </div>
+    <a class="story expandable" data-panel="panel-linxi">林汐 · 数据管理员 · 隔离节点7F<span class="s-time">24岁 · 最年轻的意识上传志愿者</span></a>
+    <div class="panel" id="panel-linxi">
+      <p>林汐，24岁，数据系统工程师。永恒号上最年轻的意识上传者。她的意识将在独立的隔离节点 7F 中运行——与主数据库物理隔离。项目组称这是「冗余安全设计」。林汐本人在出发前接受采访时说：「我只是想跟他一起走。」她没有说「他」是谁。</p>
+      <p>上传协议显示，隔离节点 7F 的权限为只读。但在射线暴前 2 分钟——该权限被手动提升至 rwx。提升者：管理员。</p>
+    </div>
+    <a class="story expandable" data-panel="panel-chenyuan">陈远 · 机械工程师 · C-E区<span class="s-time">32岁 · 三代航天世家</span></a>
+    <div class="panel" id="panel-chenyuan">
+      <p>陈远，32岁，机械工程师。负责永恒号 C 区至 E 区所有硬件维护。来自三代航天世家——祖父曾参与第一代空间站建设，父亲是月球基地的首席机械师。他把祖父的旧齿轮标签带上了船——「一九五三年七月二十七日」。</p>
+      <p>出发前体检记录中有一行备注：「受检者左手掌心有一道约 4cm 旧伤疤，自述为幼年机械事故。另——受检者在体检结束后询问：『如果我太爷爷欠了别人一条命，现在那个人来找我还——我该还吗。』医生未记录回答。」</p>
+    </div>
   </div>
   <div class="card">
     <h4>热门评论</h4>
@@ -151,5 +180,17 @@ body{background:#f4f5f6;color:#1a1a1a;font-family:'PingFang SC','Microsoft YaHei
   <p style="margin-top:12px"><a href="index.html">← 返回船舰终端</a></p>
 </div>
 
+<script>
+document.querySelectorAll('.expandable').forEach(el => {
+  el.addEventListener('click', function(e){
+    e.preventDefault();
+    const panel = document.getElementById(this.dataset.panel);
+    if(panel){
+      panel.classList.toggle('open');
+      this.classList.toggle('open');
+    }
+  });
+});
+</script>
 </body>
 </html>
