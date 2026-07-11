@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>永恒号 · 项目档案</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f8f9fa;color:#1a1a1a;font-family:'PingFang SC','Microsoft YaHei',sans-serif;line-height:1.7;max-width:800px;margin:0 auto;padding:60px 20px}
+.stamp{position:fixed;top:40px;right:40px;border:3px solid #c00;color:#c00;font-size:18px;font-weight:700;padding:8px 20px;transform:rotate(15deg);opacity:0.6;pointer-events:none}
+.header{border-bottom:3px double #333;padding-bottom:20px;margin-bottom:40px}
+.header .label{font-size:12px;color:#666;letter-spacing:4px;text-transform:uppercase}
+.header h1{font-size:32px;font-weight:700;margin:8px 0}
+.header .meta{font-size:13px;color:#555;display:flex;gap:32px;flex-wrap:wrap}
+.header .meta span{white-space:nowrap}
+.redacted{background:#1a1a1a;color:#1a1a1a;padding:2px 8px;border-radius:2px;cursor:pointer;transition:color .3s}
+.redacted:hover,.redacted.revealed{color:#c00}
+.section{margin-bottom:40px}
+.section h2{font-size:18px;font-weight:700;border-bottom:1px solid #ccc;padding-bottom:8px;margin-bottom:16px}
+.section h3{font-size:15px;font-weight:600;margin:16px 0 8px}
+table{width:100%;border-collapse:collapse;margin:12px 0}
+th,td{border:1px solid #ddd;padding:8px 12px;font-size:13px;text-align:left}
+th{background:#eee;font-weight:600}
+td.num{text-align:right;font-family:monospace}
+tr.deleted td{color:#999;text-decoration:line-through}
+tr.flagged td{background:#fff9f0}
+.crew-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin:12px 0}
+.crew-card{background:#fff;border:1px solid #e0e0e0;padding:10px 14px;font-size:13px;border-radius:2px}
+.crew-card .name{font-weight:600}
+.crew-card .role{color:#666;font-size:12px}
+.crew-card .cabin{color:#999;font-size:11px}
+.footnote{font-size:12px;color:#666;margin-top:24px;padding:16px;background:#f0f0f0;border-left:3px solid #999}
+.footnote p{margin-bottom:8px}
+a{color:#333;text-decoration:none;border-bottom:1px dotted #999}
+a:hover{color:#000}
+</style>
+</head>
+<body>
+
+<div class="stamp">内部档案 · 机密</div>
+
+<div class="header">
+  <div class="label">项目编号 HSDK-2148</div>
+  <h1>永恒号任务档案</h1>
+  <div class="meta">
+    <span>发射日期：第1年第1小时</span>
+    <span>目的地：开普勒-186f</span>
+    <span>预计航程：约600年</span>
+    <span>状态：<span style="color:#c00">事故终止</span></span>
+  </div>
+</div>
+
+<div class="section">
+  <h2>一、任务概述</h2>
+  <p>永恒号为人类首艘跨世代星际移民船。搭载 50 名船员（物理休眠）+ 50 名意识上传者（数字层），以及全船生命维持、生态循环、通讯导航系统。任务目标：在开普勒-186f 建立人类首个地外永久定居点。</p>
+  <p>船员通过意识上传技术实现"物理休眠+数字层活跃"的双态航行模式：身体在休眠舱中保存，意识在主数据库中继续工作、研究、生活。到达目的地后，身体唤醒，意识与身体重新同步。</p>
+  <p>第97年第6月，永恒号遭遇<span class="redacted" onclick="this.classList.toggle('revealed')">████████████</span>，主数据库损毁，50 名船员意识全部丢失。仅隔离节点 7F（林汐终端）幸存。</p>
+</div>
+
+<div class="section">
+  <h2>二、船员名单</h2>
+  <h3>指挥与管理系统</h3>
+  <div class="crew-grid">
+    <div class="crew-card"><div class="name">01 · 林晨</div><div class="role">管理员 · 指挥权限</div><div class="cabin">休眠舱 A-01</div></div>
+    <div class="crew-card"><div class="name">02 · 林汐</div><div class="role">数据管理员 · 隔离节点7F</div><div class="cabin">休眠舱 A-02</div></div>
+    <div class="crew-card"><div class="name">03 · 陈远</div><div class="role">机械工程师 · C区维护</div><div class="cabin">休眠舱 B-03</div></div>
+  </div>
+
+  <h3>工程与技术</h3>
+  <div class="crew-grid">
+    <div class="crew-card"><div class="name">04 · 周建国</div><div class="role">生物学组 · 生态循环</div><div class="cabin">休眠舱 B-04</div></div>
+    <div class="crew-card"><div class="name">05 · 李明远</div><div class="role">通讯系统 · 深空链路</div><div class="cabin">休眠舱 B-05</div></div>
+    <div class="crew-card"><div class="name">06 · 王芳</div><div class="role">能源系统 · 反应堆维护</div><div class="cabin">休眠舱 B-06</div></div>
+    <div class="crew-card"><div class="name">07 · 张涛</div><div class="role">导航系统 · 航线计算</div><div class="cabin">休眠舱 B-07</div></div>
+    <div class="crew-card"><div class="name">08 · 刘洋</div><div class="role">配电系统 · C-D区</div><div class="cabin">休眠舱 B-08</div></div>
+    <div class="crew-card"><div class="name">09 · 陈芳</div><div class="role">生命维持 · 环境控制</div><div class="cabin">休眠舱 C-01</div></div>
+    <div class="crew-card"><div class="name">10 · 赵明辉</div><div class="role">数据库管理 · 存储阵列</div><div class="cabin">休眠舱 C-02</div></div>
+  </div>
+
+  <h3>科研与医疗</h3>
+  <div class="crew-grid">
+    <div class="crew-card"><div class="name">11-25</div><div class="role">各专业科研人员</div><div class="cabin">休眠舱 C-03 至 C-17</div></div>
+  </div>
+
+  <h3>后勤与支援</h3>
+  <div class="crew-grid">
+    <div class="crew-card"><div class="name">26-49</div><div class="role">后勤、医疗、安保、教育</div><div class="cabin">休眠舱 D-01 至 D-24</div></div>
+  </div>
+
+  <table>
+    <tr class="deleted">
+      <td class="num">50</td>
+      <td>张明</td>
+      <td>导航系统 · 副手</td>
+      <td>休眠舱 D-25</td>
+    </tr>
+    <tr class="flagged">
+      <td class="num" style="color:#c00">51</td>
+      <td style="color:#c00"><span class="redacted" onclick="this.classList.toggle('revealed')">████████████████</span></td>
+      <td style="color:#c00"><span class="redacted" onclick="this.classList.toggle('revealed')">██████████</span></td>
+      <td style="color:#c00">隔离节点 0x2B</td>
+    </tr>
+  </table>
+
+  <p style="font-size:12px;color:#999;margin-top:4px">※ 第 51 号条目在出发前 1 天被管理员手动添加，同日被注释。注释操作IP：地球·外部终端。</p>
+</div>
+
+<div class="section">
+  <h2>三、技术参数</h2>
+  <table>
+    <tr><td>全长</td><td>847 米</td></tr>
+    <tr><td>最大承载</td><td>100 名船员（50 物理 + 50 数字）</td></tr>
+    <tr><td>动力系统</td><td>主反应堆 × 1 · 备用能源电池组 × 72</td></tr>
+    <tr><td>航行速度</td><td>0.12c（巡航）</td></tr>
+    <tr><td>通讯系统</td><td>深空量子链路 · 退役军用中继站 #7 改造</td></tr>
+    <tr><td>数据库</td><td>主数据库（意识存储单元 × 50） + 隔离节点 × 1（7F）</td></tr>
+    <tr><td>生命维持</td><td>闭环生态 · 备用电源独立供电</td></tr>
+  </table>
+  <p style="font-size:12px;color:#999;margin-top:4px">※ 中继站 #7 为退役军用设备，改造后用于民用深空通讯。改造记录显示：出发前 72 小时，该中继站被远程激活——激活来源未记录。</p>
+</div>
+
+<div class="section">
+  <h2>四、关键时间线</h2>
+  <table>
+    <tr><td>第1年 出发前72小时</td><td>意识上传队列异常：计数显示 51。管理员手动覆盖为 50。</td></tr>
+    <tr><td>第1年 出发前1天</td><td>船员名单新增第 51 号条目，同日被注释。</td></tr>
+    <tr><td>第1年 第1小时</td><td>永恒号启程。所有系统正常。</td></tr>
+    <tr><td>第50年</td><td>C区配电柜首次检测到异常负载（+3%）。节点 0x2B 活跃。</td></tr>
+    <tr><td>第96年</td><td>数据库写入操作被拒——权限不足。操作时间：凌晨 2:17。</td></tr>
+    <tr><td>第97年 第6月 02:17</td><td>数据库保护系统被手动关闭。操作签名：管理员（伪造）。来源：节点 0x2B。</td></tr>
+    <tr><td>第97年 第6月 02:17:20</td><td>外部射线暴抵达。主数据库全损。</td></tr>
+    <tr><td>第97年 第6月 02:18</td><td>中继站 #7 加密链路被远程清除。清除来源：地球。</td></tr>
+  </table>
+</div>
+
+<div class="section">
+  <h2>五、附录</h2>
+  <h3>A. 事故调查报告摘要</h3>
+  <p>编号：HSDK-2148-RB。结论：自然宇宙现象。撰写：系统自动生成。审批：<span class="redacted" onclick="this.classList.toggle('revealed')">████████</span>（地球方面）。</p>
+  <p>注意——该报告附录（仅管理员可见）中包含以下原始调查数据：路由回溯显示数据库保护系统在暴发前 3 秒被手动关闭。操作签名伪造自林晨的管理员凭证。真实来源为内部节点 0x2B，经由信号转发器 7F-A3-02-1953 发送。转发器电源接在生命维持系统备用电源上——持续运行 47 年。</p>
+
+  <h3>B. 未答复的关键问题</h3>
+  <ol style="margin-left:20px;font-size:13px">
+    <li>第 51 号乘客的身份、上传来源、授权者。</li>
+    <li>信号转发器 7F-A3-02-1953 的安装者及安装时间。</li>
+    <li>凌晨 2:17 反复出现的登录操作的执行者。</li>
+    <li>中继站 #7 为何在出发前 72 小时被激活——以及谁在暴发后 1 分钟内清除了它的链路。</li>
+    <li>射线暴是否为"自然宇宙现象"，如官方报告所述。</li>
+  </ol>
+</div>
+
+<div class="footnote">
+  <p>档案编制：系统自动归档</p>
+  <p>最后修改：第97年 第9小时 · 修改者：林晨（管理员）</p>
+  <p>备注：该档案的多处关键信息在暴发后被修改或删除。修改操作均具有管理员权限。当前版本恢复自系统缓存。</p>
+  <p><a href="index.html">← 返回船舰终端</a> · <a href="blog.html">陈远工程日志 →</a></p>
+</div>
+
+</body>
+</html>
