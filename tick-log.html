@@ -62,6 +62,9 @@ footer a{color:rgba(255,255,255,.3);text-decoration:none}
     <span>最后记录：第97年第6月</span>
     <span>总条目：23条已索引</span>
   </div>
+  <div style="margin-top:10px;display:flex;gap:8px">
+    <input type="text" placeholder="搜索日志条目..." style="flex:1;padding:6px 12px;border:1px solid #e0e0e0;border-radius:2px;font-family:'Courier New',monospace;font-size:11px;outline:none" onkeyup="var v=this.value.toLowerCase();document.querySelectorAll('.entry').forEach(function(e){var t=e.textContent.toLowerCase();e.style.display=v&&!t.includes(v)?'none':'block'})">
+  </div>
 </div>
 
 <div class="log-panel">
@@ -72,7 +75,10 @@ footer a{color:rgba(255,255,255,.3);text-decoration:none}
     <span class="filter">WARN</span><span class="sep">|</span>
     <span class="filter">CRIT</span><span class="sep">|</span>
     <span class="filter">DATA</span>
-    <span style="margin-left:auto;color:#aaa">日志级别：INFO · WARN · CRIT · DATA</span>
+    <span style="margin-left:auto;display:flex;gap:8px">
+      <span style="background:#f0f0f0;padding:3px 10px;border-radius:2px;cursor:pointer;font-size:10px;color:#888" onclick="alert('导出失败：日志链路中断。错误码：ETRN-0097-RB。')">导出完整日志</span>
+      <span style="background:#f0f0f0;padding:3px 10px;border-radius:2px;cursor:pointer;font-size:10px;color:#888" onclick="this.textContent=this.textContent==='打印'?'打印失败：无可用打印机':'打印'">打印</span>
+    </span>
   </div>
 
 <div class="log-body">
