@@ -90,7 +90,7 @@ const FILESYSTEM = {
 
 陈远？他在休眠舱里。系统日志说他从来没醒过。那这个操作是从哪来的。
 
-今天再去查一遍他的终端。`},
+今天再去查一遍他的终端。出发前他好像在写博客——网址还在系统缓存里：blog.html`},
           'investigation.md':{type:'file',perms:'rw-',owner:'LINCHEN',desc:'调查记录',
             content:`## 关于射线暴的人为可能性
 
@@ -101,7 +101,9 @@ const FILESYSTEM = {
 
 谁有能力同时访问陈远的节点和管理员权限？
 
-待查：陈远的加密日志。密码未知。线索可能在林汐的碎片记录里。`},
+待查：陈远的加密日志。密码未知。线索可能在林汐的碎片记录里。
+
+补充：永恒号项目档案中有一份船员名单——archive.html。第51号条目被注释了。`},
           'recovery':{type:'dir',perms:'r--',owner:'LINCHEN',desc:'恢复的删除日志',children:{
             'deleted_log_01.txt':{type:'file',perms:'r--',owner:'LINCHEN',desc:'恢复的删除日志片段',
               content:`[恢复时间：第97年 第10小时]
@@ -125,7 +127,7 @@ const FILESYSTEM = {
 「...他们在名单上写的是50个人。但我数过上传队列。是51。」
 「...转发器的信号一直在。我没关——因为我想知道它在跟谁说话。」
 「...那个人认识我。或者说——认识我太爷爷。纸条上的字是我太爷爷的笔迹。」
-「...如果你看到这条——去查 0x2B。」`},
+「...如果你看到这条——去查 0x2B。还有，新华星际社的记者在出发前联系过我。他们的页面：about-xinhua.html。有一篇报道没发出来。」`},
           }},
         }},
         'lxi':{type:'dir',perms:'rwx',owner:'LINXI',desc:'林汐 · 隔离节点',children:{
@@ -1317,7 +1319,10 @@ function tryLogin(){
       print('    ls  cat  find  decode  ssh  logs','ghost');
       print('');
       print('  外部参考：','dim');
-      print('    node-7f.html  tick-log.html','ghost');
+      print('外部参考页面：','dim');
+      print('    blog.html  archive.html  node-7f.html','ghost');
+      print('    tick-log.html  launch-news.html','ghost');
+      print('    relay-7f-a3.html  rescue-report.html','ghost');
       print('');
       startAmbientSystem();
     } else {
