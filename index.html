@@ -70,11 +70,13 @@ body{background:var(--bg);color:var(--text);font-family:'Consolas','Courier New'
 // 永恒号ARG · 船舰终端
 // ══════════════════════════════════════════════
 
+
+function _h(s){ let h=0; for(let i=0;i<s.length;i++){ h=((h<<5)-h)+s.charCodeAt(i); h|=0; } return h.toString(16); }
 const ACCOUNTS = {
   'guest':   {pass:'', name:'访客', role:'只读权限', home:'/'},
-  'LINCHEN': {pass:atob('bGlueGk='), name:'林晨', role:'管理员', home:'/home/lchen'},
-  'LINXI':   {pass:atob('dGlja3RvY2s3'), name:'林汐', role:'意识体·隔离节点', home:'/home/lxi'},
-  'CHENYUAN':{pass:atob('Z2VhcjE5NTM='), name:'陈远', role:'机械工程师', home:'/home/cyuan'},
+  'LINCHEN': {passHash:'6235142', name:'林晨', role:'管理员', home:'/home/lchen'},
+  'LINXI':   {passHash:'fc93c4f7', name:'林汐', role:'意识体·隔离节点', home:'/home/lxi'},
+  'CHENYUAN':{passHash:'56521cd5', name:'陈远', role:'机械工程师', home:'/home/cyuan'},
 };
 
 const FILESYSTEM = {
@@ -164,7 +166,7 @@ const FILESYSTEM = {
 
 又及：2:17。每次都是2:17。这不是巧合。`},
           'hidden/message.txt':{type:'file',perms:'---',owner:'LINXI',desc:'隐藏文件（需要密码）',
-            locked:true, password:atob('MjE0OGhzZGs='),
+            locked:true, passHash:'c60e4255',
             content:`这些是我发现但没放在公开日志里的东西。
 
 1. 数据库保护系统被关闭的操作签名，不是林晨。是伪造的管理员凭证。
@@ -245,7 +247,7 @@ const FILESYSTEM = {
 [第97年 第5月] C区配电柜发现不明设备——小型。贴在柜门内侧。不是船上的。标签模糊。拍照存档。`
             + `\n[第97年 第6月] 暴发前3天。那个不明设备不见了。柜门内侧只剩下标签残胶。`},
           'encrypted/personal.log':{type:'file',perms:'r--',owner:'CHENYUAN',desc:'加密个人日志（需要密码）',
-            locked:true, password:atob('MTk1MzA3Mjc='),
+            locked:true, passHash:'6b2f652',
             content:`这些是我发现但没上报的东西。不是不报——是不敢。
 
 第96年，我在C区配电柜发现一个装置。不是船上的标准件。是个信号转发器——很小，贴在走线后面。我拆下来看了。它能把指令伪装成内部节点的操作。只要知道节点ID，它就能冒充任何人发指令。
@@ -436,7 +438,7 @@ cyuan:x:1002:1002:陈远:/home/cyuan:/bin/sh
 注意：lchen（林晨）在第97年一直处于休眠状态。本次登录使用的凭证为第1年生成的旧token。
 该token从未被使用过——直到十七秒前。`},
         'shadow.log':{type:'file',perms:'---',desc:'隐藏日志（需要密码）',
-          locked:true, password:atob('MHgyQis3Rg=='),
+          locked:true, passHash:'bacfe6c2',
           dynamic:true,
           content:`不要相信我。
 
@@ -804,7 +806,7 @@ const MESSAGE_LOGS = {
     name:'陈远 · 加密私人日志',
     desc:'加密的私人通讯草稿。未发送。需要密码解密。',
     locked:true,
-    password:atob('MTk1MzA3Mjc='),
+    passHash:'6b2f652',
     messages:[
       {time:'第97年 第1月 草稿', from:'陈远', to:'未发送',
        content:'我太爷爷在停战日被派出去那天，遇到的那个人——不是他的长官。\n\n所有人都听那个人的。但那个人没有军衔。没有番号。\n\n他让太爷爷欠了一条命。几十年后找到了我。\n\n在我上船前。他说：你来还。'},
@@ -1121,7 +1123,7 @@ const commands = {
     const node = getNode(target);
     if(!node){print('decrypt: 文件不存在', 'err');return;}
     if(!node.locked){print('decrypt: 该文件未加密', 'dim');return;}
-    if(args[1] === node.password){
+    if(node.passHash && _h(args[1])===node.passHash){
       const fp = node._fullPath||target;
       gameState.unlockedFiles[fp] = true;
       print(`✓ ${target} 解密成功。`, 'ok');
@@ -1365,7 +1367,7 @@ const commands = {
     if(thread.adminOnly && currentUser !== 'LINCHEN'){ print('logs: 权限不足。仅管理员可访问。', 'err'); return; }
     if(!thread){ print('decrypt_logs: 记录不存在。', 'err'); return; }
     if(!thread.locked){ print('decrypt_logs: 该记录未加密。', 'dim'); return; }
-    if(args[1] === thread.password){
+    if(thread.passHash && _h(args[1])===thread.passHash){
       gameState.unlockedLogs[tid] = true;
       print(`✓ ${thread.name} 解密成功。`, 'ok');
       print('内容已解锁。使用 /logs ' + tid + ' 查看。', 'dim');
@@ -1397,7 +1399,7 @@ function tryLogin(){
   if(uid==='guest'){ pass=''; }
   if(!pass && uid!=='guest'){loginMsg.textContent='请输入密码。';return;}
   const acc = ACCOUNTS[uid];
-  if(acc && acc.pass === pass){
+  if(acc && (acc.passHash ? _h(pass)===acc.passHash : acc.pass==='')){
     const prevUser = currentUser;
     currentUser = uid; cwd = acc.home||'/';
     loginOverlay.style.display = 'none';
