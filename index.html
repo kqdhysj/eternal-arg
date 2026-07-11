@@ -39,6 +39,15 @@ body{background:var(--bg);color:var(--text);font-family:'Consolas','Courier New'
 .login-box button:hover{background:var(--accent);color:var(--bg)}
 .login-msg{font-size:13px;color:var(--danger);min-height:20px;margin-top:8px}
 .login-hint{font-size:11px;color:var(--dim);margin-top:16px}
+@media(max-width:640px){
+  .login-box{width:90vw;padding:32px 20px}
+  .login-box h2{font-size:14px}
+  #terminal{font-size:12px;padding:10px 12px}
+  #header{padding:8px 12px;font-size:11px}
+  #input-line{padding:6px 12px 12px}
+  #cmd-input{font-size:12px}
+  #prompt{font-size:11px}
+}
 </style>
 </head>
 <body>

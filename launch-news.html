@@ -99,8 +99,8 @@ body{background:#f4f5f6;color:#1a1a1a;font-family:'PingFang SC','Microsoft YaHei
 @keyframes slideIn{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
 @keyframes fadeInUp{from{transform:translateY(12px);opacity:0}to{transform:translateY(0);opacity:1}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@media(max-width:768px){.recommend-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:480px){.recommend-grid{grid-template-columns:1fr}}
+}
+}
 .ad{background:#fff;border:1px solid #e8e8e8;overflow:hidden;margin-bottom:16px;border-radius:2px}
 .ad-label{font-size:9px;color:#bbb;text-align:center;padding:4px 0 0;letter-spacing:1px}
 .ad-banner{padding:16px 20px;display:flex;align-items:center;gap:16px}
@@ -115,7 +115,18 @@ body{background:#f4f5f6;color:#1a1a1a;font-family:'PingFang SC','Microsoft YaHei
 .ad-side span{font-size:10px;color:#888;display:block;margin-bottom:10px}
 .ad-side .ad-cta{background:#c44;color:#fff;padding:4px 14px;border-radius:2px;font-size:10px;cursor:pointer;border:none}
 .top-ad{max-width:1100px;margin:0 auto;padding:12px 20px 0}
-@media(max-width:768px){.layout{flex-direction:column}.sidebar{width:100%}}
+.sidebar{width:100%}}
+@media(max-width:640px){
+  .hero h1{font-size:22px;line-height:1.4}
+  .hero{padding:40px 16px}
+  .layout{padding:16px 8px}
+  .sidebar{width:100%}
+  .recommend-grid{grid-template-columns:1fr}
+  .comment{padding:12px}
+  .pop-trending{flex-wrap:wrap;gap:8px}
+  .navbar .inner{padding:8px 12px}
+  .navbar nav a{margin-left:12px}
+}
 </style>
 </head>
 <body>

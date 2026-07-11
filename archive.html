@@ -33,6 +33,19 @@ tr.flagged td{background:#fff9f0}
 .footnote p{margin-bottom:8px}
 a{color:#333;text-decoration:none;border-bottom:1px dotted #999}
 a:hover{color:#000}
+@media(max-width:768px){
+  body{padding:24px 12px;font-size:13px}
+  .stamp{right:8px;top:8px;font-size:14px;padding:4px 12px}
+  .header h1{font-size:22px}
+  .header .meta{flex-direction:column;gap:4px}
+  table{font-size:11px;display:block;overflow-x:auto}
+  td{padding:4px 6px}
+  .crew-grid{grid-template-columns:repeat(2,1fr)}
+  .crew-card{font-size:11px;padding:8px 10px}
+}
+@media(max-width:480px){
+  .crew-grid{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>

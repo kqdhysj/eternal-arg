@@ -114,13 +114,23 @@ footer {
 footer .sig { font-family:'Georgia',serif; font-size:18px; color:var(--accent); font-style:italic; margin-bottom:8px; }
 footer a { color:var(--accent); text-decoration:none; }
 
-@media(max-width:768px){
-  .layout{flex-direction:column;padding:24px 16px}
+
   .sidebar{width:100%;position:static;display:flex;align-items:center;gap:16px}
   .timeline{padding-left:28px}
   .post::before{left:-22px}
 }
 .archive-years.open{display:block!important}
+@media(max-width:640px){
+  .layout{flex-direction:column;padding:24px 12px}
+  .sidebar{width:100%;position:static;display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap}
+  .sidebar>*{flex:1;min-width:150px}
+  .timeline{padding-left:24px}
+  .post::before{left:-18px}
+  .post-card{padding:16px}
+  .post-card h2{font-size:17px}
+  .navbar .inner{flex-direction:column;gap:6px;padding:8px 12px}
+  .navbar nav a{margin-left:12px}
+}
 </style>
 </head>
 <body>
