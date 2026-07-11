@@ -66,6 +66,20 @@ body{background:#f4f5f6;color:#1a1a1a;font-family:'PingFang SC','Microsoft YaHei
 .expandable::after{content:' +';color:#999;font-size:11px;margin-left:4px}
 .expandable.open::after{content:' -';color:#c44}
 .footer a{color:rgba(255,255,255,.3);text-decoration:none}
+.ad{background:#fff;border:1px solid #e8e8e8;overflow:hidden;margin-bottom:16px;border-radius:2px}
+.ad-label{font-size:9px;color:#bbb;text-align:center;padding:4px 0 0;letter-spacing:1px}
+.ad-banner{padding:16px 20px;display:flex;align-items:center;gap:16px}
+.ad-banner .ad-icon{font-size:28px;min-width:48px;text-align:center}
+.ad-banner .ad-text{flex:1}
+.ad-banner .ad-text strong{display:block;font-size:13px;color:#333}
+.ad-banner .ad-text span{font-size:11px;color:#888}
+.ad-banner .ad-cta{background:#c44;color:#fff;padding:6px 16px;border-radius:2px;font-size:11px;white-space:nowrap;cursor:pointer;border:none}
+.ad-side{padding:14px 16px;text-align:center}
+.ad-side .ad-icon{font-size:24px;margin-bottom:6px}
+.ad-side strong{display:block;font-size:12px;color:#333;margin-bottom:4px}
+.ad-side span{font-size:10px;color:#888;display:block;margin-bottom:10px}
+.ad-side .ad-cta{background:#c44;color:#fff;padding:4px 14px;border-radius:2px;font-size:10px;cursor:pointer;border:none}
+.top-ad{max-width:1100px;margin:0 auto;padding:12px 20px 0}
 @media(max-width:768px){.layout{flex-direction:column}.sidebar{width:100%}}
 </style>
 </head>
@@ -96,6 +110,17 @@ body{background:#f4f5f6;color:#1a1a1a;font-family:'PingFang SC','Microsoft YaHei
 </div>
 <div class="overlay" id="nav-overlay"></div>
 
+<div class="top-ad">
+  <div class="ad">
+    <div class="ad-label">广告</div>
+    <div class="ad-banner">
+      <div class="ad-icon">&#9790;</div>
+      <div class="ad-text"><strong>意识备份保险 · 量子云存储</strong><span>你的记忆值得永恒。上传前72小时免费全量扫描。已服务 1,200+ 名深空旅行者。</span></div>
+      <button class="ad-cta">了解详情</button>
+    </div>
+  </div>
+</div>
+
 <div class="hero">
   <div class="badge">特别报道 · 即时新闻</div>
   <h1>人类首艘星际移民船「永恒号」今日启程</h1>
@@ -118,6 +143,15 @@ body{background:#f4f5f6;color:#1a1a1a;font-family:'PingFang SC','Microsoft YaHei
   <p>在出发前的意识上传阶段，所有船员的数字副本均已完成校验。项目发言人表示：「每位船员都是自愿者，他们将在虚拟环境中度过航程——对他们而言，距离将只是数据流中的一个参数。」</p>
 
   <div class="img-placeholder">[ 永恒号于酒泉航天港发射升空 · 新华社航拍照片 ]<br>飞船升空后约 180 秒进入预定轨道，信号正常。</div>
+
+  <div class="ad" style="margin:20px 0">
+    <div class="ad-label">广告</div>
+    <div class="ad-banner">
+      <div class="ad-icon">&#9881;</div>
+      <div class="ad-text"><strong>休眠舱年度维护 · 限时折扣</strong><span>你的身体值得最好的保养。97年质保。零重力环境无损检测。前100名送定制舱贴。</span></div>
+      <button class="ad-cta">预约</button>
+    </div>
+  </div>
 
   <p>航天港观景台上，数百名船员家属目送飞船消失在晨光中。人群中，一位年长的军装老人独自站在后排，没有和其他家属一起挥手。他手里攥着一张纸条，从头到尾没有抬头。记者试图上前采访，他摆了摆手，转身走进了通道。有家属认出了他——「那是陈远的太爷爷。他不爱说话。」</p>
 
@@ -215,6 +249,15 @@ body{background:#f4f5f6;color:#1a1a1a;font-family:'PingFang SC','Microsoft YaHei
 </main>
 
 <aside class="sidebar">
+  <div class="ad">
+    <div class="ad-label">广告</div>
+    <div class="ad-side">
+      <div class="ad-icon">&#9794;</div>
+      <strong>深空量子通讯 · 家庭套餐</strong>
+      <span>500光年无延迟。和远方的家人保持联系。首年免费。</span>
+      <button class="ad-cta">开通</button>
+    </div>
+  </div>
   <div class="card">
     <h4>相关报道</h4>
     <a class="story expandable" data-panel="panel-crew-list">永恒号船员完整名单公布 · 50人来自14个国家<span class="s-time">出发前 72 小时</span></a>
@@ -249,6 +292,15 @@ body{background:#f4f5f6;color:#1a1a1a;font-family:'PingFang SC','Microsoft YaHei
     <div class="panel" id="panel-chenyuan">
       <p>陈远，32岁，机械工程师。负责永恒号 C 区至 E 区所有硬件维护。来自三代航天世家——祖父曾参与第一代空间站建设，父亲是月球基地的首席机械师。他把祖父的旧齿轮标签带上了船——「一九五三年七月二十七日」。</p>
       <p>出发前体检记录中有一行备注：「受检者左手掌心有一道约 4cm 旧伤疤，自述为幼年机械事故。另——受检者在体检结束后询问：『如果我太爷爷欠了别人一条命，现在那个人来找我还——我该还吗。』医生未记录回答。」</p>
+    </div>
+  </div>
+  <div class="ad">
+    <div class="ad-label">广告</div>
+    <div class="ad-side">
+      <div class="ad-icon">&#9733;</div>
+      <strong>星际地产 · 开普勒预售</strong>
+      <span>600年后抵达即住。海景地块每平米仅需今日币价 0.003。首批仅 200 席。</span>
+      <button class="ad-cta">咨询</button>
     </div>
   </div>
   <div class="card">
