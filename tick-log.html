@@ -49,14 +49,16 @@ footer a{color:rgba(255,255,255,.3);text-decoration:none}
   .navbar .inner{flex-direction:column;gap:6px}
   footer{padding:20px 12px;font-size:10px}
 }
+
+.cache-badge{position:fixed;top:0;left:0;right:0;z-index:999;background:rgba(0,0,0,.85);color:rgba(255,255,255,.5);font-size:10px;text-align:center;padding:4px 12px;letter-spacing:1px;font-family:'Courier New',monospace}
+.cache-badge span{color:rgba(255,255,255,.25)}
 </style>
 </head>
-<body>
+<body style="padding-top:28px">
+<div class="cache-badge">永恒号系统缓存 · 恢复自深空通讯链路 <span>|</span> <a href="index.html" style="color:rgba(255,255,255,.3)">← 终端</a></div>
 
-<div class="topbar">永恒号 · 自动日志记录系统 · Tick v2.4.1</div>
-<div class="navbar">
-  <div class="inner">
-    <div class="brand">TICK<span>::SYSLOG</span></div>
+
+
     <nav><a href="index.html">船舰终端</a><a href="blog.html">陈远博客</a><a href="archive.html">项目档案</a><a href="node-7f.html">隔离节点7F</a></nav>
   </div>
 </div>

@@ -127,14 +127,16 @@ body{background:#f4f5f6;color:#1a1a1a;font-family:'PingFang SC','Microsoft YaHei
   .navbar .inner{padding:8px 12px}
   .navbar nav a{margin-left:12px}
 }
+
+.cache-badge{position:fixed;top:0;left:0;right:0;z-index:999;background:rgba(0,0,0,.85);color:rgba(255,255,255,.5);font-size:10px;text-align:center;padding:4px 12px;letter-spacing:1px;font-family:'Courier New',monospace}
+.cache-badge span{color:rgba(255,255,255,.25)}
 </style>
 </head>
-<body>
+<body style="padding-top:28px">
+<div class="cache-badge">永恒号系统缓存 · 恢复自深空通讯链路 <span>|</span> <a href="index.html" style="color:rgba(255,255,255,.3)">← 终端</a></div>
 
-<div class="topbar"><span>第1年 第1小时 · 酒泉航天港 · 即时报道</span></div>
-<div class="navbar">
-  <div class="inner">
-    <div class="brand">新华星际<span>社</span></div>
+
+
     <nav><a href="#">首页</a><a class="nav-drop" data-drop="drop-deepspace" href="#">深空</a><a class="nav-drop" data-drop="drop-tech" href="#">科技</a><a class="nav-drop" data-drop="drop-society" href="#">社会</a><a class="nav-drop" data-drop="drop-opinion" href="#">评论</a></nav>
   </div>
   <div class="nav-dropdown" id="drop-deepspace">
