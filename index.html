@@ -57,7 +57,7 @@ body{background:var(--bg);color:var(--text);font-family:'Consolas','Courier New'
 <input id="login-user" type="text" placeholder="用户ID" autofocus>
 <input id="login-pass" type="password" placeholder="密码"><button id="login-btn">验证身份</button><button id="guest-btn" style="width:100%;padding:10px;background:transparent;border:1px solid rgba(136,204,255,.2);color:rgba(136,204,255,.5);font-family:inherit;font-size:13px;cursor:pointer;margin-top:8px;letter-spacing:2px;transition:all .2s" onmouseover="this.style.borderColor='rgba(136,204,255,.5)';this.style.color='rgba(136,204,255,.8)'" onmouseout="this.style.borderColor='rgba(136,204,255,.2)';this.style.color='rgba(136,204,255,.5)'">访客浏览</button>
 <div class="login-msg" id="login-msg"></div>
-<div class="login-hint" id="login-hint">授权人员：管理员 · 意识体 · 机械工程师</div>
+<div class="login-hint" id="login-hint">授权人员：林晨 · 林汐 · 陈远</div>
 </div></div>
 <div id="main">
 <div id="header"><span>▸ 永恒号 · 船舰终端</span><span id="clock" class="dim"></span></div>
@@ -388,9 +388,9 @@ cyuan:x:1002:1002:陈远:/home/cyuan:/bin/sh
         'password_hint.txt':{type:'file',perms:'r--',desc:'系统提示 · 密码线索',
             content:`授权账号的密码不是随机生成的。它们藏在这艘船的故事里。
 
-管理员（LINCHEN）：他最在意的人。全部小写。
-意识体（LINXI）：Tick 的英文单词。加一个数字——她在隔离节点等了几年。
-机械工程师（CHENYUAN）：齿轮标签上的年份。全部数字。`
+林晨（LINCHEN）：他最在意的人。全部小写。
+林汐（LINXI）：Tick 的英文单词。加一个数字——她在隔离节点等了几年。
+陈远（CHENYUAN）：齿轮标签上的年份。全部数字。`
           },
           'crew_manifest.txt':{type:'file',perms:'r--',desc:'永恒号船员名单（出发时）',
           content:`═══════════════════════════════════
