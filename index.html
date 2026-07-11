@@ -48,7 +48,7 @@ body{background:var(--bg);color:var(--text);font-family:'Consolas','Courier New'
 <input id="login-user" type="text" placeholder="用户ID" autofocus>
 <input id="login-pass" type="password" placeholder="密码"><button id="login-btn">验证身份</button>
 <div class="login-msg" id="login-msg"></div>
-<div class="login-hint" id="login-hint">仅限授权人员</div>
+<div class="login-hint" id="login-hint">授权人员：管理员 · 意识体 · 机械工程师</div>
 </div></div>
 <div id="main">
 <div id="header"><span>▸ 永恒号 · 船舰终端</span><span id="clock" class="dim"></span></div>
@@ -1276,13 +1276,11 @@ function tryLogin(){
       print('═══════════════════════════════','sys');
       print('  输入 /help 查看可用命令。','dim');
       print('');
-      print('  该终端保存了事故前后所有的系统日志、','dim');
-      print('  个人文件和通讯记录。请自行调查。','dim');
+      print('  终端保存了事故前后的系统日志、','dim');
+      print('  个人文件、通讯记录。请自行调查。','dim');
       print('');
-      print('  提示：不同账号看到的信息不同。','ghost');
-      print('  提示：用 find 跨文件搜索关键词。','ghost');
-      print('  提示：用 decode 解码隐藏信息。','ghost');
-      print('  提示：发现节点地址后试试 ssh。','ghost');
+      print('  最近命令历史：','ghost');
+      print('    ls  cat  find  decode  ssh  logs','ghost');
       print('');
       startAmbientSystem();
     } else {
