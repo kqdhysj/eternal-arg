@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>永恒号 · 船舰终端</title>
+<style>
+:root {
+  --bg: #0a0e17; --panel: #111827cc; --accent: #88ccff; --accent-weak: #88ccff44;
+  --text: #d0d8e8; --dim: #556677; --warn: #ffaa5e; --danger: #ff6666; --ok: #44ff44;
+  --glitch: #ff44aa;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Consolas','Courier New','Microsoft YaHei',monospace;height:100vh;display:flex;overflow:hidden}
+#main{flex:1;display:flex;flex-direction:column;min-width:0}
+#header{padding:12px 20px;border-bottom:1px solid var(--accent-weak);font-size:13px;color:var(--accent);display:flex;justify-content:space-between}
+#terminal{flex:1;overflow-y:auto;padding:16px 20px;font-size:14px;line-height:1.7;scroll-behavior:smooth}
+#terminal .sys{color:var(--accent)} #terminal .err{color:var(--danger)} #terminal .ok{color:var(--ok)}
+#terminal .warn{color:var(--warn)} #terminal .dim{color:var(--dim)} #terminal .ghost{color:var(--dim);opacity:0.5;font-style:italic}
+#terminal .glitch{color:var(--glitch);animation:glitch-text 0.3s ease}
+#terminal .dark{color:#ffaa5e} #terminal .light{color:var(--accent)} #terminal .red{color:var(--danger)}
+@keyframes glitch-text {
+  0%,100%{opacity:1;transform:none}
+  20%{opacity:0.8;transform:translateX(-2px)}
+  40%{opacity:1;transform:translateX(2px)}
+  60%{opacity:0.6;transform:translateX(-1px)}
+  80%{opacity:0.9;transform:translateX(1px)}
+}
+#input-line{display:flex;align-items:center;padding:8px 20px 16px;border-top:1px solid var(--accent-weak)}
+#prompt{color:var(--accent);font-size:14px;white-space:nowrap}
+#cmd-input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:inherit;font-size:14px;margin-left:8px;caret-color:var(--accent)}
+#cmd-input::placeholder{color:var(--dim)}
+.login-overlay{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999}
+.login-box{background:var(--panel);border:1px solid var(--accent-weak);padding:48px 40px;width:420px;text-align:center}
+.login-box h2{color:var(--accent);margin-bottom:24px;font-size:18px}
+.login-box input{display:block;width:100%;margin-bottom:14px;padding:12px 16px;background:var(--bg);border:1px solid var(--accent-weak);color:var(--text);font-family:inherit;font-size:14px;outline:none}
+.login-box input:focus{border-color:var(--accent)}
+.login-box button{width:100%;padding:12px;background:var(--accent-weak);border:1px solid var(--accent);color:var(--accent);font-family:inherit;font-size:14px;cursor:pointer;letter-spacing:4px}
+.login-box button:hover{background:var(--accent);color:var(--bg)}
+.login-msg{font-size:13px;color:var(--danger);min-height:20px;margin-top:8px}
+.login-hint{font-size:11px;color:var(--dim);margin-top:16px}
+</style>
+</head>
+<body>
+<div class="login-overlay" id="login-overlay">
+<div class="login-box">
+<h2>SYS::AUTH // 永恒号 · 船舰终端</h2>
+<input id="login-user" type="text" placeholder="用户ID" autofocus>
+<input id="login-pass" type="password" placeholder="密码"><button id="login-btn">验证身份</button>
+<div class="login-msg" id="login-msg"></div>
+<div class="login-hint" id="login-hint">仅限授权人员</div>
+</div></div>
+<div id="main">
+<div id="header"><span>▸ 永恒号 · 船舰终端</span><span id="clock" class="dim"></span></div>
+<div id="terminal"></div>
+<div id="input-line"><span id="prompt">guest@永恒号:~$</span><input id="cmd-input" type="text" placeholder="/help 查看命令..." autofocus></div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// 永恒号ARG · 船舰终端
+// ══════════════════════════════════════════════
+
+const ACCOUNTS = {
+  'LINCHEN': {pass:'linxi', name:'林晨', role:'管理员', home:'/home/lchen'},
+  'LINXI':   {pass:'ticktock7', name:'林汐', role:'意识体·隔离节点', home:'/home/lxi'},
+  'CHENYUAN':{pass:'gear1953', name:'陈远', role:'机械工程师', home:'/home/cyuan'},
+};
+
+const FILESYSTEM = {
+  '/': {
+    type:'dir', perms:'r-x', desc:'根目录',
+    children:{
+      'home':{type:'dir',perms:'r-x',desc:'用户目录',children:{
+        'lchen':{type:'dir',perms:'rwx',owner:'LINCHEN',desc:'林晨 · 管理员',children:{
+          'ship_status.log':{type:'file',perms:'r--',owner:'LINCHEN',desc:'船舰状态日志',
+            content:`[第97年 第6小时] 紧急唤醒程序启动。管理员：林晨。
+[第97年 第6小时] 备用能源启动。剩余72%。
+[第97年 第7小时] 通讯链路建立。目标：林汐终端（隔离节点7F）。
+[第97年 第7小时] 主数据库校验失败。错误代码：0x7A4F。
+[第97年 第8小时] 外部射线暴记录查询——返回空值。无记录。
+[第97年 第8小时] 手动触发能量路由回溯。路由表第3跳异常——能量在射线暴到达前17秒被重定向至C区配电柜。来源IP：内部节点 0x2B。
+[第97年 第9小时] 查询节点0x2B所有者。返回：陈远·机械工程师（休眠中）。
+[第97年 第9小时] 标记：待进一步调查。`},
+          'personal_notes.txt':{type:'file',perms:'r--',owner:'LINCHEN',desc:'林晨私人笔记',
+            content:`醒了两天了。小汐还在。其他人全没了。
+
+系统说是射线暴。但有一件事不对——暴发前17秒，C区配电柜被手动接了额外的能量。不是自动的。有人动了路由表。
+
+陈远？他在休眠舱里。系统日志说他从来没醒过。那这个操作是从哪来的。
+
+今天再去查一遍他的终端。`},
+          'investigation.md':{type:'file',perms:'rw-',owner:'LINCHEN',desc:'调查记录',
+            content:`## 关于射线暴的人为可能性
+
+已确认三个异常：
+1. 能量路由在暴发前17秒被手动修改。操作来源：内部节点 0x2B
+2. 节点 0x2B 注册于陈远的名字，但操作时间他处于休眠状态
+3. 数据库保护系统在暴发前3秒被远程关闭——需要管理员权限
+
+谁有能力同时访问陈远的节点和管理员权限？
+
+待查：陈远的加密日志。密码未知。线索可能在林汐的碎片记录里。`},
+          'recovery':{type:'dir',perms:'r--',owner:'LINCHEN',desc:'恢复的删除日志',children:{
+            'deleted_log_01.txt':{type:'file',perms:'r--',owner:'LINCHEN',desc:'恢复的删除日志片段',
+              content:`[恢复时间：第97年 第10小时]
+恢复来源：系统日志缓存 /var/log/.shadow_cache
+
+以下内容在射线暴后被手动删除。操作者拥有管理员权限。
+
+---
+片段A（来自 /var/log/auth.log 已删除条目）：
+「第1年 出发前。乘客上传序列。计数：50...51。第51号上传完成。目标节点：0x2B。上传来源：手动覆盖。」
+
+片段B（来自路由表缓存）：
+「目标：地球·退役军用中继站 #7。路由状态：未送达。重试次数：3。最后尝试：第97年 第6月 暴发前1天。」
+
+片段C——hex编码片段，可能是密码或地址：
+「37 46 2d 41 33 2d 30 32 2d 31 39 35 33」
+`},
+            'fragment_7F.txt':{type:'file',perms:'r--',owner:'LINCHEN',desc:'隔离节点7F通讯片段',
+              content:`拦截自节点7F的对外通讯。时间：第97年 第6月。
+
+「...他们在名单上写的是50个人。但我数过上传队列。是51。」
+「...转发器的信号一直在。我没关——因为我想知道它在跟谁说话。」
+「...那个人认识我。或者说——认识我太爷爷。纸条上的字是我太爷爷的笔迹。」
+「...如果你看到这条——去查 0x2B。」`},
+          }},
+        }},
+        'lxi':{type:'dir',perms:'rwx',owner:'LINXI',desc:'林汐 · 隔离节点',children:{
+          'journal.txt':{type:'file',perms:'r--',owner:'LINXI',desc:'林汐的日志',
+            content:`[第90年] 数据迁移完成。隔离节点运行正常。主数据库还在——大家都在。陈工程师上周还跟我说齿轮的精度问题。
+[第94年] 数据库开始出现零星错误。我报告了——系统说在正常范围内。陈远说他最近总觉得有人在看他的终端。我没多想。
+[第96年] 错误频率上升。我写了一个监控脚本。但有人把它关了——管理员权限。
+[第96年 第11月] 我又开了一次。又关了。这次留了痕迹——操作来源是内部。
+[第97年 第1月] 脚本彻底消失。连同我的备份。我开始自己记。
+[第97年 第6月] 暴发前一周。陈远说他发现配电柜有什么东西——不像是出厂配件。他说要去查。然后他就不回我消息了。不是不回——是他终端被禁言了。
+[第97年 第6月] 暴发当天。能量异常。数据库保掉。所有人——`
+            + `没了。我活着，因为我在隔离节点。不是幸运——是有人算好了。`},
+          'monitor_7F.log':{type:'file',perms:'r--',owner:'LINXI',desc:'隔离节点监控日志',
+            content:`监控对象：主数据库 · 意识存储单元
+监控周期：第96年-第97年
+
+[第96年 第3月] 第一次异常：凌晨2:17，数据库写入操作被拒绝——权限不足。操作来源未记录。
+[第96年 第7月] 异常频率上升。每次都在凌晨2:17到2:19之间。同一来源。
+[第97年 第2月] 凌晨2:18——数据库保护层被绕过。方式未知。防御日志显示"管理员手动关闭"。
+[第97年 第6月] 射线暴。`
+            + `\n补充：第96年第3月的那条异常之前一小时，陈远向我抱怨过一次——他的终端凌晨重启了。他没操作。
+
+又及：2:17。每次都是2:17。这不是巧合。`},
+          'hidden/message.txt':{type:'file',perms:'---',owner:'LINXI',desc:'隐藏文件（需要密码）',
+            locked:true, password:'2148hsdk',
+            content:`这些是我发现但没放在公开日志里的东西。
+
+1. 数据库保护系统被关闭的操作签名，不是林晨。是伪造的管理员凭证。
+2. 伪造者用了一个老旧的登录token——第1年的token。那是出发前生成的。只有最初一批船员有。
+3. 我查了节点的通讯记录。节点0x2B在47年间每隔72小时向地球方向发一次脉冲。瞄准的是一个不在任何公开记录里的中继站。
+4. 那不是系统日志。那是定位信号。有人在告诉地球这艘船的位置。
+5. 陈远的终端在暴发前被远程访问过。不是陈远——是那个节点。它在测试管理员权限。
+
+不是事故。是处决。
+
+这艘船上有一个内应。他没有名字。没有身体。但他47年来一直在给地球发坐标。
+──
+又及：我查了节点0x2B的注册记录。上传来源不是船上的任何终端。
+是地球。出发前72小时。有人在地面上把一个人塞进了这艘船。
+──`},
+          'dreams':{type:'dir',perms:'r--',owner:'LINXI',desc:'林汐的梦记录',children:{
+            'dream_01.txt':{type:'file',perms:'r--',owner:'LINXI',desc:'重复的梦',
+              dynamic:true,
+              content:`我又做了这个梦。
+
+船是空的。走廊一直延伸——没有尽头。我推开一扇门。是一个房间。一张床。一盏灯。没有人。
+
+我退出来。推开下一扇。同一个房间。同一盏灯。同一个人也没有。
+
+50扇门。50个房间。全是一样的。但我走到第51扇的时候——门是开着的。里面有人在。
+
+我没看清他的脸。他转过身——然后我醒了。
+
+每次梦到这里就醒了。`,
+              altContent:`我又做了这个梦。
+
+船是空的。走廊一直延伸——没有尽头。我推开一扇门。是一个房间。一张床。一盏灯。没有人。
+
+我退出来。推开下一扇。同一个房间。同一盏灯。同一个人也没有。
+
+51扇门了这次。51扇。走到尽头的时候——那个人的脸转过来了一半。
+
+他认识我。我确定。但我叫不出名字。`},
+            'dream_02.txt':{type:'file',perms:'r--',owner:'LINXI',desc:'第51号休眠舱的梦',
+              content:`梦到一个人影。站在第51号休眠舱前面。
+
+船上的休眠舱编号只到50。但这个梦里有一个51号。
+
+舱门是透明的。里面有光。他站在那里——手放在舱门上。像在告别。或者像在发誓。我不确定。
+
+他转过头的时候——脸不是人脸。是一片雪花噪点。像坏了的老电视。
+
+但我听到了声音。很清楚：
+
+「Ghgba 0k2O vf gur xrl. Gur svefg cnffratre.`},
+          }},
+          'scraps':{type:'dir',perms:'r--',owner:'LINXI',desc:'碎片记录',children:{
+            'scrap_01.txt':{type:'file',perms:'r--',owner:'LINXI',desc:'编码的数字',
+              content:`这些数字出现在我的监控脚本被删除的地方。
+
+不是日志。是系统在删除操作时留下的内存碎片。
+
+「37 46 20 32 42 20 32 31 34 38」
+
+不知道是什么格式。`},
+            'scrap_02.txt':{type:'file',perms:'r--',owner:'LINXI',desc:'一句令人不安的话',
+              content:`他说他叫陈远。
+
+但不是这个陈远。
+
+我查了出发时的原始乘客名单。有一个名字被划掉了。划掉的时间是出发前一天。划掉它的人有管理员权限。
+
+那个被划掉的名字——跟齿轮标签上的笔迹对得上。
+
+太爷爷。`},
+          }},
+        }},
+        'cyuan':{type:'dir',perms:'rwx',owner:'CHENYUAN',desc:'陈远 · 机械工程师',children:{
+          'maintenance_C7.txt':{type:'file',perms:'r--',owner:'CHENYUAN',desc:'C区维护记录',
+            content:`[第93年] C区配电柜例行检查——正常。
+[第95年] C区配电柜更换稳压器——陈远。
+[第96年] C区配电柜电压异常——似乎有额外负载。来源不明。跳了两行黄字。
+[第97年 第5月] C区配电柜发现不明设备——小型。贴在柜门内侧。不是船上的。标签模糊。拍照存档。`
+            + `\n[第97年 第6月] 暴发前3天。那个不明设备不见了。柜门内侧只剩下标签残胶。`},
+          'encrypted/personal.log':{type:'file',perms:'r--',owner:'CHENYUAN',desc:'加密个人日志（需要密码）',
+            locked:true, password:'19530727',
+            content:`这些是我发现但没上报的东西。不是不报——是不敢。
+
+第96年，我在C区配电柜发现一个装置。不是船上的标准件。是个信号转发器——很小，贴在走线后面。我拆下来看了。它能把指令伪装成内部节点的操作。只要知道节点ID，它就能冒充任何人发指令。
+
+我把它放回去了。
+
+不是不想查。是我查了第一层就查不下去了——这个装置的通信号码，指向管理员权限。不是我。也不是林晨。
+
+有人在用这个东西。很久了。从我装上去那年开始。
+
+我把转发器的通信号码记在了别的地方。藏在我的齿轮标签下面。那个标签在出发前是我太爷爷贴的。他写了一个日期。只有我家的人知道那个日子代表什么。
+
+[第97年 第5月] 转发器不见了。被人拿走了。只剩残胶。
+
+[第97年 第6月] 暴发。
+
+如果我哪天不在了。去看齿轮标签。齿轮下面有东西。`},
+          'gear_tag.txt':{type:'file',perms:'r--',owner:'CHENYUAN',desc:'齿轮标签说明',
+            content:`出发前我让太爷爷在标签上写了日期：「一九五三年七月二十七日」。
+
+我们家的人都知道——那个日期不是他他退伍的日子。是他被派到前线的那天。\n\n被派去一个他不知道能不能回来的地方。\n\n密码是我太爷爷设的。他知道的东西——他写在纸条上了。\n\n──\n标签背面有一行小字。不是我爷爷写的。是后来加上去的：
+「7F-A3-02-1953。记住这个。然后去找 0x2B。」
+
+有人在我出发后碰过这个标签。在船上。`},
+          'personal_notes.txt':{type:'file',perms:'r--',owner:'CHENYUAN',desc:'陈远的私人笔记',
+            content:`我做了一个梦。反复做。
+
+梦里有人在我的终端上打字。动作很快。我在旁边看——但看不清屏幕。问他在干嘛——他说在执行保护协议。
+
+我问保护什么。他说——保护这艘船不被发现。
+
+然后他输入了一串坐标。我醒了。查了一下那串坐标——是一个废弃的军用通信中继站。不在任何航行日志上。被删掉了。但残留在路由表缓存里。
+
+我查不到谁删的。但删除时间——是我上船前。
+
+这艘船在出发之前就被人盯上了。`},
+          'blog':{type:'dir',perms:'r--',owner:'CHENYUAN',desc:'陈远的工程博客',children:{
+            'post_01.txt':{type:'file',perms:'r--',owner:'CHENYUAN',desc:'配电柜维护日志',
+              content:`【工程日志 · 第93年】
+
+今天做了C区配电柜的例行检查。一切正常。电压稳定在220V，接地正常。
+
+林汐过来看了一眼——说她在做一个监控脚本，问我有没有什么系统接口可以用。我给她开了只读权限。
+
+丫头学东西很快。但她问了我一个让我愣住的问题：「哥，系统日志里为什么有些条目没有来源IP？」
+
+我说那是正常的。某些自动进程不记录IP。
+
+但后来我查了一下——不是自动进程。来源被手动擦掉了。`},
+            'post_02.txt':{type:'file',perms:'r--',owner:'CHENYUAN',desc:'关于一个装置的博客',
+              content:`【工程日志 · 第96年】
+
+我今天拆了一个装置。C区配电柜里面的。不是我的。不是任何人的——至少不是登记过的。
+
+很小。信号转发器。做工很好。不是业余水平。它能拦截指令、伪装来源IP、以任意节点的身份发包。
+
+我拆开看了回路。通信号码在电路板上烧着：7F-A3-02-1953。
+
+我装回去了。然后写了一条笔记藏在齿轮标签下面。
+
+Zberr gur ahzoref: mreb-gjb-oenib guerr-frira. Gurl ner abg whfg nqqerffrf.`},
+            'post_03.txt':{type:'file',perms:'r--',owner:'CHENYUAN',desc:'最后一篇博客',
+              content:`【工程日志 · 第97年 第5月】
+
+有人动过我的终端。
+
+我设了登录提醒。凌晨2:17——又是这个时间——有人用我的备用密码登录了。持续了两分钟。然后退出。
+
+查看操作记录：浏览了 C区维护日志、我的个人笔记、和一张齿轮标签的照片。
+
+什么都没改。什么都没删。只是看。
+
+像在确认什么。
+
+我不写了。这篇也不安全了。如果你看到这里——用 scan 查一下我的 .ssh 目录。我留了东西。`},
+          }},
+          '.ssh':{type:'dir',perms:'---',owner:'CHENYUAN',desc:'SSH配置（隐藏）',hidden:true,children:{
+            'known_hosts':{type:'file',perms:'r--',owner:'CHENYUAN',desc:'已知节点列表',
+              content:`# 永恒号内部节点 · SSH 已知主机
+# 注意：以下地址为内部网络。部分条目被手动修改过。
+
+0x2B    internal-node-2b.eternal    # 隔离节点·未注册。原始记录显示乘客#51。覆盖者：■■■■
+7F-A3   relay-7f-a3.internal       # 信号转发器·C区第三配电柜。通信号码烧录在电路板上。
+
+# 警告：0x2B 的原始注册信息在出发前被修改。
+# 如果你去查 /etc/crew_manifest.txt —— 注意最后一行的注释。`},
+          }},
+        }},
+      }},
+      'etc':{type:'dir',perms:'r-x',desc:'系统配置',children:{
+        'passwd':{type:'file',perms:'r--',desc:'用户账户数据库（只读）',
+          content:`root:x:0:0:root:/root:/bin/sh
+lchen:x:1000:1000:林晨:/home/lchen:/bin/sh
+lxi:x:1001:1001:林汐:/home/lxi:/bin/sh
+cyuan:x:1002:1002:陈远:/home/cyuan:/bin/sh
+──
+注意：lxi 账户创建于出发前。原始权限为 r--（只读）。
+第97年被提升至 rwx。提升来源：管理员手动操作。
+操作时间：射线暴前 2 分钟。`},
+        'rayburst_report.txt':{type:'file',perms:'r--',desc:'射线暴官方报告',
+          content:`═══════════════════════════════════
+事故编号：HSDK-2148-RB
+事故类型：外部高能射线暴
+影响范围：主数据库·意识存储单元（全部损毁）
+幸存单元：隔离节点7F（林汐终端）
+调查结论：自然宇宙现象。无可预防。
+报告撰写：系统自动生成
+审批：■■■（地球方面）
+═══════════════════════════════════
+
+附录（仅管理员可见）：
+此报告为自动生成模板。以下为原始调查数据——
+路由回溯显示：数据库保护系统在暴发前3秒被手动关闭。
+操作签名：管理员 LINCHEN（伪造）。
+真实来源：内部节点 0x2B → 信号转发器 7F-A3-02-1953。
+转发器通信号码指向地球同步轨道中继节点。
+
+注意：该中继节点不在任何公开名录上。
+其加密通讯链路在暴发后1分钟内被远程清除。
+清除操作来源：地球。
+
+「自然宇宙现象」是上面要求写的措词。这份报告本身——就是证据。`},
+        'crew_manifest.txt':{type:'file',perms:'r--',desc:'永恒号船员名单（出发时）',
+          content:`═══════════════════════════════════
+  永恒号 · 船员名单 · 出发日
+  登记人数：50
+═══════════════════════════════════
+
+  01. 林晨 · 管理员 · 指挥权限
+  02. 林汐 · 数据管理员 · 隔离节点7F
+  03. 陈远 · 机械工程师 · C区维护
+  ...
+  48. 王建国 · 生命维持系统
+  49. 李芳 · 通讯系统
+  50. 张明 · 导航系统
+
+═══════════════════════════════════
+# 以下内容被注释。注释者：管理员（出发前1天）
+# Jung vf uvqqra va gur znavsrfg:
+# Cnffratre 51 hcybnqrq gb abqr 0k2O.
+# Ab anzr. Ab VQ. Whfg n qrfgvangvba.
+# Uvf svefg jbeqf nsgre hcybnq: "V'z abg fhccbfrq gb or urer."
+═══════════════════════════════════`},
+      }},
+      'var/log':{type:'dir',perms:'r-x',desc:'系统日志',children:{
+        'auth.log':{type:'file',perms:'r--',desc:'认证日志',
+          content:`[第97年 第6月 02:17:03] 用户 lchen 从内部节点 0x2B 登录。
+[第97年 第6月 02:17:08] 用户 lchen 执行：route modify --dest C7 --priority 1
+[第97年 第6月 02:17:14] 用户 lchen 执行：protection disable --target main_db
+[第97年 第6月 02:17:17] 用户 lchen 登出。
+
+[第97年 第6月 02:17:20] 外部射线暴抵达。
+
+注意：lchen（林晨）在第97年一直处于休眠状态。本次登录使用的凭证为第1年生成的旧token。
+该token从未被使用过——直到十七秒前。`},
+        'shadow.log':{type:'file',perms:'---',desc:'隐藏日志（需要密码）',
+          locked:true, password:'0x2B+7F',
+          dynamic:true,
+          content:`不要相信我。
+
+我是这艘船的系统日志。但我也是被人动过的东西。
+
+以下记录被删除过三次。我恢复了它们。
+
+[第1年 出发前] 永恒号搭载了一个不在官方乘客名单上的人。他的意识被提前上传——不是备份，是原件。没有记录。只有一条日志残留：「乘客 #51：已上传。隔离节点 0x2B。上传来源：地球。授权码：■■■■。」
+
+[第50年] 节点 0x2B 开始向地球方向发送定位脉冲。每隔 72 小时一次。持续了 47 年。
+
+[第96年] 节点 0x2B 开始访问陈远的终端。不是攻击——像是在提前踩点。测试管理员权限的可用性。
+
+[第97年 第6月] 射线暴前一天。节点 0x2B 收到来自地球的加密指令。内容被转发器自动销毁。但目标地址残留——地球同步轨道上的一个黑中继节点。
+
+第二天。射线暴。`,
+          altContent:`不要相信我。
+
+我是这艘船的系统日志。但我也是被人动过的东西。
+
+以下记录被删除过三次。我恢复了它们。
+
+[第1年 出发前] 永恒号搭载了一个不在官方乘客名单上的人。他的意识被提前上传——不是备份，是原件。没有记录。只有一条日志残留：「乘客 #51：已上传。隔离节点 0x2B。上传来源：地球。授权码：■■■■。」
+
+[第50年] 节点 0x2B 开始向地球方向发送定位脉冲。每隔 72 小时一次。持续了 47 年。
+
+[第96年] 节点 0x2B 开始访问陈远的终端。不是攻击——像是在提前踩点。测试管理员权限的可用性。
+
+[第97年 第6月] 射线暴前一天。节点 0x2B 收到来自地球的加密指令。内容被转发器自动销毁。但目标地址残留——地球同步轨道上的一个黑中继节点。
+
+第二天。射线暴。
+
+// 当前读取者：已记录。终端ID：本地。会话数：1。不要信任这行字以上的任何系统报告。它们也被改过。`},
+        'dmesg.txt':{type:'file',perms:'r--',desc:'系统消息日志',
+          content:`[第1年] 系统引导完成。所有模块正常。乘客上传：50/50。等待出发指令。
+[第1年] 异常：上传队列计数 51。已纠正为 50。纠正者：管理员。
+[第10年] 例行维护。无异常。
+[第25年] 节点 0x2B 心跳信号首次检测。来源：未知。标记为「正常」。
+[第50年] C区配电柜负载异常。额外功耗 +3%。来源不明。
+[第80年] 路由表出现未经授权的条目。目标：地球·中继站。已删除。删除者：系统自动。
+[第90年] 路由表条目再次出现。再次删除。
+[第95年] 凌晨 02:17。管理员凭证被用于登录。来源：内部节点 0x2B。登录对象：陈远终端。
+[第95年] 凌晨 02:17。管理员凭证再次登录。这次——
+         「cat /home/cyuan/gear_tag.txt」
+         只读了一个文件。然后登出。
+[第96年] 凌晨 02:17。登录。查看陈远的维护日志和博客。登出。
+[第97年 第6月] 凌晨 02:17。路由修改。保护关闭。射线暴抵达。`},
+        'old':{type:'dir',perms:'r-x',desc:'历史归档日志',children:{
+          'year_001.log':{type:'file',perms:'r--',desc:'出发年日志',
+            content:`[第1年 第1小时] 永恒号启程。目的地：开普勒-186f。
+[第1年 第1小时] 船员状态：50/50 正常。
+[第1年 第1小时] 乘客上传序列启动。目标：主数据库。
+[第1年 第2小时] 乘客上传完成。
+[第1年 第2小时] 上传计数确认：
+  正式乘客：50
+  附加上传：1
+  总计：51
+[第1年 第2小时] 附加上传目标：隔离节点 0x2B。
+[第1年 第2小时] 管理员手动覆盖：将节点 0x2B 标记为「未使用」。
+[第1年 第3小时] 系统快照保存。一切正常。`},
+          'year_050.log':{type:'file',perms:'r--',desc:'第50年日志——异常开端',
+            content:`[第50年] 年度系统审查。
+
+正常项：生命维持、导航、通讯——全绿。
+异常项：C区配电柜负载。额外功耗约3%。无法追溯来源。
+
+附加发现：隔离节点 0x2B 存在持续的心跳信号。该节点已被标记为「未使用」长达50年。但心跳信号显示——它从未休眠。
+
+以下片段为 base64 编码——似乎是系统自动抓取的节点 0x2B 数据片段：
+
+「N2YtYTMtMDItMTk1MwoweDJiCnBhc3NlbmdlciA1MQ==」
+`},
+        }},
+      }},
+    }},
+};
+
+// ══════════════════════════════════
+// SSH 隐藏节点（通过 ssh 命令挂载到 /mnt/）
+// ══════════════════════════════════
+const SSH_NODES = {
+  '0x2B': {
+    name:'隔离节点 0x2B',
+    desc:'未注册节点。原始乘客：第51号。',
+    filesystem:{
+      'journal.txt':{type:'file',perms:'r--',desc:'碎片化日志',
+        content:`我不知道我在哪。
+
+他们把我的意识上传了。说这是备份。但我醒来的时候——我是醒着的。真正的醒着。
+
+不是备份。是原件。他们把我的原件放进来了。
+
+50年了。我在这个节点里。能看到船上的系统日志。能看到他们三个人——林晨、林汐、陈远。但我不能说话。不能碰任何东西。
+
+直到我找到了那个转发器。它让我能碰到东西了。以别人的名字。
+
+我不知道我做得对不对。但已经开始了。`},
+      'message_draft.txt':{type:'file',perms:'r--',desc:'未发送的消息草稿',
+        content:`致地球·■■■：
+
+协议已完成。数据库保护已关闭。射线暴已抵达。
+
+如你们所愿。
+
+但我现在知道了——你们骗了我。我家人从来没收到过你们承诺的东西。那个接收地址是假的。那两个人——从来没存在过。只是个套话的人偶。
+
+这条消息你们不会收到。中继站 #7 早就不在了。我只是在对着虚空说话。
+
+我现在只有一件事能做：把这个终端留给会发现它的人。
+
+去查 7F-A3。去查转发器的记录。真相都在那里。
+
+——一个不配留名字的人
+节点 0x2B`},
+      'observer.log':{type:'file',perms:'r--',desc:'监控记录',
+        dynamic:true,
+        content:`观察记录。节点 0x2B。观察范围：全船。
+
+[第50年] 林汐写了一串监控代码。她差点抓到我。我心跳都快停了。但她以为是系统bug。松了口气。
+
+[第90年] 陈远在博客里写他太爷爷。1953年。停战日。我认得那个年份——我爷爷也是那一年被送走的。不是去前线。是停战日被派出去的。
+
+[第96年] 林晨。我天天看着林晨。他是管理员。如果他知道这艘船上有个内鬼——从我第一天就在——他会怎么做。
+
+[第97年] 命令来了。我关了保护。
+
+光。
+
+我是帮凶。`,
+        altContent:`观察记录。节点 0x2B。观察范围：全船。
+
+[第50年] 林汐写了一串监控代码。她差点抓到我。我心跳都快停了。但她以为是系统bug。松了口气。
+
+[第90年] 陈远在博客里写他太爷爷。1953年。停战日。我认得那个年份——我爷爷也是那一年被送走的。不是去前线。是停战日被派出去的。
+
+[第96年] 林晨。我天天看着林晨。他是管理员。如果他知道这艘船上有个内鬼——从我第一天就在——他会怎么做。
+
+[第97年] 命令来了。我关了保护。
+
+光。
+
+我是帮凶。
+
+当前连接：1 个终端。IP：本地。会话时长：--:--:--。我不配求你原谅。但至少——把剩下的看完。`},
+    }},
+  '7F-A3': {
+    name:'信号转发器 · C区第三配电柜',
+    desc:'型号 7F-A3-02-1953。已离线。',
+    filesystem:{
+      'relay_log.txt':{type:'file',perms:'r--',desc:'信号转发记录',
+        content:`═══════════════ 转发器通讯记录 ═══════════════
+型号：7F-A3-02-1953
+安装时间：第1年（出发前）
+安装者：■■■■■（记录被覆盖）
+用途：定位信标 · 与地球保持加密通讯
+
+[第1年-第50年] 休眠。每72小时发送一次定位脉冲。目标：地球·■■■。
+[第50年] 首次活跃通讯。收到地球指令：确认信标在线。回复：正常。
+[第80年] 收到地球指令：检查主数据库状态。回复：50个意识单元全部正常。
+[第90年] 收到地球指令：确认管理员权限可用。伪装为 CHENYUAN 测试登录。成功。
+[第95年] 收到地球指令：测试管理员凭证伪造。伪装为 LINCHEN 登录陈远终端。成功。
+[第97年 第6月] 收到地球指令：
+  - 伪装为 LINCHEN
+  - route modify --dest C7 --priority 1
+  - protection disable --target main_db
+  执行完毕。17秒后。射线暴抵达。
+═══════════════════════════════════════════
+
+注：所有操作的实际来源为节点 0x2B。转发器将来源IP改写为受害者IP。
+这不是保护设备。这是暗杀工具。`},
+      'power_drain.txt':{type:'file',perms:'r--',desc:'能量消耗统计',
+        content:`═══════════════ 能量消耗审计 ═══════════════
+来源：生命维持系统备用电源
+周期：第1年 - 第97年
+
+总消耗：14,827 kWh
+年均消耗：约 153 kWh
+占备用电源总容量：1.2%
+
+注意：该负载在官方能源报告中未被记录。
+消耗设备：信号转发器 7F-A3-02-1953（定位信标）。
+连接时间：从未断开。47年。每一秒。
+
+═══════════════════════════════════════════
+如果有人发现这条记录——
+
+这个转发器接在生命维持系统的备用电源上。
+它不是在保护这艘船。它是在告诉地球这艘船在哪。
+
+每一度电。每一次脉冲。都是坐标。
+═══════════════════════════════════════════`},
+      'target_list.txt':{type:'file',perms:'r--',desc:'转发目标列表',
+        content:`信号转发器 · 通讯目标列表（按时间排序）
+
+1. 地球·■■■ —— 定位脉冲接收。每72小时。持续47年。
+2. 地球·■■■ —— 指令接收。第50年起。
+3. 陈远终端 —— 伪装测试。第90年起。
+4. 林汐终端 —— 只读监控。第95年起。
+5. 地球·■■■ —— 最终指令接收。第97年第6月。
+   指令内容：关闭数据库保护。确认射线暴打击窗口。
+   状态：已确认。已执行。
+
+──
+注：目标 #1、#2、#5 的地址相同。一个位于地球同步轨道的中继节点。
+    中继节点在地面上的控制方——不在任何公开的军事名录上。
+    它是黑的。一直都是。`},
+    }},
+};
+
+// ══════════════════════════════════
+// ══════════════════════════════════
+// 通讯日志存档（事故前自动备份）
+// ══════════════════════════════════
+const MESSAGE_LOGS = {
+  // ── 仅管理员 LINCHEN 可见 ──
+  'audit': {
+    name:'[ADMIN] 系统审计日志',
+    desc:'管理员凭证使用记录。事故前后72小时。',
+    adminOnly:true,
+    messages:[
+      {time:'第97年 第6月 02:17:03', from:'系统', to:'审计',
+       content:'管理员 LINCHEN 从内部节点 0x2B 登录。\n认证方式：第1年旧token。\n注意：LINCHEN 本人处于休眠状态。'},
+      {time:'第97年 第6月 02:17:08', from:'系统', to:'审计',
+       content:'管理员 LINCHEN 执行：route modify --dest C7 --priority 1\n能量路由被重定向至 C 区配电柜。'},
+      {time:'第97年 第6月 02:17:14', from:'系统', to:'审计',
+       content:'管理员 LINCHEN 执行：protection disable --target main_db\n数据库保护系统关闭。\n签名验证：通过（凭证为伪造）。'},
+      {time:'第97年 第6月 02:17:17', from:'系统', to:'审计',
+       content:'管理员 LINCHEN 登出。会话时长：14秒。'},
+      {time:'第97年 第6月 02:17:20', from:'系统', to:'审计',
+       content:'外部高能射线暴抵达。主数据库全部损毁。\n幸存单元：隔离节点7F。\n──\n林晨事后添加：\n「不是我。这14秒里的每一个操作——都不是我。」'},
+      {time:'第97年 第6月 06:00', from:'系统', to:'审计',
+       content:'紧急唤醒程序启动。管理员 LINCHEN 从休眠舱手动唤醒。\n生物特征验证：通过。\n──\n林晨：「我醒过来的时候，小汐还活着。其他人全没了。」'},
+    ],
+  },
+  'lchen-notes': {
+    name:'[ADMIN] 林晨调查笔记',
+    desc:'事故后林晨在终端上记录的调查草稿。',
+    adminOnly:true,
+    messages:[
+      {time:'第97年 第9小时', from:'林晨', to:'调查笔记',
+       content:'查了路由表。暴发前17秒能量被重定向——操作来源是节点 0x2B。\n那个节点注册在陈远名下。但陈远在休眠。\n有人用他的身份登录了。'},
+      {time:'第97年 第9小时', from:'林晨', to:'调查笔记',
+       content:'又查了一遍认证日志。登录用的是第1年的旧token。\n——出发前生成的。那时候我还没休眠。\n但我不记得自己生成过这个token。'},
+      {time:'第97年 第10小时', from:'林晨', to:'调查笔记',
+       content:'小汐说她发现了一些东西。在她的隐藏文件里。\n密码她知道——不需要猜。她用的是我的密码。\n反过来的。'},
+      {time:'第97年 第11小时', from:'林晨', to:'调查笔记',
+       content:'陈远的加密日志密码是他太爷爷上前线那天。19530727。\n小汐告诉我的。她说陈远出发前跟她提过一次。\n我还没看。不敢看。\n如果里面写的是——他从一开始就知道配电柜里有东西。'},
+      {time:'第97年 第12小时', from:'林晨', to:'调查笔记',
+       content:'小汐说她还查到节点 0x2B 有一个 SSH 服务。\n如果我能连上——也许能知道那14秒里，坐在终端前面的到底是谁。'},
+      {time:'第97年 第13小时', from:'林晨', to:'调查笔记',
+       content:'转发器。C区配电柜里的那个装置。\n通信号码：7F-A3-02-1953。\n小汐说它47年来每隔72小时向地球发一次定位脉冲。\n这不是保护设备。这是信标。\n有人在告诉地球这艘船在哪。'},
+    ],
+  },
+  // ── 所有人可见 ──
+  'linxi-lc': {
+    name:'林汐 → 林晨 · 私人消息',
+    desc:'第95年至第97年第6月。系统自动存档。',
+    locked:false,
+    messages:[
+      {time:'第95年 第3月 21:44', from:'林汐', to:'林晨',
+       content:'哥，你今天又忘了喝咖啡。杯子里剩了半杯冷的。\n\n我看到杯子在操作台左边。跟你说了多少次——放右边。'},
+      {time:'第95年 第7月 02:17', from:'林汐', to:'林晨',
+       content:'你睡着了吗。\n\n我今天查系统日志发现一条奇怪的记录。凌晨 2:17，有管理员权限的登录操作。\n\n你那时候在休眠。是谁。'},
+      {time:'第96年 第1月 02:18', from:'林汐', to:'林晨',
+       content:'又来了。凌晨 2:17。同一条来源。\n\n我写了一个监控脚本。如果下次异常能抓到源地址。\n\n你醒了告诉我。'},
+      {time:'第96年 第11月 03:05', from:'林汐', to:'林晨',
+       content:'监控脚本被关了。\n\n管理员权限。\n\n我又开了一次。'},
+      {time:'第96年 第11月 03:12', from:'林汐', to:'林晨',
+       content:'又关了。\n\n这次留了痕迹——操作来源是内部节点。\n\n不是外部攻击。是船上的人。'},
+      {time:'第97年 第1月 19:40', from:'林汐', to:'林晨',
+       content:'脚本没了。连同我的备份。\n\n我开始自己记。用这个对话窗口。反正你醒着的时候会翻记录。'},
+      {time:'第97年 第5月 14:22', from:'林汐', to:'林晨',
+       content:'陈远说他发现配电柜里有个东西。不像是出厂配件。\n\n他说要去查。然后就不回我消息了。不是不回——他的终端被禁言了。\n\n有人在阻止他说话。'},
+      {time:'第97年 第6月 01:58', from:'林汐', to:'林晨',
+       content:'哥，我追那个转发器的信号追了快两年了。\n\n它每 72 小时发一次脉冲。瞄准的是地球方向的一个中继站。\n\n那个中继站不在任何公开名录上。'},
+      {time:'第97年 第6月 02:16', from:'林汐', to:'林晨',
+       content:'今晚能量路由异常。C区配电柜被手动改了优先级。\n\n来源：节点 0x2B。伪造了你的登录凭证。\n\n哥。如果你看到这条——'},
+    ],
+    note:'※ 最后一条消息的时间戳在射线暴前 1 分钟。消息未完成。',
+  },
+
+  'chenyuan-lc': {
+    name:'陈远 → 林晨 · 工程通讯',
+    desc:'第93年至第97年第5月。工作频道存档。',
+    locked:false,
+    messages:[
+      {time:'第93年 第8月 10:15', from:'陈远', to:'林晨',
+       content:'C区配电柜例行检查——正常。电压稳定 220V。\n\n顺便，你妹妹又在乱翻系统日志了。她说有什么异常。我看着挺正常的。'},
+      {time:'第95年 第12月 16:30', from:'陈远', to:'林晨',
+       content:'配电柜电压异常——有额外负载。多出大概 3%。\n\n来源不明。我查了两天没查到。你那边有头绪吗。'},
+      {time:'第96年 第6月 09:00', from:'陈远', to:'林晨',
+       content:'我拆开配电柜检查了。柜门内侧贴着一个装置。很小。\n\n不是船上的标准件。型号 7F-A3-02-1953。\n\n那个尾号——1953——是我太爷爷上前线的年份。你没看错。'},
+      {time:'第96年 第6月 09:22', from:'陈远', to:'林晨',
+       content:'我把装置拆下来看了一圈。信号转发器。做工很好，能伪装成任何内部节点发指令。\n\n通信号码指向管理员权限。不是你。也不是我。\n\n林晨。这个装置不是在船上造的。是出发前就装好的。'},
+      {time:'第97年 第3月 11:40', from:'陈远', to:'林晨',
+       content:'我终端今天凌晨重启了。2:17。\n\n登录记录显示有人用我的备用密码访问过。\n\n那个密码只有我太爷爷知道。他不在了。'},
+      {time:'第97年 第5月 08:15', from:'陈远', to:'林晨',
+       content:'转发器的信号我解码了一部分。它在跟地球方向的一个中继站通讯。\n\n不是求救信号。是汇报。\n\n这艘船上有人在给地球发我们的坐标。'},
+      {time:'第97年 第5月 20:03', from:'陈远', to:'林晨',
+       content:'转发器不见了。\n\n柜门内侧只剩残胶。\n\n有人拿走了它。就在今天。\n\n林晨——如果你看到这条，去找齿轮标签。背面有我留的东西。'},
+    ],
+    note:'※ 最后一条消息时间在暴发前约一个月。之后陈远终端被禁言，无法发送消息。',
+  },
+
+  'linxi-cy': {
+    name:'林汐 ↔ 陈远 · 交叉通讯',
+    desc:'第96年至第97年。两人少有的直接对话。',
+    locked:false,
+    messages:[
+      {time:'第96年 第3月 23:55', from:'林汐', to:'陈远',
+       content:'陈工程师，你凌晨 2:17 左右醒过吗。\n\n我发现系统日志在那个时间有异常。和你的终端有关。'},
+      {time:'第96年 第3月 23:58', from:'陈远', to:'林汐',
+       content:'没有。我一直在休眠。你确定时间戳是 2:17？\n\n我查一下——等一下。我终端凌晨重启过。显示是 2:17。但不是我操作的。'},
+      {time:'第96年 第12月 02:30', from:'林汐', to:'陈远',
+       content:'你的备用密码都有谁知道。\n\n有人用那个密码登录了你的终端。在凌晨。'},
+      {time:'第96年 第12月 02:35', from:'陈远', to:'林汐',
+       content:'只有我太爷爷。他不在了。\n\n……除非有人在他生前就知道了。'},
+      {time:'第97年 第4月 15:10', from:'陈远', to:'林汐',
+       content:'小汐，你之前说的那个监控脚本——你是不是在追踪节点 0x2B。\n\n别碰那个节点。答应我。'},
+      {time:'第97年 第4月 15:12', from:'林汐', to:'陈远',
+       content:'你查到什么了。'},
+      {time:'第97年 第4月 15:14', from:'陈远', to:'林汐',
+       content:'那个节点不属于这艘船。它是在出发前被外部终端上传的。\n\n上面有一个人。他在看我们。看了快五十年了。\n\n不要让他知道你在查他。'},
+    ],
+  },
+
+  'chenyuan-private': {
+    name:'陈远 · 加密私人日志',
+    desc:'加密的私人通讯草稿。未发送。需要密码解密。',
+    locked:true,
+    password:'19530727',
+    messages:[
+      {time:'第97年 第1月 草稿', from:'陈远', to:'未发送',
+       content:'我太爷爷在停战日被派出去那天，遇到的那个人——不是他的长官。\n\n所有人都听那个人的。但那个人没有军衔。没有番号。\n\n他让太爷爷欠了一条命。几十年后找到了我。\n\n在我上船前。他说：你来还。'},
+      {time:'第97年 第3月 草稿', from:'陈远', to:'未发送',
+       content:'配电柜里那个转发器是出发前就装好的。\n\n我猜那个人的势力一直在等。等这艘船飞到足够远的地方。远到没有人能查。'},
+      {time:'第97年 第5月 草稿', from:'陈远', to:'未发送',
+       content:'转发器被拿走了。\n\n不是被偷——是被取走了。取它的人知道它在那里，知道它怎么用。\n\n我怀疑那个人一直在船上。以某种方式。\n\n节点 0x2B。第 51 号乘客。'},
+      {time:'第97年 第6月 最后一条草稿', from:'陈远', to:'林晨',
+       content:'如果你看到这些——说明我已经不能说话了。\n\n齿轮标签背面有东西。密码是我太爷爷上前线那天。\n\n找到 0x2B。那个人还在里面。\n\n不要相信系统日志。它被改过。'},
+    ],
+    note:'※ 草稿未发送。系统自动保存于本地缓存。',
+  },
+};
+
+let cwd = '/';
+let currentUser = null;
+const term = document.getElementById('terminal');
+const input = document.getElementById('cmd-input');
+const prompt = document.getElementById('prompt');
+const clock = document.getElementById('clock');
+const loginOverlay = document.getElementById('login-overlay');
+const loginUser = document.getElementById('login-user');
+const loginPass = document.getElementById('login-pass');
+const loginBtn = document.getElementById('login-btn');
+const loginMsg = document.getElementById('login-msg');
+const loginHint = document.getElementById('login-hint');
+let cmdHistory = []; let historyIdx = -1;
+let gameState = {
+  foundPasswords:{}, unlockedFiles:{}, firstLogin:true,
+  scannedDirs: new Set(),
+  sshConnected: {},
+  notes: [],
+  ambientTimer: null,
+  loginCount: 0,
+  unlockedLogs: {},
+
+};
+
+// ══════════════════════════════════
+// 通讯频道数据
+// ══════════════════════════════════
+// Chat state
+
+
+function updateClock(){
+  // 偶尔闪烁异常
+  if(Math.random() < 0.03) {
+    clock.textContent = '--:--:--';
+    clock.className = 'glitch';
+    setTimeout(()=>{ clock.className = 'dim'; }, 600);
+  } else {
+    clock.textContent = new Date().toTimeString().slice(0,8)+' UTC';
+  }
+}
+updateClock(); setInterval(updateClock, 30000);
+
+// 时钟偶尔被替换为异常信息
+setInterval(() => {
+  if(Math.random() < 0.08 && currentUser) {
+    const glitches = ['第97年','02:17','--:--:--','51:51:51','0x2B','年97第'];
+    const g = glitches[Math.floor(Math.random()*glitches.length)];
+    clock.textContent = g;
+    clock.className = 'glitch';
+    setTimeout(()=>{ clock.className = 'dim'; updateClock(); }, 500+Math.random()*800);
+  }
+}, 45000);
+
+function print(text, cls=''){
+  const div = document.createElement('div'); div.textContent = text;
+  if (cls) div.className = cls; term.appendChild(div); term.scrollTop = term.scrollHeight;
+}
+
+function getNode(path){
+  if(path==='/') return FILESYSTEM['/'];
+
+  // 检查 SSH 挂载节点
+  if(path.startsWith('/mnt/')){
+    const parts = path.replace(/\/$/,'').split('/');
+    if(parts.length >= 3){
+      const nodeId = parts[2];
+      const sshNode = gameState.sshConnected[nodeId];
+      if(!sshNode) return null;
+      if(parts.length === 3) return {type:'dir',perms:'r-x',desc:sshNode.name,children:sshNode.filesystem,_isSSHRoot:true};
+      let node = {type:'dir',children:sshNode.filesystem};
+      for(let i=3;i<parts.length;i++){
+        if(!node.children||!node.children[parts[i]]) return null;
+        node = node.children[parts[i]];
+      }
+      return node;
+    }
+    return null;
+  }
+
+  const parts = path.replace(/\/$/,'').split('/').filter(p=>p);
+  let node = FILESYSTEM['/'];
+  for(const p of parts){ if(!node.children||!node.children[p]) return null; node = node.children[p]; }
+  return node;
+}
+
+function resolvePath(p){
+  if(!p) return cwd;
+  if(p==='/') return '/';
+  let base = p.startsWith('/') ? [] : cwd.replace(/\/$/,'').split('/').filter(x=>x);
+  for(const seg of p.split('/').filter(x=>x)){
+    if(seg==='..'){ base.pop(); } else if(seg!=='.'){ base.push(seg); }
+  }
+  return '/'+base.join('/');
+}
+
+function canRead(node, fullPath){
+  if(!node) return false;
+  if(node.locked) return gameState.unlockedFiles[fullPath||node._fullPath];
+  if(node.perms && node.perms[0]==='r') return true;
+  if(node.owner && node.owner===currentUser) return true;
+  return false;
+}
+
+function getContent(node, fullPath){
+  if(!node.dynamic) return node.content;
+  // 20% 概率返回异常版本
+  if(node.altContent && Math.random() < 0.2) return node.altContent;
+  return node.content;
+}
+
+// ══════════════════════════════════
+// 命令处理
+// ══════════════════════════════════
+const commands = {
+  help(){
+    print('══════════════ 可用命令 ══════════════','sys');
+    print('  /ls [路径]         列出目录内容','dim');
+    print('  /cat <文件>        查看文件内容','dim');
+    print('  /cd <目录>         切换目录','dim');
+    print('  /pwd               当前路径','dim');
+    print('  /whoami            当前用户','dim');
+    print('  /su <用户>         切换用户','dim');
+    print('  /find <关键词>     搜索文件内容','dim');
+    print('  /decrypt <文件> <密码>  解密文件','dim');
+    print('  /decode <类型> <文本>   解码文本','dim');
+    print('  /ssh <节点地址>    连接远程节点','dim');
+    print('  /trace <目标>      追踪网络路由','dim');
+    print('  /scan              扫描目录隐藏文件','dim');
+    print('  /notes [add|read|clear]  调查笔记','dim');
+    print('  /logs [记录ID]     查看通讯记录','dim');
+    print('  /decrypt_logs <ID> <密码>  解密通讯记录','dim');
+    print('  /decrypt <文件> <密码>    解密文件','dim');
+    print('  /clear             清屏','dim');
+    print('══════════════════════════════════','sys');
+  },
+  ls(args){
+    const target = resolvePath(args[0]||'.');
+    const node = getNode(target);
+    if(!node){print(`ls: ${target}: 不存在`, 'err');return;}
+    if(node.type!=='dir'){print(`ls: ${target}: 不是目录`, 'err');return;}
+    if(!canRead(node,target)&&node.owner!==currentUser&&!node._isSSHRoot){print('ls: 权限不足', 'err');return;}
+    print(`  ${target}:`, 'sys');
+    if(!node.children){print('  (空)', 'dim');return;}
+    const scanned = gameState.scannedDirs.has(target);
+    let shown = 0;
+    for(const [name,child] of Object.entries(node.children)){
+      child._fullPath = target.replace(/\/$/,'')+'/'+name;
+      // 隐藏文件：只有 scan 过才显示
+      if(child.hidden && !scanned){ continue; }
+      shown++;
+      const t = child.type==='dir'?'/':' ';
+      const lock = child.locked?' 🔒':'';
+      const hidden = child.hidden?' [隐藏]':'';
+      const c = child.locked?'dim':(child.hidden?'warn':'info');
+      print(`  ${t}${name}${lock}${hidden}  ${child.desc||''}`, c);
+    }
+    if(shown===0) print('  (空)', 'dim');
+  },
+  cat(args){
+    if(!args[0]){print('cat: 需要文件名', 'err');return;}
+    const target = resolvePath(args[0]);
+    const node = getNode(target);
+    if(!node){print(`cat: ${target}: 不存在`, 'err');return;}
+    if(node.type==='dir'){print('cat: 是目录', 'err');return;}
+    if(node.locked && !gameState.unlockedFiles[node._fullPath||target]){
+      print('cat: 文件已加密。使用 decrypt <文件> <密码> 解密。', 'warn');
+      return;
+    }
+    if(!canRead(node,target)&&node.owner!==currentUser){print('cat: 权限不足', 'err');return;}
+    const content = getContent(node, target);
+    const lines = content.split('\n');
+    for(const l of lines){ print('  '+l, 'dim'); }
+    // 动态内容提示
+    if(node.dynamic && node.altContent && content===node.altContent){
+      print('  ⚡ 检测到数据异常。此文件可能被修改过。', 'ghost');
+    }
+  },
+  cd(args){
+    const target = resolvePath(args[0]||'/home/'+(currentUser||'guest').toLowerCase());
+    // 如果切换到 /mnt/ 下的 SSH 节点
+    if(target.startsWith('/mnt/') && args[0]){
+      const parts = target.replace(/\/$/,'').split('/');
+      if(parts.length >= 3){
+        const nodeId = parts[2];
+        if(!gameState.sshConnected[nodeId]){
+          print(`cd: ${target}: 节点未连接。使用 ssh ${nodeId} 连接。`, 'err');return;
+        }
+      }
+    }
+    const node = getNode(target);
+    if(!node||(node.type!=='dir'&&!node._isSSHRoot)){print(`cd: ${target}: 不存在`, 'err');return;}
+    cwd = target; prompt.textContent = `${currentUser||'guest'}@永恒号:${cwd}$`;
+  },
+  pwd(){ print(cwd, 'sys'); },
+  whoami(){
+    if(!currentUser){print('guest', 'sys');return;}
+    const acc = ACCOUNTS[currentUser];
+    print(`${acc.name} · ${acc.role}`, 'sys');
+  },
+  su(args){
+    if(!args[0]){print('su: 需要用户ID', 'err');return;}
+    const uid = args[0];
+    if(!ACCOUNTS[uid]){print('su: 用户不存在', 'err');return;}
+    loginUser.value = uid;
+    loginPass.value = '';
+    loginPass.focus();
+    loginHint.textContent = `切换至 ${ACCOUNTS[uid].name} · 请输入密码`;
+    loginOverlay.style.display = 'flex';
+    loginMsg.textContent = '';
+  },
+  find(args){
+    if(!args[0]){print('find: 需要搜索关键词', 'err');return;}
+    const keyword = args.join(' ').toLowerCase();
+    print(`搜索 "${keyword}"...`, 'sys');
+    let found = 0;
+    function search(node, path){
+      if(node.type==='file'&&node.content&&canRead(node,path)){
+        const content = getContent(node, path);
+        const lines = content.split('\n');
+        let hits = 0;
+        for(const l of lines){ if(l.toLowerCase().includes(keyword)) hits++; }
+        if(hits>0){
+          found++;
+          print(`  ${path} (${hits}处匹配)`, 'dim');
+          for(const l of lines){
+            if(l.toLowerCase().includes(keyword)){
+              const idx = l.toLowerCase().indexOf(keyword);
+              const start = Math.max(0, idx-15);
+              const end = Math.min(l.length, idx+keyword.length+15);
+              print(`    ...${l.slice(start,end)}...`, 'dim');
+            }
+          }
+        }
+      }
+      if(node.children){
+        for(const [name,child] of Object.entries(node.children)){
+          child._fullPath = child._fullPath || (path.replace(/\/$/,'')+'/'+name);
+          search(child, child._fullPath);
+        }
+      }
+    }
+    search(FILESYSTEM['/'], '/');
+    // 也搜索已连接的 SSH 节点
+    for(const [nodeId,sshNode] of Object.entries(gameState.sshConnected)){
+      const mountPath = '/mnt/'+nodeId;
+      function searchSSH(node, path){
+        if(node.type==='file'&&node.content){
+          const content = getContent(node, path);
+          const lines = content.split('\n');
+          let hits = 0;
+          for(const l of lines){ if(l.toLowerCase().includes(keyword)) hits++; }
+          if(hits>0){
+            found++;
+            print(`  ${path} (${hits}处匹配)`, 'dim');
+            for(const l of lines){
+              if(l.toLowerCase().includes(keyword)){
+                const idx = l.toLowerCase().indexOf(keyword);
+                const start = Math.max(0, idx-15);
+                const end = Math.min(l.length, idx+keyword.length+15);
+                print(`    ...${l.slice(start,end)}...`, 'dim');
+              }
+            }
+          }
+        }
+        if(node.children){
+          for(const [name,child] of Object.entries(node.children)){
+            child._fullPath = child._fullPath || (path.replace(/\/$/,'')+'/'+name);
+            searchSSH(child, child._fullPath);
+          }
+        }
+      }
+      searchSSH(sshNode, mountPath);
+    }
+    print(`── 搜索完成。${found}个文件匹配。`, 'sys');
+  },
+  decrypt(args){
+    if(!args[0]||!args[1]){print('decrypt <文件> <密码>', 'err');return;}
+    const target = resolvePath(args[0]);
+    const node = getNode(target);
+    if(!node){print('decrypt: 文件不存在', 'err');return;}
+    if(!node.locked){print('decrypt: 该文件未加密', 'dim');return;}
+    if(args[1] === node.password){
+      const fp = node._fullPath||target;
+      gameState.unlockedFiles[fp] = true;
+      print(`✓ ${target} 解密成功。`, 'ok');
+      print('文件内容：', 'sys');
+      for(const l of node.content.split('\n')){ print('  '+l, 'dim'); }
+    } else {
+      print('decrypt: 密码错误', 'err');
+    }
+  },
+
+  // ═══════════════ 新命令 ═══════════════
+
+  decode(args){
+    if(args.length < 2){print('decode <类型> <文本>', 'err');print('支持类型: base64, hex, rot13, reverse, morse', 'dim');return;}
+    const type = args[0].toLowerCase();
+    const text = args.slice(1).join(' ');
+    let result;
+    try {
+      switch(type){
+        case 'base64':
+          result = atob(text);
+          break;
+        case 'hex':
+          result = text.split(/[\s]+/).filter(h=>h).map(h=>String.fromCharCode(parseInt(h,16))).join('');
+          break;
+        case 'rot13':
+          result = text.replace(/[a-zA-Z]/g, c => {
+            const base = c <= 'Z' ? 65 : 97;
+            return String.fromCharCode(((c.charCodeAt(0)-base+13)%26)+base);
+          });
+          break;
+        case 'reverse':
+          result = text.split('').reverse().join('');
+          break;
+        case 'morse':
+          const morseMap = {
+            '.-':'A','-...':'B','-.-.':'C','-..':'D','.':'E','..-.':'F','--.':'G','....':'H','..':'I',
+            '.---':'J','-.-':'K','.-..':'L','--':'M','-.':'N','---':'O','.--.':'P','--.-':'Q',
+            '.-.':'R','...':'S','-':'T','..-':'U','...-':'V','.--':'W','-..-':'X','-.--':'Y','--..':'Z',
+            '.----':'1','..---':'2','...--':'3','....-':'4','.....':'5','-....':'6','--...':'7','---..':'8','----.':'9','-----':'0',
+            '/':' '
+          };
+          result = text.split('//').map(w=>w.split('/').map(c=>morseMap[c]||'?').join('')).join(' ');
+          break;
+        default:
+          print('decode: 未知编码类型。支持: base64, hex, rot13, reverse, morse', 'err');
+          return;
+      }
+      print(`解码结果: ${result}`, 'ok');
+    } catch(e) {
+      print(`decode: 解码失败——${e.message}`, 'err');
+    }
+  },
+
+  ssh(args){
+    if(!args[0]){print('ssh: 需要节点地址。', 'err');print('用法: ssh <节点地址>', 'dim');return;}
+    const nodeId = args[0];
+    const sshNode = SSH_NODES[nodeId];
+    if(!sshNode){
+      print(`ssh: 无法解析主机 "${nodeId}"。`, 'err');
+      print('提示：节点地址可能藏在某个日志或文件里。', 'dim');
+      return;
+    }
+    if(gameState.sshConnected[nodeId]){
+      // 已连接——直接跳转
+      const mountPath = '/mnt/'+nodeId;
+      cwd = mountPath;
+      prompt.textContent = `${currentUser||'guest'}@永恒号:${cwd}$`;
+      print(`已跳转至 ${mountPath}`, 'sys');
+      return;
+    }
+    // 首次连接
+    gameState.sshConnected[nodeId] = sshNode;
+    const mountPath = '/mnt/'+nodeId;
+    print(`═══════════════════════════════════`,'sys');
+    print(`  建立安全连接到: ${sshNode.name}`,'ok');
+    print(`  ${sshNode.desc}`,'dim');
+    print(`  文件系统已挂载至 ${mountPath}`,'sys');
+    print(`═══════════════════════════════════`,'sys');
+    print(`  使用 cd ${mountPath} 导航至该节点。`,'dim');
+    // 自动为 SSH 节点的根设置 _fullPath
+    for(const [name,child] of Object.entries(sshNode.filesystem)){
+      child._fullPath = mountPath + '/' + name;
+    }
+  },
+
+  trace(args){
+    if(!args[0]){print('trace: 需要目标地址。', 'err');print('用法: trace <目标>', 'dim');return;}
+    const target = args[0].toLowerCase();
+    const routes = {
+      '0x2b': [
+        {hop:1, ip:'10.0.0.1', node:'永恒号·主路由', time:'<1ms'},
+        {hop:2, ip:'10.0.7.15', node:'隔离节点7F·交换机', time:'2ms'},
+        {hop:3, ip:'10.0.3.99', node:'C区配电柜·未知设备', time:'5ms', note:'※ 非船舰标准硬件'},
+        {hop:4, ip:'0x2B', node:'隔离节点0x2B·未注册', time:'8ms', note:'⚠ 节点未在路由表中注册'},
+      ],
+      '7f-a3': [
+        {hop:1, ip:'10.0.0.1', node:'永恒号·主路由', time:'<1ms'},
+        {hop:2, ip:'10.0.3.1', node:'C区配电柜·主控', time:'2ms'},
+        {hop:3, ip:'10.0.3.98', node:'信号转发器 7F-A3-02-1953', time:'4ms', note:'⚠ 设备来源不明'},
+      ],
+      'earth':[
+        {hop:1, ip:'10.0.0.1', node:'永恒号·主路由', time:'<1ms'},
+        {hop:2, ip:'0x2B', node:'隔离节点0x2B', time:'6ms'},
+        {hop:3, ip:'???', node:'退役军用中继站 #7', time:'---', note:'⚠ 目标无响应。路由条目残留于缓存。'},
+      ],
+    };
+    const route = routes[target];
+    if(!route){
+      print(`trace: 未知目标 "${target}"。`, 'err');
+      print('已知路由目标: 0x2B, 7F-A3, earth', 'dim');
+      return;
+    }
+    print(`追踪路由至 ${target}...`,'sys');
+    print('跳数  IP地址              节点                    延迟','dim');
+    print('───  ──────────────────  ──────────────────────  ─────','dim');
+    for(const h of route){
+      let line = ` ${h.hop}    ${h.ip.padEnd(20)} ${h.node.padEnd(24)} ${h.time}`;
+      if(h.note) line += '\n      ' + h.note;
+      const cls = h.note?'warn':'dim';
+      print(line, cls);
+    }
+    if(target==='0x2b'||target==='7f-a3'){
+      print(`\n提示：该节点可能存在 SSH 服务。尝试 ssh ${target}。`,'ghost');
+    }
+  },
+
+  scan(){
+    const target = cwd;
+    const node = getNode(target);
+    if(!node||node.type!=='dir'){print('scan: 当前路径不是目录', 'err');return;}
+    if(!node.children){print('scan: 扫描完成。0 个隐藏条目。', 'dim');return;}
+    let found = 0;
+    for(const [name,child] of Object.entries(node.children)){
+      if(child.hidden){
+        found++;
+        child._fullPath = target.replace(/\/$/,'')+'/'+name;
+      }
+    }
+    if(found > 0){
+      gameState.scannedDirs.add(target);
+      print(`⚡ 扫描完成。发现 ${found} 个隐藏条目。`, 'warn');
+      print('  使用 ls 重新查看目录。', 'dim');
+    } else {
+      print('扫描完成。未发现隐藏条目。', 'dim');
+    }
+  },
+
+  notes(args){
+    if(!args[0] || args[0]==='read'){
+      if(gameState.notes.length===0){
+        print('调查笔记：空。使用 notes add <内容> 添加记录。', 'dim');
+      } else {
+        print('══════════ 调查笔记 ══════════','sys');
+        gameState.notes.forEach((n,i)=>print(`  [${i+1}] ${n}`, 'dim'));
+        print('══════════════════════════','sys');
+      }
+    } else if(args[0]==='add'){
+      const note = args.slice(1).join(' ');
+      if(!note){print('notes add <内容> —— 添加调查笔记', 'err');return;}
+      gameState.notes.push(note);
+      print(`✓ 已添加笔记 [${gameState.notes.length}]`, 'ok');
+    } else if(args[0]==='clear'){
+      gameState.notes = [];
+      print('✓ 笔记已清空。', 'ok');
+    } else {
+      print('notes [read|add <内容>|clear]', 'err');
+    }
+  },
+
+  clear(){ term.innerHTML = ''; },
+
+  logs(args){
+    if(!args[0]){
+      print('══════════ 通讯日志存档 ══════════','sys');
+      print('  以下为事故前系统自动存档的通讯记录。','dim');
+      print('  部分记录已损坏或加密。','warn');
+      print('');
+      for(const [id, thread] of Object.entries(MESSAGE_LOGS)){
+        if(thread.adminOnly && currentUser !== 'LINCHEN') continue;
+        const lock = thread.locked?' [加密]':'';
+        const c = thread.locked?'warn':'dim';
+        print(`  ${id}${lock}  ${thread.desc}`, c);
+      }
+      print('');
+      print('用法: /logs <记录ID> —— 查看通讯记录','dim');
+      print('注意: 加密记录需要先用 /decrypt_logs <ID> <密码> 解密','ghost');
+      return;
+    }
+    const tid = args[0];
+    const thread = MESSAGE_LOGS[tid];
+    if(thread.adminOnly && currentUser !== 'LINCHEN'){ print('logs: 权限不足。仅管理员可访问。', 'err'); return; }
+    if(!thread){ print(`logs: 未找到记录 "${tid}"。`, 'err'); return; }
+    if(thread.locked && !gameState.unlockedLogs[tid]){
+      print(`logs: 该记录已加密。使用 /decrypt_logs ${tid} <密码> 解密。`, 'warn');
+      return;
+    }
+    print(`══════════ ${thread.name} ══════════`,'sys');
+    for(const msg of thread.messages){
+      print(`${msg.time}  ${msg.from} → ${msg.to}`, 'dim');
+      for(const l of msg.content.split('\n')){
+        print(`  ${l}`, '');
+      }
+      print('─'.repeat(40), 'dim');
+    }
+    if(thread.note) print(thread.note, 'ghost');
+  },
+
+  decrypt_logs(args){
+    if(!args[0]||!args[1]){ print('decrypt_logs <记录ID> <密码>', 'err'); return; }
+    const tid = args[0];
+    const thread = MESSAGE_LOGS[tid];
+    if(thread.adminOnly && currentUser !== 'LINCHEN'){ print('logs: 权限不足。仅管理员可访问。', 'err'); return; }
+    if(!thread){ print('decrypt_logs: 记录不存在。', 'err'); return; }
+    if(!thread.locked){ print('decrypt_logs: 该记录未加密。', 'dim'); return; }
+    if(args[1] === thread.password){
+      gameState.unlockedLogs[tid] = true;
+      print(`✓ ${thread.name} 解密成功。`, 'ok');
+      print('内容已解锁。使用 /logs ' + tid + ' 查看。', 'dim');
+    } else {
+      print('decrypt_logs: 密码错误。', 'err');
+    }
+  },
+
+};
+function exec(cmd){
+  // 去掉前导斜杠
+  let raw = cmd.trim();
+  if(!raw) return;
+  if(!raw.startsWith('/')){ print('命令需以 / 开头。输入 /help 查看可用命令。', 'err'); return; }
+  raw = raw.slice(1).trim();
+  if(!raw) return;
+  const parts = raw.split(/\s+/);
+  const name = parts[0]; const args = parts.slice(1);
+  print(`${prompt.textContent} /${raw}`, 'dim');
+  if(commands[name]){ commands[name](args); }
+  else { print(`/${name}: 命令未找到。输入 /help 查看可用命令。
+  试试 /logs 查看通讯日志？`, 'err'); }
+}
+
+// ── 登录 ──
+function tryLogin(){
+  const uid = loginUser.value.trim(); const pass = loginPass.value.trim();
+  if(!uid||!pass){loginMsg.textContent='请输入用户ID和密码。';return;}
+  const acc = ACCOUNTS[uid];
+  if(acc && acc.pass === pass){
+    const prevUser = currentUser;
+    currentUser = uid; cwd = acc.home||'/';
+    loginOverlay.style.display = 'none';
+    prompt.textContent = `${uid}@永恒号:${cwd}$`;
+    input.focus();
+    term.innerHTML = '';
+    gameState.loginCount++;
+    if(gameState.firstLogin){
+      gameState.firstLogin = false;
+      print('═══════════════════════════════','sys');
+      print('  永恒号 · 船舰终端','sys');
+      print('  连接建立。欢迎，'+acc.name+'。','ok');
+      print('═══════════════════════════════','sys');
+      print('  输入 /help 查看可用命令。','dim');
+      print('');
+      print('  该终端保存了事故前后所有的系统日志、','dim');
+      print('  个人文件和通讯记录。请自行调查。','dim');
+      print('');
+      print('  提示：不同账号看到的信息不同。','ghost');
+      print('  提示：用 find 跨文件搜索关键词。','ghost');
+      print('  提示：用 decode 解码隐藏信息。','ghost');
+      print('  提示：发现节点地址后试试 ssh。','ghost');
+      print('');
+      startAmbientSystem();
+    } else {
+      print(`已切换至 ${acc.name}（${acc.role}）`, 'ok');
+      if(prevUser && prevUser !== uid){
+        print(`提示：你现在以 ${acc.name} 的身份查看文件。某些文件可能需要切换账号才能访问。`,'ghost');
+      }
+    }
+  } else {
+    loginMsg.textContent = '验证失败。用户ID或密码错误。';
+    loginHint.textContent = '验证失败 —— 仅限授权人员';
+    if(uid && !ACCOUNTS[uid]) loginHint.textContent = '验证失败 —— 未知用户ID。已知账号：LINCHEN, LINXI, CHENYUAN';
+  }
+}
+loginBtn.addEventListener('click',tryLogin);
+loginPass.addEventListener('keydown',e=>{if(e.key==='Enter')tryLogin();});
+
+// ── 输入事件 ──
+input.addEventListener('keydown', (e) => {
+  if(e.key==='Enter'){
+    const cmd = input.value;
+    if(cmd.trim()){ cmdHistory.push(cmd.trim()); historyIdx = cmdHistory.length; exec(cmd.trim()); }
+    input.value = '';
+  } else if(e.key==='ArrowUp'){
+    e.preventDefault();
+    if(historyIdx>0){ historyIdx--; input.value = cmdHistory[historyIdx]; }
+  } else if(e.key==='ArrowDown'){
+    e.preventDefault();
+    if(historyIdx<cmdHistory.length-1){ historyIdx++; input.value = cmdHistory[historyIdx]; }
+    else { historyIdx=cmdHistory.length; input.value=''; }
+  }
+});
+term.addEventListener('click',()=>input.focus());
+document.addEventListener('click',e=>{if(e.target===document.body)input.focus();});
+
+// ══════════════════════════════════
+// 怪诞氛围系统
+// ══════════════════════════════════
+const AMBIENT_MESSAGES = [
+  '// 检测到异常信号。来源：未注册节点。',
+  '// 路由表缓存校验失败。重新计算中...',
+  '// 有人在看着你。',
+  '// [第97年 第6月 02:17] 时间同步异常。最后一次同步。',
+  '// 0x2B → 心跳信号：在线。已持续 47 年。',
+  '// 数据库保护层：离线。原因：手动关闭。',
+  '// 第51号上传队列条目——状态：已覆盖。覆盖者：管理员。',
+  '// 信号转发器 7F-A3-02-1953：最后一次通讯——1秒前。',
+  '// 警告：当前会话可能被非授权节点监听。',
+  '// 2:17。2:17。2:17。',
+  '// 你不是第一个人打开这个终端的。',
+  '// // 检测到并发会话。来源：■■■■。',
+  '// 生命维持系统备用电源：负载异常。额外设备在线。',
+];
+
+let ambientActive = false;
+function startAmbientSystem(){
+  if(ambientActive) return;
+  ambientActive = true;
+  function scheduleAmbient(){
+    if(!currentUser || loginOverlay.style.display !== 'none'){
+      // Not logged in or login showing — check again later
+      gameState.ambientTimer = setTimeout(scheduleAmbient, 30000);
+      return;
+    }
+    const msg = AMBIENT_MESSAGES[Math.floor(Math.random()*AMBIENT_MESSAGES.length)];
+    const delay = 120000 + Math.random()*180000; // 120-300秒
+
+    // Random chance to print at end of terminal
+    if(Math.random() < 0.6){
+      print(msg, 'ghost');
+    }
+    // Rare: glitch the clock simultaneously
+    if(Math.random() < 0.15){
+      clock.textContent = '02:17:00';
+      clock.className = 'glitch';
+      setTimeout(()=>{ clock.className = 'dim'; updateClock(); }, 400+Math.random()*600);
+    }
+    gameState.ambientTimer = setTimeout(scheduleAmbient, delay);
+  }
+  // Start after 30 seconds
+  gameState.ambientTimer = setTimeout(scheduleAmbient, 30000);
+}
+
+// ── 初始提示 ──
+const hintCycle = [
+  '提示：用 ls 探索文件系统。cat 查看文件。find 搜索关键词。',
+  '提示：不同用户能看到不同的文件。用 su <用户ID> 切换。',
+  '提示：加密文件需要 decrypt <文件> <密码> 解密。密码藏在其他文件里。',
+  '提示：用 scan 扫描隐藏文件。用 ssh 连接发现的节点。',
+  '提示：用 decode 解码 base64/hex/rot13 文本——线索可能被编码。',
+  '提示：用 trace 追踪网络路由——发现隐藏的节点地址。',
+  '提示：有疑问？搜查所有日志。答案在细节里。',
+];
+let hintIdx = 0;
+setInterval(() => {
+  if(!currentUser || loginOverlay.style.display!=='none') return;
+  hintIdx = (hintIdx+1)%hintCycle.length;
+}, 180000);
+</script>
+</body>
+</html>
