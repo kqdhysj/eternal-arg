@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tick · 系统日志</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#fff;color:#111;font-family:'Courier New',monospace;font-size:13px;line-height:2;max-width:800px;margin:0 auto;padding:60px 32px}
+.header{border-bottom:1px solid #ddd;padding-bottom:16px;margin-bottom:32px}
+.header h1{font-size:16px;font-weight:400;letter-spacing:2px}
+.header p{font-size:12px;color:#666;margin-top:4px}
+.entry{margin-bottom:4px;padding:4px 0}
+.entry .ts{color:#999;margin-right:16px}
+.entry .tag{font-size:11px;padding:1px 6px;border-radius:2px;margin-right:8px}
+.tag-info{background:#e8f0e8;color:#3a6030}
+.tag-warn{background:#fff8e8;color:#8a6030}
+.tag-crit{background:#ffe8e8;color:#8a2020}
+.tag-data{background:#e8e8f8;color:#3030a0}
+.empty{color:#ccc;font-style:italic}
+footer{margin-top:48px;padding-top:16px;border-top:1px solid #ddd;font-size:11px;color:#999}
+footer a{color:#666;text-decoration:none}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>TICK::SYSLOG</h1>
+  <p>永恒号 · 自动日志记录系统 · 启动日：第1年第1小时</p>
+  <p>当前状态：在线。最后记录：第97年第6月。</p>
+</div>
+
+<div class="entry"><span class="ts">第1年 第1小时</span><span class="tag tag-info">INFO</span>系统引导完成。所有模块正常。乘客上传：50/50。等待出发指令。</div>
+<div class="entry"><span class="ts">第1年 第1小时</span><span class="tag tag-warn">WARN</span>上传队列计数异常：51。管理员手动覆盖为 50。覆盖者：林晨。</div>
+<div class="entry"><span class="ts">第1年 第1小时</span><span class="tag tag-data">DATA</span>附加条目：隔离节点 0x2B。来源：地球·外部终端。授权码：■■■■。</div>
+<div class="entry empty"><span class="ts">...</span></div>
+<div class="entry"><span class="ts">第10年 第7月</span><span class="tag tag-info">INFO</span>例行维护完成。所有系统正常。</div>
+<div class="entry empty"><span class="ts">...</span></div>
+<div class="entry"><span class="ts">第35年 第8月</span><span class="tag tag-warn">WARN</span>C区配电柜负载异常：+3.1%%。来源不明。</div>
+<div class="entry empty"><span class="ts">...</span></div>
+<div class="entry"><span class="ts">第50年 第1月</span><span class="tag tag-warn">WARN</span>节点 0x2B 心跳信号首次检测。间隔：72小时。标记：正常（自动）。</div>
+<div class="entry"><span class="ts">第50年 第11月</span><span class="tag tag-data">DATA</span>心跳信号规律性确认。脉冲目标：地球方向。中继节点未注册。</div>
+<div class="entry empty"><span class="ts">...</span></div>
+<div class="entry"><span class="ts">第72年 第1月</span><span class="tag tag-info">INFO</span>林汐请求访问节点 0x2B 路由表。已批准（只读）。</div>
+<div class="entry empty"><span class="ts">...</span></div>
+<div class="entry"><span class="ts">第90年 第3月</span><span class="tag tag-warn">WARN</span>陈远终端凌晨 02:17 远程登录。来源：内部节点 0x2B。凭证：备用密码。</div>
+<div class="entry"><span class="ts">第90年 第6月</span><span class="tag tag-warn">WARN</span>C区配电柜发现不明设备。型号：7F-A3-02-1953。</div>
+<div class="entry empty"><span class="ts">...</span></div>
+<div class="entry"><span class="ts">第95年 第1月</span><span class="tag tag-warn">WARN</span>管理员凭证被用于登录陈远终端。时间：02:17。来源：0x2B。</div>
+<div class="entry"><span class="ts">第95年 第7月</span><span class="tag tag-warn">WARN</span>管理员凭证被用于登录陈远终端。操作：读取齿轮标签照片。</div>
+<div class="entry"><span class="ts">第95年 第12月</span><span class="tag tag-warn">WARN</span>管理员凭证再次登录陈远终端。操作：浏览维护日志及博客。</div>
+<div class="entry empty"><span class="ts">...</span></div>
+<div class="entry"><span class="ts">第96年 第3月</span><span class="tag tag-warn">WARN</span>数据库写入操作被拒。权限不足。时间：02:17。</div>
+<div class="entry"><span class="ts">第96年 第7月</span><span class="tag tag-warn">WARN</span>异常频率上升。每次均发生在 02:17 至 02:19。来源未记录。</div>
+<div class="entry"><span class="ts">第96年 第11月</span><span class="tag tag-crit">CRIT</span>林汐监控脚本被关闭。操作者：管理员。来源：内部。</div>
+<div class="entry"><span class="ts">第97年 第1月</span><span class="tag tag-crit">CRIT</span>监控脚本及备份全部删除。操作者：管理员。</div>
+<div class="entry empty"><span class="ts">...</span></div>
+<div class="entry"><span class="ts">第97年 第5月</span><span class="tag tag-warn">WARN</span>陈远终端被禁言。原因：未授权通讯。执行者：管理员。</div>
+<div class="entry"><span class="ts">第97年 第5月</span><span class="tag tag-crit">CRIT</span>C区配电柜不明设备消失。柜门内侧残留粘合剂痕迹。</div>
+<div class="entry empty"><span class="ts">...</span></div>
+<div class="entry"><span class="ts">第97年 第6月 02:17:00</span><span class="tag tag-crit">CRIT</span>能量路由被手动修改。目标：C区配电柜。操作者：LINCHEN。来源：0x2B。</div>
+<div class="entry"><span class="ts">第97年 第6月 02:17:03</span><span class="tag tag-crit">CRIT</span>用户 LINCHEN 从内部节点 0x2B 登录。凭证：旧token（第1年生成）。</div>
+<div class="entry"><span class="ts">第97年 第6月 02:17:08</span><span class="tag tag-crit">CRIT</span>执行：route modify --dest C7 --priority 1</div>
+<div class="entry"><span class="ts">第97年 第6月 02:17:14</span><span class="tag tag-crit">CRIT</span>执行：protection disable --target main_db</div>
+<div class="entry"><span class="ts">第97年 第6月 02:17:17</span><span class="tag tag-crit">CRIT</span>用户 LINCHEN 登出。会话持续：14秒。</div>
+<div class="entry"><span class="ts">第97年 第6月 02:17:20</span><span class="tag tag-crit">CRIT</span>外部高能射线暴抵达。主数据库全损。50/50 意识单元丢失。</div>
+<div class="entry"><span class="ts">第97年 第6月 02:17:21</span><span class="tag tag-info">INFO</span>隔离节点 7F 自动切换至独立供电。幸存单元：1（林汐）。</div>
+<div class="entry"><span class="ts">第97年 第6月 02:18:00</span><span class="tag tag-warn">WARN</span>中继站 #7 加密链路被远程清除。操作来源：地球。</div>
+<div class="entry empty"><span class="ts">...</span></div>
+<div class="entry"><span class="ts">第97年 第9小时</span><span class="tag tag-info">INFO</span>管理员林晨手动唤醒。系统恢复运行。</div>
+
+<footer>
+  <p>Tick v2.4.1 · 永恒号辅助系统 · 日志结束</p>
+  <p><a href="index.html">← 船舰终端</a></p>
+</footer>
+</body>
+</html>

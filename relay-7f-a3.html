@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7F-A3-02-1953 · 设备拆解记录</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#fdfaf3;color:#2a2018;font-family:'Courier New','PingFang SC','Microsoft YaHei',monospace;line-height:1.8;max-width:700px;margin:0 auto;padding:48px 24px}
+.header{border-bottom:2px solid #333;padding-bottom:16px;margin-bottom:32px}
+.header h1{font-size:18px;font-weight:700;letter-spacing:2px}
+.header .meta{font-size:11px;color:#666;margin-top:4px}
+.section{margin-bottom:28px}
+.section h2{font-size:14px;font-weight:700;border-left:3px solid #333;padding-left:12px;margin-bottom:10px}
+.spec-table{width:100%;border-collapse:collapse;margin:12px 0}
+.spec-table td{padding:6px 10px;border-bottom:1px solid #e0d8c8;font-size:12px}
+.spec-table td:first-child{color:#666;width:140px}
+.diagram{background:#f8f4e8;border:1px solid #e0d8c8;padding:16px 20px;margin:12px 0;font-size:11px;line-height:1.6;white-space:pre;overflow-x:auto}
+.warn{border-left:3px solid #c44;padding-left:12px;color:#a22;font-size:12px;margin:16px 0}
+.note{font-size:11px;color:#888;margin-top:6px;font-style:italic}
+footer{margin-top:48px;padding-top:16px;border-top:1px solid #ddd;font-size:10px;color:#999}
+footer a{color:#666;text-decoration:none}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>设备拆解记录 · 7F-A3-02-1953</h1>
+  <div class="meta">拆解人：陈远（C区机械工程师）· 日期：第90年 第6月</div>
+  <div class="meta">文档状态：草稿 · 未提交</div>
+</div>
+
+<div class="section">
+  <h2>一、发现位置</h2>
+  <p>C区第三配电柜 · 柜门内侧 · 走线后方。用工业粘合剂固定，表面涂有与配电柜内壁一致的灰色涂层。若非电压异常排查，无法通过目视检查发现。</p>
+</div>
+
+<div class="section">
+  <h2>二、物理参数</h2>
+  <table class="spec-table">
+    <tr><td>尺寸</td><td>约 4.2 × 2.8 × 0.9 cm</td></tr>
+    <tr><td>重量</td><td>约 12g</td></tr>
+    <tr><td>外壳材料</td><td>钛合金 · 非船舰标准件</td></tr>
+    <tr><td>电源连接</td><td>生命维持系统备用电源线（并联）</td></tr>
+    <tr><td>功耗</td><td>约 3.1W（持续）</td></tr>
+    <tr><td>安装时间</td><td>据粘合剂老化程度推算：第1年出发前</td></tr>
+  </table>
+</div>
+
+<div class="section">
+  <h2>三、功能分析</h2>
+  <p>该设备为<strong>信号转发器</strong>，具备以下能力：</p>
+  <p>1. 拦截内部网络指令包</p>
+  <p>2. 修改来源IP为任意已注册的内部节点ID</p>
+  <p>3. 以伪造身份发包——包括管理员权限</p>
+  <p>4. 每72小时发送一次定位脉冲</p>
+  <p>5. 接收来自地球方向的加密指令</p>
+  <p>通信号码烧录于电路板底层：</p>
+
+  <div class="diagram">
+    7F-A3-02-1953
+    │  │  │  └── 年份标识
+    │  │  └───── 电路板编号：第二块
+    │  └──────── 配电柜编号：A3 = C区第三柜
+    └─────────── 目标节点：7F = 隔离节点（林汐终端）
+  </div>
+
+  <p>该号码可分解为四个部分。尾号 <strong>1953</strong> 与我太爷爷上前线年份一致——不是巧合。该设备的设计者知道这个日期，且知道我会上这艘船。</p>
+
+  <div class="warn">
+    ⚠ 电源线接在生命维持系统备用电源上。该设备无法在不影响备用电源的前提下拆除。拆掉它——能量系统会出现不可预测的波动。它就是被设计成拆不掉的。
+  </div>
+</div>
+
+<div class="section">
+  <h2>四、推测结论</h2>
+  <p>该设备在永恒号出发前被安装。安装者具有以下条件：</p>
+  <p>· 能够进入C区配电柜（出发前或出发时）</p>
+  <p>· 了解船舰内部网络协议及管理员凭证格式</p>
+  <p>· 知道「1953」这一日期的含义及与陈远太爷爷的关联</p>
+  <p>· 预谋在射线暴攻击时关闭数据库保护——该设备在暴发前 17 秒执行了此操作</p>
+  <p>该设备与节点 0x2B 维持心跳连接长达 47 年。脉冲目标指向地球方向的一个退役军用中继站。该中继站在出发前 72 小时被远程激活——激活来源未记录。</p>
+</div>
+
+<div class="note">注：本文档为草稿。拆解完成后，设备被放回原位。第97年第5月，设备消失。残留粘合剂痕迹。取走者身份未知。</div>
+
+<footer>
+  <p>陈远 · C区机械工程师 · 永恒号</p>
+  <p><a href="index.html">← 船舰终端</a></p>
+</footer>
+
+</body>
+</html>
