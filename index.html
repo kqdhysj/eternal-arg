@@ -819,6 +819,21 @@ const MESSAGE_LOGS = {
   },
 };
 
+// ══════════════════════════════════
+// 船舰网页缓存系统
+// ══════════════════════════════════
+const WEB_CACHE = {
+  'blog':          {url:'blog.html',          desc:'陈远工程日志 · 第1-97年', locked:false},
+  'archive':       {url:'archive.html',       desc:'永恒号项目档案 · 船员名单+技术参数', locked:false},
+  'news':          {url:'launch-news.html',   desc:'新华星际社 · 永恒号发射报道', locked:false},
+  'node-7f':       {url:'node-7f.html',       desc:'林汐 · 隔离节点7F日记', locked:false},
+  'tick-log':      {url:'tick-log.html',      desc:'Tick系统日志 · 23条索引记录', locked:false},
+  'about':         {url:'about-xinhua.html',  desc:'新华星际社 · 关于我们', locked:false},
+  'relay':         {url:'relay-7f-a3.html',   desc:'信号转发器拆解记录 · 7F-A3-02-1953', locked:false},
+  'passenger-51':  {url:'passenger-51.html',  desc:'[受限] 节点0x2B日志', locked:true},
+  'rescue':        {url:'rescue-report.html', desc:'[绝密] 曙光号救援报告', locked:true},
+};
+
 let cwd = '/';
 let currentUser = null;
 const term = document.getElementById('terminal');
@@ -955,6 +970,7 @@ const commands = {
     print('  /logs [记录ID]     查看通讯记录','dim');
     print('  /decrypt_logs <ID> <密码>  解密通讯记录','dim');
     print('  /decrypt <文件> <密码>    解密文件','dim');
+    print('  /cache [页面ID]    打开系统缓存的网页','dim');
     print('  /clear             清屏','dim');
     print('══════════════════════════════════','sys');
   },
@@ -1279,6 +1295,32 @@ const commands = {
 
   clear(){ term.innerHTML = ''; },
 
+  cache(args){
+    if(!args[0]){
+      print('══════════ 船舰网页缓存系统 ══════════','sys');
+      print('  以下为深空通讯链路中恢复的历史网页。','dim');
+      print('  使用 /cache <页面ID> 在新标签页中打开。','dim');
+      print('');
+      for(const [id, page] of Object.entries(WEB_CACHE)){
+        const lock = page.locked?' [需要授权]':'';
+        const c = page.locked?'warn':'dim';
+        print(`  ${id}${lock}  ${page.desc}`, c);
+      }
+      print('');
+      print('示例: /cache blog  —— 打开陈远工程日志','ghost');
+      return;
+    }
+    const pid = args[0];
+    const page = WEB_CACHE[pid];
+    if(!page){ print(`cache: 未找到页面 "${pid}"。输入 /cache 查看列表。`, 'err'); return; }
+    if(page.locked && currentUser==='guest'){
+      print('cache: 该页面需要授权账号登录后才能访问。', 'warn');
+      return;
+    }
+    print(`正在打开系统缓存: ${page.desc}...`, 'ok');
+    window.open(page.url, '_blank');
+  },
+
   logs(args){
     if(!args[0]){
       print('══════════ 通讯日志存档 ══════════','sys');
@@ -1377,7 +1419,7 @@ function tryLogin(){
         print('  /etc/password_hint.txt 有线索。','ghost');
         print('');
         print('  可用命令：','ghost');
-        print('    ls  cat  cd  pwd  whoami  find  decode  help','ghost');
+        print('    ls  cat  cd  pwd  whoami  find  decode  cache  help','ghost');
       } else {
         print('  连接建立。欢迎，'+acc.name+'。','ok');
         print('═══════════════════════════════','sys');
@@ -1387,13 +1429,10 @@ function tryLogin(){
         print('  个人文件、通讯记录。请自行调查。','dim');
         print('');
         print('  最近命令历史：','ghost');
-        print('    ls  cat  find  decode  ssh  logs','ghost');
+        print('    ls  cat  find  decode  ssh  logs  cache','ghost');
       }
       print('');
-      print('外部参考页面：','dim');
-      print('    blog.html  archive.html  node-7f.html','ghost');
-      print('    tick-log.html  launch-news.html','ghost');
-      print('    relay-7f-a3.html  rescue-report.html','ghost');
+      print('  输入 /cache 查看系统缓存中的历史网页。','ghost');
     } else {
       print(`已切换至 ${acc.name}（${acc.role}）`, 'ok');
       if(prevUser && prevUser !== uid){
