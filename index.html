@@ -48,7 +48,7 @@ body{background:var(--bg);color:var(--text);font-family:'Consolas','Courier New'
 <input id="login-user" type="text" placeholder="用户ID" autofocus>
 <input id="login-pass" type="password" placeholder="密码"><button id="login-btn">验证身份</button>
 <div class="login-msg" id="login-msg"></div>
-<div class="login-hint" id="login-hint">授权人员：管理员 · 意识体 · 机械工程师</div>
+<div class="login-hint" id="login-hint">授权人员：管理员 · 意识体 · 机械工程师<br>访客模式：直接点击「验证身份」或留空登录</div>
 </div></div>
 <div id="main">
 <div id="header"><span>▸ 永恒号 · 船舰终端</span><span id="clock" class="dim"></span></div>
@@ -62,6 +62,7 @@ body{background:var(--bg);color:var(--text);font-family:'Consolas','Courier New'
 // ══════════════════════════════════════════════
 
 const ACCOUNTS = {
+  'guest':   {pass:'', name:'访客', role:'只读权限', home:'/'},
   'LINCHEN': {pass:'linxi', name:'林晨', role:'管理员', home:'/home/lchen'},
   'LINXI':   {pass:'ticktock7', name:'林汐', role:'意识体·隔离节点', home:'/home/lxi'},
   'CHENYUAN':{pass:'gear1953', name:'陈远', role:'机械工程师', home:'/home/cyuan'},
@@ -376,7 +377,14 @@ cyuan:x:1002:1002:陈远:/home/cyuan:/bin/sh
 清除操作来源：地球。
 
 「自然宇宙现象」是上面要求写的措词。这份报告本身——就是证据。`},
-        'crew_manifest.txt':{type:'file',perms:'r--',desc:'永恒号船员名单（出发时）',
+        'password_hint.txt':{type:'file',perms:'r--',desc:'系统提示 · 密码线索',
+            content:`授权账号的密码不是随机生成的。它们藏在这艘船的故事里。
+
+管理员（LINCHEN）：他最在意的人。全部小写。
+意识体（LINXI）：Tick 的时钟。
+机械工程师（CHENYUAN）：齿轮标签上的年份。全部数字。`
+          },
+          'crew_manifest.txt':{type:'file',perms:'r--',desc:'永恒号船员名单（出发时）',
           content:`═══════════════════════════════════
   永恒号 · 船员名单 · 出发日
   地球报道：launch-news.html
@@ -898,6 +906,10 @@ function resolvePath(p){
 function canRead(node, fullPath){
   if(!node) return false;
   if(node.locked) return gameState.unlockedFiles[fullPath||node._fullPath];
+  if(currentUser==='guest'){
+    if(node.perms && node.perms[0]==='r' && !node.owner) return true;
+    return false;
+  }
   if(node.perms && node.perms[0]==='r') return true;
   if(node.owner && node.owner===currentUser) return true;
   return false;
@@ -1076,6 +1088,7 @@ const commands = {
     print(`── 搜索完成。${found}个文件匹配。`, 'sys');
   },
   decrypt(args){
+    if(currentUser==='guest'){print('decrypt: 权限不足。访客无法解密文件。', 'err');return;}
     if(!args[0]||!args[1]){print('decrypt <文件> <密码>', 'err');return;}
     const target = resolvePath(args[0]);
     const node = getNode(target);
@@ -1137,6 +1150,7 @@ const commands = {
   },
 
   ssh(args){
+    if(currentUser==='guest'){print('ssh: 权限不足。访客无法建立远程连接。', 'err');return;}
     if(!args[0]){print('ssh: 需要节点地址。', 'err');print('用法: ssh <节点地址>', 'dim');return;}
     const nodeId = args[0];
     const sshNode = SSH_NODES[nodeId];
@@ -1291,7 +1305,8 @@ const commands = {
   },
 
   decrypt_logs(args){
-    if(!args[0]||!args[1]){ print('decrypt_logs <记录ID> <密码>', 'err'); return; }
+	    if(currentUser==='guest'){ print('decrypt_logs: 权限不足。访客无法解密记录。', 'err'); return; }
+	    if(!args[0]||!args[1]){ print('decrypt_logs <记录ID> <密码>', 'err'); return; }
     const tid = args[0];
     const thread = MESSAGE_LOGS[tid];
     if(thread.adminOnly && currentUser !== 'LINCHEN'){ print('logs: 权限不足。仅管理员可访问。', 'err'); return; }
@@ -1324,8 +1339,10 @@ function exec(cmd){
 
 // ── 登录 ──
 function tryLogin(){
-  const uid = loginUser.value.trim(); const pass = loginPass.value.trim();
-  if(!uid||!pass){loginMsg.textContent='请输入用户ID和密码。';return;}
+  let uid = loginUser.value.trim(); let pass = loginPass.value.trim();
+  if(!uid){ uid='guest'; pass=''; }
+  if(uid==='guest'){ pass=''; }
+  if(!pass && uid!=='guest'){loginMsg.textContent='请输入密码。';return;}
   const acc = ACCOUNTS[uid];
   if(acc && acc.pass === pass){
     const prevUser = currentUser;
@@ -1339,23 +1356,33 @@ function tryLogin(){
       gameState.firstLogin = false;
       print('═══════════════════════════════','sys');
       print('  永恒号 · 船舰终端','sys');
-      print('  连接建立。欢迎，'+acc.name+'。','ok');
-      print('═══════════════════════════════','sys');
-      print('  输入 /help 查看可用命令。','dim');
+      if(currentUser==='guest'){
+        print('  访客模式。只读权限。','warn');
+        print('═══════════════════════════════','sys');
+        print('  输入 /help 查看可用命令。','dim');
+        print('');
+        print('  你可以浏览公开文件，但无法访问个人数据。','dim');
+        print('  /etc/passwd 记录了授权账号——找到密码即可登录。','ghost');
+        print('  /etc/password_hint.txt 有线索。','ghost');
+        print('');
+        print('  可用命令：','ghost');
+        print('    ls  cat  cd  pwd  whoami  find  decode  help','ghost');
+      } else {
+        print('  连接建立。欢迎，'+acc.name+'。','ok');
+        print('═══════════════════════════════','sys');
+        print('  输入 /help 查看可用命令。','dim');
+        print('');
+        print('  终端保存了事故前后的系统日志、','dim');
+        print('  个人文件、通讯记录。请自行调查。','dim');
+        print('');
+        print('  最近命令历史：','ghost');
+        print('    ls  cat  find  decode  ssh  logs','ghost');
+      }
       print('');
-      print('  终端保存了事故前后的系统日志、','dim');
-      print('  个人文件、通讯记录。请自行调查。','dim');
-      print('');
-      print('  最近命令历史：','ghost');
-      print('    ls  cat  find  decode  ssh  logs','ghost');
-      print('');
-      print('  外部参考：','dim');
       print('外部参考页面：','dim');
       print('    blog.html  archive.html  node-7f.html','ghost');
       print('    tick-log.html  launch-news.html','ghost');
       print('    relay-7f-a3.html  rescue-report.html','ghost');
-      print('');
-      startAmbientSystem();
     } else {
       print(`已切换至 ${acc.name}（${acc.role}）`, 'ok');
       if(prevUser && prevUser !== uid){
