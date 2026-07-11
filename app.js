@@ -1099,7 +1099,11 @@ const commands = {
       print('文件内容：', 'sys');
       for(const l of node.content.split('\n')){ print('  '+l, 'dim'); }
     } else {
-      print('decrypt: 密码错误', 'err');
+      let dpwmsg = "密码错误。";
+	    if(currentUser==="LINXI") dpwmsg = "密码不对。……你不是他。";
+	    else if(currentUser==="CHENYUAN") dpwmsg = "密码不对。再检查一遍——可能记错了。";
+	    else if(currentUser==="LINCHEN") dpwmsg = "错了。";
+	    print(dpwmsg, "err");
     }
   },
 
@@ -1153,7 +1157,10 @@ const commands = {
     const nodeId = args[0];
     const sshNode = SSH_NODES[nodeId];
     if(!sshNode){
-      print(`ssh: 无法解析主机 "${nodeId}"。`, 'err');
+      let sshmsg = `无法解析主机 "${nodeId}"。`;
+    if(currentUser==='LINXI') sshmsg = `……"${nodeId}"？没这个节点。你是不是解错了。`;
+    else if(currentUser==='CHENYUAN') sshmsg = `"${nodeId}" 没有响应。地址可能藏在某个文件里——再翻翻。`;
+    print(sshmsg, 'err');
       print('提示：节点地址可能藏在某个日志或文件里。', 'dim');
       return;
     }
@@ -1389,7 +1396,10 @@ const commands = {
       print(`✓ ${thread.name} 解密成功。`, 'ok');
       print('内容已解锁。使用 /logs ' + tid + ' 查看。', 'dim');
     } else {
-      print('decrypt_logs: 密码错误。', 'err');
+      let dlpw = "密码错误。";
+	    if(currentUser==="LINXI") dlpw = "……不对。再想想。";
+	    else if(currentUser==="CHENYUAN") dlpw = "解密失败。确认密码无误？";
+	    print(dlpw, "err");
     }
   },
 
@@ -1401,8 +1411,13 @@ function exec(cmd){
   if(!raw.startsWith('/')){ print('命令需以 / 开头。输入 /help 查看可用命令。', 'err'); return; }
   raw = raw.slice(1).trim();
   if(!raw) return;
-  const parts = raw.split(/\s+/);
-  const name = parts[0]; const args = parts.slice(1);
+  else {
+    let hint = '输入 /help 查看可用命令。';
+    if(currentUser==='LINXI') hint = '……没有这个命令。你打对了吗。';
+    else if(currentUser==='CHENYUAN') hint = '命令不存在。检查拼写——或者看 /help。';
+    else if(currentUser==='LINCHEN') hint = '无效。试试 /help。';
+    print(`/${name}: ${hint}`, 'err');
+  }
   print(`${prompt.textContent} /${raw}`, 'dim');
   if(commands[name]){ commands[name](args); }
   else { print(`/${name}: 命令未找到。输入 /help 查看可用命令。
@@ -1459,7 +1474,11 @@ function tryLogin(){
       }
     }
   } else {
-    loginMsg.textContent = '验证失败。用户ID或密码错误。';
+    let failMsg = '验证失败。用户ID或密码错误。';
+	    if(loginUser.value.trim()==="LINXI") failMsg = "验证失败。……你确定这是我哥的密码？";
+	    else if(loginUser.value.trim()==="CHENYUAN") failMsg = "验证失败。密码是太爷爷设的——那串数字。";
+	    else if(loginUser.value.trim()==="LINCHEN") failMsg = "验证失败。密码不对。";
+	    loginMsg.textContent = failMsg;
     loginHint.textContent = '验证失败 —— 仅限授权人员';
     if(uid && !ACCOUNTS[uid]) loginHint.textContent = '验证失败 —— 未知用户ID。已知账号：LINCHEN, LINXI, CHENYUAN';
   }
