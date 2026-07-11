@@ -44,7 +44,7 @@ const FILESYSTEM = {
 
 谁有能力同时访问陈远的节点和管理员权限？
 
-待查：陈远的加密日志。密码未知。线索可能在林汐的碎片记录里。
+待查：陈远的加密日志。密码未知。线索可能在林汐的碎片记录里。另外陈远家里有一份 relay_notes.txt——权限被锁了。只有他本人用 chmod 才能打开。
 
 补充：永恒号项目档案中有一份船员名单——archive.html。第51号条目被注释了。`},
           'recovery':{type:'dir',perms:'r--',owner:'LINCHEN',desc:'恢复的删除日志',children:{
@@ -96,7 +96,7 @@ const FILESYSTEM = {
 [第97年 第6月] 射线暴。`
             + `\n补充：第96年第3月的那条异常之前一小时，陈远向我抱怨过一次——他的终端凌晨重启了。他没操作。
 
-又及：2:17。每次都是2:17。这不是巧合。`},
+又及：2:17。每次都是2:17。这不是巧合。陈远的转发器笔记锁了权限——chmod +r 要他自己来。但里面的东西可能跟这串时间有关系。`},
           'hidden/message.txt':{type:'file',perms:'---',owner:'LINXI',desc:'隐藏文件（需要密码）',
             locked:true, passHash:'c60e4255',
             content:`这些是我发现但没放在公开日志里的东西。
@@ -204,6 +204,22 @@ const FILESYSTEM = {
 「7F-A3-02-1953。记住这个。然后去找 0x2B。」
 
 有人在我出发后碰过这个标签。在船上。`},
+          'relay_notes.txt':{type:'file',perms:'---',owner:'CHENYUAN',desc:'[锁定] 转发器分析笔记',
+            content:`我拆开转发器之后做的笔记。锁了权限——只有我能开。
+
+转发器通信号码：7F-A3-02-1953。拆解记录见 relay-7f-a3.html。
+
+1. 这个装置能伪装成任何内部节点ID。意味着它可以以林晨的名义执行管理员操作——包括关闭数据库保护。
+2. 通信号码的前缀 7F 指向林汐的隔离节点。不是巧合——设计者想让追查的人误以为是林汐在控制这个装置。
+3. 尾号 1953 是我太爷爷上前线那年。设计者知道这个日期对我的意义——他是故意留的。他知道我会拆开配电柜。他知道我会看到这串数字。
+4. 装置从第1年就在了。我对照过出发前的配电柜检查记录——那时候一切正常。说明有人在出发之前就装好了。在所有人都没看到的时候。
+5. 最关键的一条：转发器的上行链路指向节点 0x2B。不是它发给 0x2B——是 0x2B 在控制它。那个节点里有人。
+6. 林汐给我看过她的监控日志。凌晨 2:17。转发器活动。0x2B 登录。管理员凭证被伪造。全是同一个时间窗口。她对我说过一句话——「那个人认识你太爷爷。纸条上的字是你太爷爷的笔迹。」
+7. 我不信。但她的数据不会说谎。
+
+如果有人用我的账号读到这份笔记——说明你拿到了我的密码。齿轮标签上的日期。八位数字。太爷爷被派出去那天。不是退伍日。
+接下来的事拜托了。我可能已经被禁言了。
+`},
           'personal_notes.txt':{type:'file',perms:'r--',owner:'CHENYUAN',desc:'陈远的私人笔记',
             content:`我做了一个梦。反复做。
 
@@ -1224,6 +1240,26 @@ const commands = {
       print('✓ 笔记已清空。', 'ok');
     } else {
       print('notes [read|add <内容>|clear]', 'err');
+    }
+  },
+
+  chmod(args){
+    if(!args[0]||!args[1]){print('chmod <权限> <文件路径>', 'err');return;}
+    const mode = args[0]; const target = resolvePath(args[1]);
+    const node = getNode(target);
+    if(!node){print(`chmod: ${target}: 文件不存在`, 'err');return;}
+    if(node.type==='dir'){print(`chmod: ${target}: 不能修改目录权限`, 'err');return;}
+    if(!node.owner){print(`chmod: ${target}: 该文件无所有者——无法通过终端修改权限`, 'err');return;}
+    if(node.owner !== currentUser){print(`chmod: ${target}: 权限不足。文件所有者是 ${node.owner}。当前用户是 ${currentUser}。`, 'err');return;}
+    if(mode==='+r'){
+      if(node.perms[0]==='r'){print(`chmod: ${target}: 已有读权限`, 'dim');return;}
+      node.perms = 'r' + node.perms.slice(1);
+      print(`chmod: ${target}: +r 已生效。`, 'ok');
+    } else if(mode==='-r'){
+      node.perms = '-' + node.perms.slice(1);
+      print(`chmod: ${target}: -r 已生效。`, 'ok');
+    } else {
+      print('chmod: 支持 +r（添加读权限）或 -r（移除读权限）', 'err');
     }
   },
 
