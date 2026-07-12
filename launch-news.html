@@ -71,6 +71,14 @@ body{background:#f4f5f6;color:#1a1a1a;font-family:'PingFang SC','Microsoft YaHei
 .expandable{cursor:pointer;position:relative}
 .expandable::after{content:' +';color:#999;font-size:11px;margin-left:4px}
 .expandable.open::after{content:' -';color:#c44}
+.article-pop{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.7);align-items:center;justify-content:center}
+.article-pop.open{display:flex}
+.article-pop .inner{background:#fff;max-width:600px;width:90%;max-height:80vh;overflow-y:auto;padding:32px;border-radius:2px;position:relative}
+.article-pop .inner h3{font-size:18px;margin-bottom:8px}
+.article-pop .inner .p-meta{font-size:11px;color:#999;margin-bottom:16px}
+.article-pop .inner p{font-size:14px;line-height:1.9;margin-bottom:12px}
+.article-pop .close{position:absolute;top:12px;right:16px;font-size:24px;cursor:pointer;color:#999;line-height:1}
+.article-pop .close:hover{color:#333}
 .footer a{color:rgba(255,255,255,.3);text-decoration:none}
 .cookie-banner{position:fixed;bottom:0;left:0;right:0;background:#1a1a2e;color:rgba(255,255,255,.85);padding:16px 24px;font-size:12px;z-index:999;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
 .cookie-banner button{background:#c44;color:#fff;border:none;padding:6px 16px;border-radius:2px;cursor:pointer;font-size:11px}
@@ -424,6 +432,107 @@ document.querySelectorAll('.expandable').forEach(el => {
     if(panel){ panel.classList.toggle('open'); this.classList.toggle('open'); }
   });
 });
+
+// Article popup system
+const ARTICLES = {
+  'crew-list':{title:'永恒号船员完整名单公布 · 50人来自14个国家',meta:'出发前 72 小时 · 新华星际社',body:'<p>永恒号搭载 50 名正式船员，来自 14 个国家，平均年龄 31 岁。名单分为指挥管理（3人）、工程技术（7人）、科研医疗（15人）、后勤支援（25人）四个组别。</p><p>核心人员包括：林晨（管理员，30岁，前深空任务指挥官）、林汐（数据管理员，24岁，最年轻的意识上传志愿者）、陈远（机械工程师，32岁，三代航天世家）。</p><p>但据航天港调度记录显示，上传队列实际计数为 <strong>51</strong>。第 51 号条目在出发前 1 天被管理员手动注释。该条目指向独立节点 0x2B——一个不在主数据库注册表中的隔离位置。</p>'},
+  'upload-tech':{title:'意识上传技术：从实验室到星际移民',meta:'出发前 1 周 · 新华星际社科技版',body:'<p>永恒号采用的意识上传技术基于量子态映射原理，将人类神经连接组以亚原子精度扫描并重建于数字基质中。上传后的意识保留完整的记忆、人格和自我认知。</p><p>技术争议点在于「原件」问题：上传后的数字意识是否仍是同一个人？永恒号项目采用了「连续自我」模型——上传过程保持意识连续，不存在中断或复制。但反对者指出，该模型的验证数据来自短期实验，从未在 600 年尺度上测试。</p><p>一位不愿具名的项目顾问透露：「我们对船员的承诺是——上传后的你还是你。但我们没有证据证明这一点。只是选择了相信。」</p>'},
+  'kepler':{title:'开普勒-186f：人类的下一个家园',meta:'出发前 3 周 · 新华星际社',body:'<p>开普勒-186f 位于天鹅座，距地球约 500 光年。它是人类发现的第一颗位于宜居带内的类地行星。表面温度、大气成分和液态水存在概率均符合移民条件。</p><p>永恒号将在抵达后部署预置的生态舱和大气改造设备。项目总工程师在最后一次新闻发布会上说：「如果到了发现不适合居住——我们就改造它。人类花了五万年改造地球，再花六百年改造一颗新星。不亏。」</p><p>但麻省理工的天体物理学家持保留态度：500 光年外的光谱数据有约 1500 年的延迟误差。永恒号抵达时看到的景象——可能与我们的预测完全不同。</p>'},
+  'route-sim':{title:'永恒号航线全程模拟图',meta:'出发前 3 天 · 深空任务',body:'<p>永恒号航线：太阳系 → 奥尔特云 → 星际介质 → 天鹅座旋臂 → 开普勒-186f。全程约 500 光年，预计航行时间 600 年（船舰参考系约 580 年）。</p><p>航线设计避开了已知的星际尘埃密集区和脉冲星辐射带。深空量子中继站 #7 作为主要通讯节点——但该站在发射前被退役并改造为民用。改造记录显示：出发前 72 小时，该站被远程激活。激活来源未记录。</p>'},
+  'relay-upgrade':{title:'中继站 #7 完成改造',meta:'出发前 1 周 · 深空任务',body:'<p>退役军用中继站 #7 已完成民用通讯改造。该站原为军事通讯节点，退役后移交民用深空通讯部门。</p><p>改造内容包括信号放大器增益调整、加密协议降级、公开频段接入。但有中继站维护员向本社匿名反映：信号放大器的增益被调至上限——那是紧急广播模式才会用的参数。「民用船不需要那玩意。除非——有人计划在很远的地方，发一个必须被听到的信号。」</p><p>中继站 #7 在永恒号出发后被重新激活。射线暴后 39 秒内，其加密链路被从地球远程清除。</p>'},
+  'military-declass':{title:'退役军用设备转民用协议解密',meta:'出发前 1 月 · 深空任务',body:'<p>一份解密文件显示，永恒号使用的多个关键通讯组件源自退役军用设备。包括深空量子中继站 #7、信号加密模块、以及部分生命维持系统的冗余回路。</p><p>文件备注栏有一条手写批注：「设备转让方：■■■■（军事单位，编号未解密）。接收方：永恒号项目组。转让日期：出发前 10 年。附加条款：转让后设备不得逆向工程。」</p><p>批注下方有人用不同颜色的墨加了一行字：「逆向工程不需要。这些设备的设计图我们没有——但有人有。」</p>'},
+  'kepler-spectrum':{title:'开普勒-186f 全光谱分析报告',meta:'出发前 2 月 · 目的地',body:'<p>最新全光谱分析显示：开普勒-186f 大气中含氧量约 18%，氮气 79%，与地球大气成分高度相似。表面平均温度约 12°C。液态水覆盖率约为 62%。</p><p>但有一个异常数据点：光谱中检测到微量的氟利昂类化合物痕迹。这类化合物在自然界中不存在——只能由工业活动产生。麻省理工团队将其标注为「可能的仪器误差」。</p><p>另一位独立研究者不同意：「这不是误差。如果 500 光年外有人类活动——我们不是第一批。」</p>'},
+  'planet-choice':{title:'宜居带行星候选：为什么是它',meta:'出发前 6 月 · 目的地',body:'<p>开普勒-186f 从 47 个候选行星中被选出。选择标准包括：大气成分、表面温度、液态水概率、与地球的距离、以及——潜在的战略价值。</p><p>最后一条标准从未出现在公开文件中。一位退役项目组成员私下透露：「选 186f 不是因为它是最近的行星——是因为它的轨道位置刚好在深空链路的中继范围内。到了那里，我们能跟地球保持联系。比任何其他候选星都稳定。」</p><p>「换句话说——他们选的不是最宜居的。选的是最不会被切断联系的。」</p>'},
+  'hologram-engine':{title:'全息投影引擎 v3.2 发布',meta:'出发前 1 周 · 科技',body:'<p>永恒号搭载了最新版全息投影引擎 v3.2。该引擎支持高保真人体投影，延迟低于 12ms。理论上，船员在数字层中的投影可以与物理世界的人进行「面对面」交流——包括微表情和视线跟踪。</p><p>林汐——永恒号的数据管理员——在出发前测试了该引擎。测试日志备注栏里有一行字：「能看到哥的脸了。不是照片。是动的。可以歪头。可以翻白眼。」</p>'},
+  'isolation-node':{title:'隔离节点架构：为什么放在 7F',meta:'出发前 3 天 · 科技',body:'<p>永恒号的数据架构中，林汐的隔离节点被放置在 7F——一个与主数据库物理隔离的独立存储单元。项目组称这是「冗余安全设计」：如果主数据库遭遇故障，隔离节点不受影响。</p><p>但系统架构图显示，7F 在舰船物理结构中的位置恰好位于 C 区配电柜上方——距离不到 20 米。这不是隔离。是相邻。配电柜内侧后来发现了一个信号转发器——通信号码的前缀就是 7F。</p>'},
+  'c7-inspection':{title:'C 区配电柜最后一轮检查',meta:'出发前 24 小时 · 设备与工程',body:'<p>出发前最后一天，机械工程师陈远完成了 C 区配电柜的最终检查。检查记录上写着：「所有线路正常。电压稳定 220V。柜门密封完好。」</p><p>但在同一天的系统备份中，配电柜内部监控摄像头拍到了一个人影——凌晨 2:17，站在柜门前。访问记录被删除了。备份是自动的——可能连删除者都不知道它存在。</p>'},
+  'life-support-design':{title:'生命维持系统备用电源设计说明',meta:'出发前 1 月 · 设备与工程',body:'<p>永恒号的生命维持系统采用双回路供电：主回路通过主反应堆，备用回路通过独立电池组。备用回路的设计冗余量为 120%。</p><p>但在施工图纸的终版中，备用回路多出了一条支线。该支线未标注用途，连接点位于 C 区第三配电柜内侧——恰好是后来发现信号转发器的位置。原设计师被调离项目组时在离职备忘录里写道：「最终版图纸上的那条线不是我画的。」</p>'},
+  'global-support':{title:'全球 14 国联合声明：支持永恒号任务',meta:'出发前 1 周 · 社会反响',body:'<p>14 个国家发表联合声明，支持永恒号任务。声明称：「永恒号是人类文明的集体成就。无论国籍、信仰、意识形态——当那艘船离开太阳系的那一刻，我们是一个物种。」</p><p>但有一个国家没有签字。该国代表在闭门会议上说的话被匿名泄露：「你们要送 50 个人去一颗没有验证的星球——带着我们最好的军事通讯技术。这不叫移民。这叫部署。」</p>'},
+  'ethics-debate':{title:'反对声音：意识上传的伦理边界',meta:'出发前 2 周 · 社会反响',body:'<p>多个伦理学组织对永恒号任务中的意识上传技术提出质疑。核心争议包括：上传后的意识是否享有与物理人类同等的权利；上传过程不可逆——意识无法被「下载」回身体；数字意识可以被复制、修改、删除——谁拥有这些权力？</p><p>一位生物伦理学家在听证会上说了一句后来被反复引用的话：「我们讨论的不是技术。我们讨论的是——人类是否有权创造一种可以被合法删除的人。」</p>'},
+  'old-soldier':{title:'军装老人：一个没说完的故事',meta:'出发后 3 小时 · 家属故事',body:'<p>发射观景台上，一位年长的军装老人被多名目击者看到独自站在人群后排。他没有和其他家属一起挥手。手里攥着一张纸条。记者试图上前采访——他摆了摆手，转身走进了通道。</p><p>有家属认出了他：「那是陈远的太爷爷。他不爱说话。」</p><p>老人离开后，有清洁工在观景台栏杆上发现了一张被揉皱的纸条。上面只写了一行字：「一九五三年七月二十七日。停战日。他上前线的那天。他知道自己不会再回来了。我也知道。」</p>'},
+  'no-visitor':{title:'她没来送行——林汐的最后一位访客',meta:'出发前 2 天 · 家属故事',body:'<p>林汐在出发前两天接受了意识上传手术。访客记录显示，最后一个进入她病房的人不是林晨——是一个中年女性，登记名为「周女士」。访问时长约 12 分钟。离开时眼睛是红的。</p><p>林汐后来在她的日记里写了一句：「妈妈来了。她说她替我保管那件蓝色的卫衣。等到了新世界——她会寄给我。我知道她在骗自己。但我没说。」</p>'},
+  'six-hundred-years':{title:'600 年的承诺：我们欠后代什么',meta:'出发前 1 天 · 社论',body:'<p>当永恒号在第 97 年遭遇射线暴时，地球上甚至还没有人知道这个消息。当救援飞船在第 97 年抵达永恒号时，发射它的人已经死了几代。</p><p>600 年的航程意味着：没有任何一个参与决策的人会看到结局。没有人会被追责。没有人会被感谢。这是人类做过的最大的承诺——也是最容易被忘记的承诺。</p><p>但数据不会忘。永恒号系统缓存里现在保存着这个故事。如果你在看——你已经是这段历史的一部分了。</p>'},
+  'backup-original':{title:'备份还是原件：意识上传的身份悖论',meta:'出发前 3 天 · 社论',body:'<p>如果你上传了你的意识——然后你的身体继续活着。五十个你被创造出来。哪一个才是你？永恒号项目的答案是：都是。法律上的答案是：都不是。</p><p>意识上传者没有遗产继承权。没有婚姻效力。没有国籍保护。他们是一群在法律上不存在的人。当射线暴摧毁主数据库的那一刻——地球上没有一个人收到讣告。</p><p>因为那些人在出发前就已经被注销了。</p>'},
+  'not-coming-back':{title:'「他们不会再回来了」',meta:'出发前 2 天 · 读者来信',body:'<p>我的未婚妻在船上。她是生物学组的研究员——负责开普勒的生态改造方案。出发前一天晚上她跟我说：「你知道吗，我到那边之后——可以种真正的番茄了。不是实验舱里的那种。」</p><p>我说好。我没说「你不会回来了」。她知道。我也知道。</p><p>发射那天我去了航天港。没进观景台。在停车场里听完了倒计时。然后开车回家。路上把她的歌单从头到尾放了一遍。</p>'},
+  'daughter-on-board':{title:'「我女儿在船上」',meta:'出发前 1 天 · 读者来信',body:'<p>林汐是我的女儿。我不是一个会出现在媒体报道里的母亲——他们采访的是她哥，是项目负责人，是工程师。没有人问过我。</p><p>她走之前我去看了她。她躺在扫描舱里，头发剃了一半。她冲我挤眼睛，说「妈，你看我像不像科幻片里的人」。我笑了。然后她进去了。玻璃门关了。光下来了。</p><p>我再没有见到她。不是死了。是变成了我碰不到的东西。但我还是她妈。这一点没人能改。</p>'},
+};
+
+const popup = document.createElement('div');
+popup.className = 'article-pop';
+popup.id = 'article-popup';
+popup.innerHTML = '<div class="inner"><span class="close" onclick="document.getElementById(\'article-popup\').classList.remove(\'open\')">&times;</span><h3 id="pop-title"></h3><div class="p-meta" id="pop-meta"></div><div id="pop-body"></div></div>';
+document.body.appendChild(popup);
+
+function showArticle(key){
+  const a = ARTICLES[key];
+  if(!a) return;
+  document.getElementById('pop-title').textContent = a.title;
+  document.getElementById('pop-meta').textContent = a.meta;
+  document.getElementById('pop-body').innerHTML = a.body;
+  document.getElementById('article-popup').classList.add('open');
+}
+
+// Make all dropdown links clickable
+document.querySelectorAll('.nav-dropdown a[href="#"]').forEach(a => {
+  a.href = 'javascript:void(0)';
+  a.addEventListener('click', function(e){
+    e.preventDefault(); e.stopPropagation();
+    const key = this.textContent.trim().slice(0,20).replace(/[^a-zA-Z0-9\\u4e00-\\u9fff]/g,'').toLowerCase();
+    // Map text to article key
+    const maps = {
+      '永恒号航线全程模拟图':'route-sim','中继站7完成改造':'relay-upgrade','退役军用设备转民用协议解密':'military-declass',
+      '开普勒186f全光谱分析报告':'kepler-spectrum','宜居带行星候选为什么是它':'planet-choice',
+      '意识上传从神经扫描到数字重建':'upload-tech','全息投影引擎v32发布':'hologram-engine','隔离节点架构为什么放在7f':'isolation-node',
+      'c区配电柜最后一轮检查':'c7-inspection','生命维持系统备用电源设计说明':'life-support-design',
+      '全球14国联合声明支持永恒号任务':'global-support','反对声音意识上传的伦理边界':'ethics-debate',
+      '军装老人一个没说完的故事':'old-soldier','她没来送行林汐的最后一位访客':'no-visitor',
+      '600年的承诺我们欠后代什么':'six-hundred-years','备份还是原件意识上传的身份悖论':'backup-original',
+      '他们不会再回来了':'not-coming-back','我女儿在船上':'daughter-on-board',
+    };
+    for(const [k,v] of Object.entries(maps)){
+      if(this.textContent.includes(k.slice(0,8))){ showArticle(v); return; }
+    }
+    // Fallback: search article keys
+    for(const [k,v] of Object.entries(ARTICLES)){
+      if(v.title.includes(this.textContent.trim().slice(0,6))){ showArticle(k); return; }
+    }
+  });
+});
+
+// Make sidebar story links clickable
+document.querySelectorAll('.sidebar .story').forEach(a => {
+  a.href = 'javascript:void(0)';
+  a.addEventListener('click', function(e){
+    e.preventDefault();
+    const maps = {
+      '永恒号船员完整名单公布':'crew-list','意识上传技术从实验室到星际移民':'upload-tech','开普勒186f人类的下一个家园':'kepler',
+      '深空量子通讯如何在500光年外保持联系':'relay-upgrade','林晨永恒号管理员指挥权限':'crew-list',
+      '林汐数据管理员隔离节点7f':'no-visitor','陈远机械工程师ce区':'old-soldier',
+    };
+    for(const [k,v] of Object.entries(maps)){
+      if(this.textContent.includes(k.slice(0,8))){ showArticle(v); return; }
+    }
+    // Fallback
+    showArticle('crew-list');
+  });
+});
+
+// Make ad buttons show in-world content
+document.querySelectorAll('.ad-cta').forEach(btn => {
+  btn.addEventListener('click', function(e){
+    e.preventDefault(); e.stopPropagation();
+    const ad = this.closest('.ad');
+    const title = ad.querySelector('strong')?.textContent || '广告';
+    const desc = ad.querySelector('span')?.textContent || '';
+    document.getElementById('pop-title').textContent = title;
+    document.getElementById('pop-meta').textContent = '赞助内容';
+    document.getElementById('pop-body').innerHTML = '<p>'+desc+'</p><p style="color:#c44;margin-top:16px">※ 该服务为深空航行专属。地球用户暂不可用。如已上传——欢迎咨询。</p>';
+    document.getElementById('article-popup').classList.add('open');
+  });
+});
+
+// Close popup on overlay click
+popup.addEventListener('click', function(e){ if(e.target===this) this.classList.remove('open'); });
 </script>
 </body>
 </html>
