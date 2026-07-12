@@ -6,7 +6,7 @@
 <title>Tick · 系统日志 — 永恒号</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#f4f5f6;color:#1a1a1a;font-family:'Courier New','PingFang SC','Microsoft YaHei',monospace;line-height:1.8}
+body{background:#f0f1f3;color:#1a1a1a;font-family:'Courier New','PingFang SC','Microsoft YaHei',monospace;line-height:1.8}
 .topbar{background:#1a1a2e;color:#fff;font-size:11px;padding:6px 0;text-align:center;letter-spacing:1px}
 .navbar{background:#fff;border-bottom:1px solid #e0e0e0;position:sticky;top:0;z-index:100}
 .navbar .inner{max-width:1000px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding:10px 20px}
@@ -15,28 +15,30 @@ body{background:#f4f5f6;color:#1a1a1a;font-family:'Courier New','PingFang SC','M
 .navbar nav a{color:#666;text-decoration:none;margin-left:20px;font-size:12px;font-family:'PingFang SC','Microsoft YaHei',sans-serif;transition:color .2s}
 .navbar nav a:hover{color:#c44}
 main{max-width:960px;margin:0 auto;padding:40px 20px 60px}
-.page-header{background:#fff;border:1px solid #e0e0e0;padding:24px 32px;margin-bottom:24px;border-radius:2px}
-.page-header h1{font-size:18px;font-weight:700;letter-spacing:2px;color:#1a1a2e}
-.page-header .meta{font-size:11px;color:#888;margin-top:6px;display:flex;gap:24px;flex-wrap:wrap}
+.page-header{background:#1a1d24;border:1px solid #2a3040;padding:24px 32px;margin-bottom:24px;border-radius:2px;color:#ccc}
+.page-header h1{font-size:18px;font-weight:700;letter-spacing:2px;color:#88ccff}
+.page-header .meta{font-size:11px;color:#8899aa;margin-top:6px;display:flex;gap:24px;flex-wrap:wrap}
 .page-header .meta .stat{display:flex;align-items:center;gap:6px}
-.page-header .meta .stat .dot{width:6px;height:6px;border-radius:50%;background:#4a4}
-.log-panel{background:#fff;border:1px solid #e0e0e0;border-radius:2px;overflow:hidden}
-.log-panel .toolbar{background:#f8f8f8;border-bottom:1px solid #e8e8e8;padding:8px 16px;display:flex;gap:12px;align-items:center;font-size:10px;color:#888}
-.log-panel .toolbar .filter{color:#333;font-weight:600}
-.log-panel .toolbar .filter.active{color:#c44}
-.log-panel .toolbar .sep{color:#ddd}
-.log-body{padding:20px 24px;font-size:12px;line-height:2.2;max-height:70vh;overflow-y:auto}
-.entry{padding:3px 0;border-bottom:1px solid #f5f5f5;transition:background .2s}
-.entry:hover{background:#fafafa}
-.entry .ts{color:#999;margin-right:14px;white-space:nowrap}
+.page-header .meta .stat .dot{width:6px;height:6px;border-radius:50%;background:#4a4;box-shadow:0 0 6px rgba(68,255,68,.3)}
+.log-panel{background:#1a1d24;border:1px solid #2a3040;border-radius:2px;overflow:hidden}
+.log-panel .toolbar{background:#14171c;border-bottom:1px solid #2a3040;padding:8px 16px;display:flex;gap:12px;align-items:center;font-size:10px;color:#8899aa}
+.log-panel .toolbar .filter{color:#aabbcc;font-weight:600}
+.log-panel .toolbar .filter.active{color:#88ccff}
+.log-panel .toolbar .sep{color:#3a4050}
+.log-panel .toolbar .count{background:#2a3040;color:#8899aa}
+.log-body{padding:20px 24px;font-size:12px;line-height:2.2;max-height:70vh;overflow-y:auto;color:#aabbcc}
+.entry{padding:4px 0;border-bottom:1px solid #1e2230;transition:background .2s}
+.entry:hover{background:#1e2230}
+.entry .ts{color:#667788;margin-right:14px;white-space:nowrap}
 .entry .tag{font-size:10px;padding:1px 6px;border-radius:2px;margin-right:8px;font-weight:600}
-.tag-info{background:#e8f4e8;color:#3a7030}
-.tag-warn{background:#fff8e8;color:#8a6030}
-.tag-crit{background:#ffe8e8;color:#8a2020}
-.tag-data{background:#e8e8f8;color:#3030a0}
-.entry.empty{color:#ccc;font-style:italic;text-align:center;border:none;padding:12px 0;font-size:16px;letter-spacing:4px}
+.tag-info{background:rgba(68,204,68,.12);color:#4c4}
+.tag-warn{background:rgba(255,170,80,.12);color:#fa8}
+.tag-crit{background:rgba(255,80,80,.12);color:#f66}
+.tag-data{background:rgba(100,160,255,.12);color:#8af}
+.entry.empty{color:#3a4050;font-style:italic;text-align:center;border:none;padding:12px 0;font-size:16px;letter-spacing:4px}
 .entry.empty .ts{display:none}
 .entry.hidden{display:none}
+.page-header input{background:#14171c;border:1px solid #2a3040;color:#aabbcc}
 .toolbar .filter{cursor:pointer;transition:color .2s}
 .toolbar .filter:hover{color:#c44}
 .toolbar .count{font-size:9px;background:#e0e0e0;color:#888;padding:1px 6px;border-radius:8px;margin-left:2px}
@@ -83,8 +85,8 @@ footer a{color:rgba(255,255,255,.3);text-decoration:none}
     <span class="filter" onclick="filterLog('CRIT')">CRIT<span class="count">10</span></span><span class="sep">|</span>
     <span class="filter" onclick="filterLog('DATA')">DATA<span class="count">3</span></span>
     <span style="margin-left:auto;display:flex;gap:8px">
-      <span style="background:#f0f0f0;padding:3px 10px;border-radius:2px;cursor:pointer;font-size:10px;color:#888" onclick="alert('导出失败：日志链路中断。错误码：ETRN-0097-RB。')">导出完整日志</span>
-      <span style="background:#f0f0f0;padding:3px 10px;border-radius:2px;cursor:pointer;font-size:10px;color:#888" onclick="this.textContent=this.textContent==='打印'?'打印失败：无可用打印机':'打印'">打印</span>
+      <span style="background:#2a3040;padding:3px 10px;border-radius:2px;cursor:pointer;font-size:10px;color:#8899aa" onclick="alert('导出失败：日志链路中断。错误码：ETRN-0097-RB。')">导出完整日志</span>
+      <span style="background:#2a3040;padding:3px 10px;border-radius:2px;cursor:pointer;font-size:10px;color:#8899aa" onclick="this.textContent=this.textContent==='打印'?'打印失败：无可用打印机':'打印'">打印</span>
     </span>
   </div>
 
