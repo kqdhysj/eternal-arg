@@ -155,13 +155,13 @@ body{background:#f4f5f6;color:#1a1a1a;font-family:'PingFang SC','Microsoft YaHei
 
 <div class="pop-trending">
   <span class="hot">&#9650; 热门</span>
-  <a href="#">永恒号发射</a><span>·</span>
-  <a href="#">意识上传伦理争议</a><span>·</span>
-  <a href="#">第51号上传者身份</a><span>·</span>
-  <a href="#">开普勒-186f是否宜居</a><span>·</span>
-  <a href="#">深空量子通讯协议</a><span>·</span>
-  <a href="#">酒泉航天港周边房价</a><span>·</span>
-  <a href="#">林汐 · 最年轻上传者</a>
+  <a href="javascript:void(0)" onclick="showArticle('crew-list')">永恒号发射</a><span>·</span>
+  <a href="javascript:void(0)" onclick="showArticle('ethics-debate')">意识上传伦理争议</a><span>·</span>
+  <a href="javascript:void(0)" onclick="showArticle('crew-list')">第51号上传者身份</a><span>·</span>
+  <a href="javascript:void(0)" onclick="showArticle('kepler')">开普勒-186f是否宜居</a><span>·</span>
+  <a href="javascript:void(0)" onclick="showArticle('relay-upgrade')">深空量子通讯协议</a><span>·</span>
+  <a href="javascript:void(0)" onclick="showArticle('housing')">酒泉航天港周边房价</a><span>·</span>
+  <a href="javascript:void(0)" onclick="showArticle('no-visitor')">林汐 · 最年轻上传者</a>
 </div>
 
 <div class="top-ad">
@@ -435,6 +435,8 @@ document.querySelectorAll('.expandable').forEach(el => {
 
 // Article popup system
 const ARTICLES = {
+  "housing":{title:"酒泉航天港周边房价暴涨 · 发射效应",meta:"出发后 6 小时 · 社会",body:"<p>永恒号发射后，酒泉航天港周边房价在6小时内上涨了 47%。中介广告语：\"推开窗就能看到人类文明的火种\"。</p><p>一家本地房产公司推出了\"星际视野户型\"——阳台朝东，理论上可以看到永恒号的尾迹。尾迹持续约 8 秒。每平米溢价 12 万。</p><p>评论区炸了：\"8秒的风景值12万？\" \"值。那是人类最后一眼。\" \"你不是在看房子。你是在看一个物种出发。\"</p>"},
+  
   'crew-list':{title:'永恒号船员完整名单公布 · 50人来自14个国家',meta:'出发前 72 小时 · 新华星际社',body:'<p>永恒号搭载 50 名正式船员，来自 14 个国家，平均年龄 31 岁。名单分为指挥管理（3人）、工程技术（7人）、科研医疗（15人）、后勤支援（25人）四个组别。</p><p>核心人员包括：林晨（管理员，30岁，前深空任务指挥官）、林汐（数据管理员，24岁，最年轻的意识上传志愿者）、陈远（机械工程师，32岁，三代航天世家）。</p><p>但据航天港调度记录显示，上传队列实际计数为 <strong>51</strong>。第 51 号条目在出发前 1 天被管理员手动注释。该条目指向独立节点 0x2B——一个不在主数据库注册表中的隔离位置。</p>'},
   'upload-tech':{title:'意识上传技术：从实验室到星际移民',meta:'出发前 1 周 · 新华星际社科技版',body:'<p>永恒号采用的意识上传技术基于量子态映射原理，将人类神经连接组以亚原子精度扫描并重建于数字基质中。上传后的意识保留完整的记忆、人格和自我认知。</p><p>技术争议点在于「原件」问题：上传后的数字意识是否仍是同一个人？永恒号项目采用了「连续自我」模型——上传过程保持意识连续，不存在中断或复制。但反对者指出，该模型的验证数据来自短期实验，从未在 600 年尺度上测试。</p><p>一位不愿具名的项目顾问透露：「我们对船员的承诺是——上传后的你还是你。但我们没有证据证明这一点。只是选择了相信。」</p>'},
   'kepler':{title:'开普勒-186f：人类的下一个家园',meta:'出发前 3 周 · 新华星际社',body:'<p>开普勒-186f 位于天鹅座，距地球约 500 光年。它是人类发现的第一颗位于宜居带内的类地行星。表面温度、大气成分和液态水存在概率均符合移民条件。</p><p>永恒号将在抵达后部署预置的生态舱和大气改造设备。项目总工程师在最后一次新闻发布会上说：「如果到了发现不适合居住——我们就改造它。人类花了五万年改造地球，再花六百年改造一颗新星。不亏。」</p><p>但麻省理工的天体物理学家持保留态度：500 光年外的光谱数据有约 1500 年的延迟误差。永恒号抵达时看到的景象——可能与我们的预测完全不同。</p>'},
