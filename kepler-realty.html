@@ -5,24 +5,76 @@
 <title>开普勒地产 · 星际置业</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:linear-gradient(135deg,#001a0a,#003020);color:#d0f0d0;font-family:'PingFang SC','Microsoft YaHei',sans-serif;text-align:center;min-height:100vh;display:flex;align-items:center;justify-content:center}
-.card{max-width:500px;padding:48px 32px;border:1px solid rgba(80,180,120,.3);border-radius:4px;background:rgba(10,40,20,.8)}
-.card h1{font-size:24px;color:#80d0a0;margin-bottom:8px}
-.card .tag{color:#888;font-size:12px;margin-bottom:24px}
-.card p{font-size:14px;line-height:2;color:rgba(180,220,200,.7);margin-bottom:12px}
-.card .price{font-size:36px;color:#90d0b0;margin:20px 0}
-.card .btn{display:inline-block;background:#308050;color:#fff;padding:12px 40px;border-radius:2px;text-decoration:none;font-size:14px;margin-top:12px}
-.card .note{font-size:11px;color:rgba(180,220,200,.3);margin-top:24px}
+body{background:#0d150a;color:#d4d8d0;font-family:'PingFang SC','Microsoft YaHei',serif}
+.hero{position:relative;padding:100px 20px;text-align:center;background:linear-gradient(180deg,rgba(0,30,10,.8),rgba(0,20,5,.9)),radial-gradient(ellipse at 50% 30%,rgba(80,200,100,.08),transparent 60%)}
+.hero .tag{display:inline-block;border:1px solid rgba(80,200,100,.3);color:rgba(80,200,100,.7);padding:4px 16px;font-size:11px;letter-spacing:3px;margin-bottom:20px}
+.hero h1{font-size:52px;color:#a0e0b0;font-weight:300;letter-spacing:4px}
+.hero .sub{font-size:16px;color:rgba(160,220,180,.5);margin-top:12px}
+.property-grid{max-width:1000px;margin:48px auto;padding:0 20px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.property{background:#111a10;border:1px solid rgba(255,255,255,.04);overflow:hidden;border-radius:2px;transition:transform .2s}
+.property:hover{transform:translateY(-3px)}
+.property .img{height:160px;background:linear-gradient(135deg,rgba(60,140,80,.2),rgba(40,100,60,.1));display:flex;align-items:center;justify-content:center;font-size:40px}
+.property .info{padding:16px}
+.property .info h4{font-size:14px;color:#c0dcc0;margin-bottom:4px}
+.property .info .loc{font-size:11px;color:#668866;margin-bottom:8px}
+.property .info .price{font-size:18px;color:#80c898;font-weight:600}
+.property .info .price span{font-size:10px;color:#888}
+.property .info .tag-line{font-size:10px;color:rgba(130,200,150,.5);margin-top:4px}
+.broker{max-width:600px;margin:48px auto;padding:32px;background:#111a10;border:1px solid rgba(255,255,255,.04);text-align:center}
+.broker .avatar{width:60px;height:60px;border-radius:50%;background:#2a4a30;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:24px;color:#80c898}
+.broker h4{color:#c0dcc0;margin-bottom:4px}
+.broker .title{font-size:11px;color:#668866;margin-bottom:12px}
+.broker .quote{font-size:13px;color:rgba(180,210,190,.6);font-style:italic;line-height:1.8}
+footer{text-align:center;padding:40px 20px;font-size:11px;color:rgba(160,200,180,.15);border-top:1px solid rgba(255,255,255,.03)}
+footer a{color:rgba(160,200,180,.2)}
 </style>
 </head>
 <body>
-<div class="card">
+
+<div class="hero">
+<div class="tag">限量预售</div>
 <h1>开普勒地产</h1>
-<div class="tag">星际置业 · 首批仅 200 席</div>
-<p>开普勒-186f 海景地块。<br>600 年后抵达即住。<br>每平米仅需今日币价 0.003。<br>推开窗就是人类文明的第一缕光。</p>
-<div class="price">0.003 / m&#178;</div>
-<a class="btn" href="launch-news.html">咨询详情</a>
-<div class="note">※ 预计交付时间：第 600 年。不保证中途飞船不被射线暴击中。<br>如发生不可抗力——不退定金。</div>
+<div class="sub">在人类文明的尽头 · 推开你的第一扇窗</div>
 </div>
+
+<div class="property-grid">
+<div class="property">
+<div class="img">&#127966;</div>
+<div class="info">
+<h4>海岸线一号</h4><div class="loc">北纬 34° · 东海岸 · 距海 0m</div>
+<div class="price">0.005<span> / m&#178;</span></div>
+<div class="tag-line">每扇窗都是日出。每天一次。</div>
+</div>
+</div>
+<div class="property">
+<div class="img">&#127795;</div>
+<div class="info">
+<h4>高原台地</h4><div class="loc">南纬 12° · 内陆高原 · 海拔 800m</div>
+<div class="price">0.002<span> / m&#178;</span></div>
+<div class="tag-line">空气稀薄。星星更近。</div>
+</div>
+</div>
+<div class="property">
+<div class="img">&#127794;</div>
+<div class="info">
+<h4>河谷平层</h4><div class="loc">赤道 · 河谷三角洲 · 三面环水</div>
+<div class="price">0.003<span> / m&#178;</span></div>
+<div class="tag-line">河水是淡的。跟地球上的一样。</div>
+</div>
+</div>
+</div>
+
+<div class="broker">
+<div class="avatar">&#9993;</div>
+<h4>专属置业顾问 · 陈芳</h4>
+<div class="title">曙光号通讯官 · 兼职星际地产经纪</div>
+<div class="quote">"我去过永恒号。在舰桥见过那个人的最后一面。他留了一张纸条——'花种在海边。别忘了。'<br><br>所以我开始卖海边的地。不是想赚钱。是想让更多人记住——有人花了六百年，只为了把一颗种子送到一片海。如果你买了海岸线一号——种点什么吧。算是替他种的。"</div>
+</div>
+
+<footer>
+<p>开普勒地产 · 星际置业 · 首批仅 200 席</p>
+<p style="margin-top:8px">预计交付时间：第 600 年。不保证中途飞船不被射线暴击中。<br>如发生不可抗力——不退定金。<br><a href="launch-news.html">← 返回新闻</a></p>
+</footer>
+
 </body>
 </html>

@@ -5,24 +5,74 @@
 <title>深空通 · 家庭量子套餐</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:linear-gradient(135deg,#001020,#002040);color:#d0e0f0;font-family:'PingFang SC','Microsoft YaHei',sans-serif;text-align:center;min-height:100vh;display:flex;align-items:center;justify-content:center}
-.card{max-width:500px;padding:48px 32px;border:1px solid rgba(80,150,220,.3);border-radius:4px;background:rgba(10,25,50,.8)}
-.card h1{font-size:24px;color:#80b8e0;margin-bottom:8px}
-.card .tag{color:#888;font-size:12px;margin-bottom:24px}
-.card p{font-size:14px;line-height:2;color:rgba(170,200,230,.7);margin-bottom:12px}
-.card .price{font-size:36px;color:#90c0e0;margin:20px 0}
-.card .btn{display:inline-block;background:#205080;color:#fff;padding:12px 40px;border-radius:2px;text-decoration:none;font-size:14px;margin-top:12px}
-.card .note{font-size:11px;color:rgba(170,200,230,.3);margin-top:24px}
+body{background:#0a0f18;color:#ccd;font-family:'PingFang SC','Microsoft YaHei',sans-serif;line-height:1.8}
+.hero{text-align:center;padding:72px 20px 48px}
+.hero .logo{font-size:14px;color:#4080c0;letter-spacing:4px;margin-bottom:8px}
+.hero h1{font-size:36px;color:#a0c8e8;font-weight:300}
+.hero .tagline{color:#688;font-size:14px;margin-top:8px}
+.signal-bar{display:flex;justify-content:center;align-items:flex-end;gap:4px;height:40px;margin:32px 0}
+.signal-bar span{width:8px;background:#205080;border-radius:1px}
+.signal-bar span:nth-child(1){height:8px}.signal-bar span:nth-child(2){height:14px;background:#3060a0}
+.signal-bar span:nth-child(3){height:20px;background:#3070b0}
+.signal-bar span:nth-child(4){height:28px;background:#4080c0}
+.signal-bar span:nth-child(5){height:36px;background:#5090d0;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.plans{max-width:800px;margin:0 auto 48px;padding:0 20px;display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.plan{flex:1;min-width:200px;max-width:250px;background:#111822;border:1px solid rgba(255,255,255,.05);padding:24px 20px;text-align:center;border-radius:2px}
+.plan.pop{border-color:rgba(80,140,200,.3);position:relative}
+.plan.pop::before{content:'推荐';position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#3060a0;color:#fff;font-size:10px;padding:2px 12px;border-radius:10px}
+.plan h3{color:#a0c8e0;font-size:16px;margin-bottom:8px}
+.plan .data{font-size:28px;color:#80b8e0;font-weight:300;margin:12px 0}
+.plan .data span{font-size:11px;color:#688}
+.plan ul{list-style:none;text-align:left;font-size:11px;color:#889;margin:16px 0}
+.plan ul li{padding:4px 0;border-bottom:1px solid rgba(255,255,255,.02)}
+.plan ul li::before{content:'> ';color:#3060a0}
+.plan .btn{display:block;background:#204870;color:#bcd;padding:8px;text-decoration:none;font-size:12px;border-radius:2px;margin-top:12px}
+.testimonial{max-width:600px;margin:48px auto;padding:0 20px;text-align:center}
+.testimonial .msg{background:#111822;padding:20px 24px;border-radius:2px;font-size:14px;color:rgba(180,200,220,.7);line-height:1.9;border-left:3px solid #3060a0;text-align:left}
+.testimonial .from{font-size:11px;color:#688;margin-top:8px}
+.testimonial .reply{background:#0d1824;padding:14px 18px;margin:8px 0 0 40px;border-radius:2px;font-size:13px;color:rgba(160,200,230,.6);border-left:3px solid #202840;text-align:left}
+footer{text-align:center;padding:40px 20px;font-size:11px;color:rgba(160,180,200,.12);border-top:1px solid rgba(255,255,255,.03)}
+footer a{color:rgba(160,180,200,.2)}
 </style>
 </head>
 <body>
-<div class="card">
+
+<div class="hero">
+<div class="logo">DEEPCOMM</div>
 <h1>深空通</h1>
-<div class="tag">家庭量子套餐 · 500 光年无延迟</div>
-<p>和远方的家人保持联系。<br>量子纠缠态通讯。<br>首年免费 · 续费自动扣款。<br>信号永不中断——除非量子链路被远程清除。</p>
-<div class="price">&#165; 0 / 首年</div>
-<a class="btn" href="launch-news.html">立即开通</a>
-<div class="note">※ 第 97 年后服务可能中断。原因：中继站 #7 链路已被清除。<br>如已在使用中——请保持在线。断开后可能无法重连。</div>
+<div class="tagline">你在哪里。信号就在哪里。</div>
+<div class="signal-bar"><span></span><span></span><span></span><span></span><span></span></div>
 </div>
+
+<div class="plans">
+<div class="plan">
+<h3>近地套餐</h3><div class="data">&#165;0<span>/月</span></div>
+<ul><li>太阳系内全覆盖</li><li>延迟 500ms 以内</li><li>免费量子密钥</li></ul>
+<a class="btn" href="launch-news.html">开通</a>
+</div>
+<div class="plan pop">
+<h3>家庭量子套餐</h3><div class="data">&#165;0<span>/首年</span></div>
+<ul><li>500 光年无延迟</li><li>绑定至多 4 人</li><li>跨星系自动漫游</li><li>通话加密——军用级</li></ul>
+<a class="btn" href="launch-news.html">开通</a>
+</div>
+<div class="plan">
+<h3>企业版</h3><div class="data">&#165;0<span>/舱位</span></div>
+<ul><li>全船 50 人共享</li><li>广播 + 单播混合</li><li>中继站 #7 直连</li></ul>
+<a class="btn" href="launch-news.html">开通</a>
+</div>
+</div>
+
+<div class="testimonial">
+<div class="msg">"我在永恒号上。离地球快 500 光年了。用深空通给地球上的妈妈打了一通电话——她说信号很清楚，比我以前在火星出差的时候还好。就是延迟有点长——我说了一句'妈我想你了'，她说她要等三百年才能听到。我说没关系——反正我也有三百年。"</div>
+<div class="from">—— 林汐 · 数据管理 · 永恒号 · 第 90 年</div>
+<div class="reply">"汐汐。电话我接到了。你爸在旁边哭。你说三百年——三百年就三百年。妈等。"<br><span style="color:#688;font-size:10px">—— 林汐母亲 · 地球 · 预计接收时间：第 390 年</span></div>
+</div>
+
+<footer>
+<p>深空通 · 家庭量子套餐 · 500 光年无延迟</p>
+<p style="margin-top:8px">※ 第 97 年后服务可能中断。原因：中继站 #7 链路已被从地球端清除。<br>如已在使用中——请保持在线。断开后可能无法重连。<br><a href="launch-news.html">← 返回新闻</a></p>
+</footer>
+
 </body>
 </html>
