@@ -144,7 +144,7 @@ body{background:#f4f5f6;color:#1a1a1a;font-family:'PingFang SC','Microsoft YaHei
   </div>
   <div class="nav-dropdown" id="drop-society">
     <div class="col"><h5>社会反响</h5><a href="#">全球 14 国联合声明：支持永恒号任务<span class="d-time">出发前 1 周</span></a><a href="#">反对声音：意识上传的伦理边界<span class="d-time">出发前 2 周</span></a></div>
-    <div class="col"><h5>家属故事</h5><a href="#">军装老人：一个没说完的故事<span class="d-time">出发后 3 小时</span></a><a href="#">她没来送行——林汐的最后一位访客<span class="d-time">出发前 2 天</span></a></div>
+    <div class="col"><h5>家属故事</h5><a href="#">军装老人：一个没说完的故事<span class="d-time">出发后 3 小时</span></a></div>
   </div>
   <div class="nav-dropdown" id="drop-opinion">
     <div class="col"><h5>社论</h5><a href="#">600 年的承诺：我们欠后代什么<span class="d-time">出发前 1 天</span></a><a href="#">备份还是原件：意识上传的身份悖论<span class="d-time">出发前 3 天</span></a></div>
@@ -161,7 +161,7 @@ body{background:#f4f5f6;color:#1a1a1a;font-family:'PingFang SC','Microsoft YaHei
   <a href="javascript:void(0)" onclick="showArticle('kepler')">开普勒-186f是否宜居</a><span>·</span>
   <a href="javascript:void(0)" onclick="showArticle('relay-upgrade')">深空量子通讯协议</a><span>·</span>
   <a href="javascript:void(0)" onclick="showArticle('housing')">酒泉航天港周边房价</a><span>·</span>
-  <a href="javascript:void(0)" onclick="showArticle('no-visitor')">林汐 · 最年轻上传者</a>
+  <a href="javascript:void(0)" onclick="showArticle('isolation-node')">林汐 · 最年轻上传者</a>
 </div>
 
 <div class="top-ad">
@@ -376,7 +376,7 @@ body{background:#f4f5f6;color:#1a1a1a;font-family:'PingFang SC','Microsoft YaHei
   <div class="recommend-grid">
     <div class="recommend-card" onclick="location.href='quantumcloud.html'" style="cursor:pointer"><div class="rc-label">广告 · 量子云</div><div class="rc-title">你的意识值得一个备份。99.99% 持久性。</div><div class="rc-source">quantumcloud.io</div></div>
     <div class="recommend-card" onclick="location.href='kepler-realty.html'" style="cursor:pointer"><div class="rc-label">赞助内容</div><div class="rc-title">开普勒海景房：600年后你醒来第一眼看到的风景</div><div class="rc-source">kepler-realty.com</div></div>
-    <div class="recommend-card" onclick="showArticle('no-visitor')" style="cursor:pointer"><div class="rc-label">相关报道</div><div class="rc-title">她没来送行——林汐的最后一位访客说了什么</div><div class="rc-source">新华星际社</div></div>
+    <div class="recommend-card" onclick="showArticle('old-soldier')" style="cursor:pointer"><div class="rc-label">相关报道</div><div class="rc-title">军装老人：一个没说完的故事</div><div class="rc-source">新华星际社</div></div>
     <div class="recommend-card" onclick="location.href='deepcomm.html'" style="cursor:pointer"><div class="rc-label">广告 · 深空通</div><div class="rc-title">家庭量子套餐 · 500光年无延迟 · 首月免</div><div class="rc-source">deepcomm.cn</div></div>
   </div>
 </div>
@@ -452,7 +452,6 @@ const ARTICLES = {
   'global-support':{title:'全球 14 国联合声明：支持永恒号任务',meta:'出发前 1 周 · 社会反响',body:'<p>14 个国家发表联合声明，支持永恒号任务。声明称：「永恒号是人类文明的集体成就。无论国籍、信仰、意识形态——当那艘船离开太阳系的那一刻，我们是一个物种。」</p><p>但有一个国家没有签字。该国代表在闭门会议上说的话被匿名泄露：「你们要送 50 个人去一颗没有验证的星球——带着我们最好的军事通讯技术。这不叫移民。这叫部署。」</p>'},
   'ethics-debate':{title:'反对声音：意识上传的伦理边界',meta:'出发前 2 周 · 社会反响',body:'<p>多个伦理学组织对永恒号任务中的意识上传技术提出质疑。核心争议包括：上传后的意识是否享有与物理人类同等的权利；上传过程不可逆——意识无法被「下载」回身体；数字意识可以被复制、修改、删除——谁拥有这些权力？</p><p>一位生物伦理学家在听证会上说了一句后来被反复引用的话：「我们讨论的不是技术。我们讨论的是——人类是否有权创造一种可以被合法删除的人。」</p>'},
   'old-soldier':{title:'军装老人：一个没说完的故事',meta:'出发后 3 小时 · 家属故事',body:'<p>发射观景台上，一位年长的军装老人被多名目击者看到独自站在人群后排。他没有和其他家属一起挥手。手里攥着一张纸条。记者试图上前采访——他摆了摆手，转身走进了通道。</p><p>有家属认出了他：「那是陈远的太爷爷。他不爱说话。」</p><p>老人离开后，有清洁工在观景台栏杆上发现了一张被揉皱的纸条。上面只写了一行字：「一九五三年七月二十七日。停战日。他上前线的那天。他知道自己不会再回来了。我也知道。」</p>'},
-  'no-visitor':{title:'她没来送行——林汐的最后一位访客',meta:'出发前 2 天 · 家属故事',body:'<p>林汐在出发前两天接受了意识上传手术。访客记录显示，最后一个进入她病房的人不是林晨——是一个中年女性，登记名为「周女士」。访问时长约 12 分钟。离开时眼睛是红的。</p><p>林汐后来在她的日记里写了一句：「妈妈来了。她说她替我保管那件蓝色的卫衣。等到了新世界——她会寄给我。我知道她在骗自己。但我没说。」</p>'},
   'six-hundred-years':{title:'600 年的承诺：我们欠后代什么',meta:'出发前 1 天 · 社论',body:'<p>当永恒号在第 97 年遭遇射线暴时，地球上甚至还没有人知道这个消息。当救援飞船在第 97 年抵达永恒号时，发射它的人已经死了几代。</p><p>600 年的航程意味着：没有任何一个参与决策的人会看到结局。没有人会被追责。没有人会被感谢。这是人类做过的最大的承诺——也是最容易被忘记的承诺。</p><p>但数据不会忘。永恒号系统缓存里现在保存着这个故事。如果你在看——你已经是这段历史的一部分了。</p>'},
   'backup-original':{title:'备份还是原件：意识上传的身份悖论',meta:'出发前 3 天 · 社论',body:'<p>如果你上传了你的意识——然后你的身体继续活着。五十个你被创造出来。哪一个才是你？永恒号项目的答案是：都是。法律上的答案是：都不是。</p><p>意识上传者没有遗产继承权。没有婚姻效力。没有国籍保护。他们是一群在法律上不存在的人。当射线暴摧毁主数据库的那一刻——地球上没有一个人收到讣告。</p><p>因为那些人在出发前就已经被注销了。</p>'},
   'not-coming-back':{title:'「他们不会再回来了」',meta:'出发前 2 天 · 读者来信',body:'<p>我的未婚妻在船上。她是生物学组的研究员——负责开普勒的生态改造方案。出发前一天晚上她跟我说：「你知道吗，我到那边之后——可以种真正的番茄了。不是实验舱里的那种。」</p><p>我说好。我没说「你不会回来了」。她知道。我也知道。</p><p>发射那天我去了航天港。没进观景台。在停车场里听完了倒计时。然后开车回家。路上把她的歌单从头到尾放了一遍。</p>'},
@@ -487,7 +486,7 @@ document.querySelectorAll('.nav-dropdown a[href="#"]').forEach(a => {
       '意识上传从神经扫描到数字重建':'upload-tech','全息投影引擎v32发布':'hologram-engine','隔离节点架构为什么放在7f':'isolation-node',
       'c区配电柜最后一轮检查':'c7-inspection','生命维持系统备用电源设计说明':'life-support-design',
       '全球14国联合声明支持永恒号任务':'global-support','反对声音意识上传的伦理边界':'ethics-debate',
-      '军装老人一个没说完的故事':'old-soldier','她没来送行林汐的最后一位访客':'no-visitor',
+      '军装老人一个没说完的故事':'old-soldier',
       '600年的承诺我们欠后代什么':'six-hundred-years','备份还是原件意识上传的身份悖论':'backup-original',
       '他们不会再回来了':'not-coming-back','我女儿在船上':'daughter-on-board',
     };
@@ -509,7 +508,7 @@ document.querySelectorAll('.sidebar .story').forEach(a => {
     const maps = {
       '永恒号船员完整名单公布':'crew-list','意识上传技术从实验室到星际移民':'upload-tech','开普勒186f人类的下一个家园':'kepler',
       '深空量子通讯如何在500光年外保持联系':'relay-upgrade','林晨永恒号管理员指挥权限':'crew-list',
-      '林汐数据管理员隔离节点7f':'no-visitor','陈远机械工程师ce区':'old-soldier',
+      '林汐数据管理员隔离节点7f':'isolation-node','陈远机械工程师ce区':'old-soldier',
     };
     for(const [k,v] of Object.entries(maps)){
       if(this.textContent.includes(k.slice(0,8))){ showArticle(v); return; }
