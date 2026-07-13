@@ -419,8 +419,8 @@ git commit -m "style: polish external cached services"
 
 ```powershell
 $expected = 'about-xinhua.html','archive.html','blog.html','deepcomm.html','index.html','kepler-realty.html','launch-news.html','node-7f.html','passenger-51.html','quantumcloud.html','relay-7f-a3.html','rescue-report.html','tick-log.html'
-$actual = @(Get-ChildItem -File *.html | Sort-Object Name | ForEach-Object Name)
-if (Compare-Object $expected $actual) { throw 'HTML page set changed' }
+$missing = $expected | Where-Object { -not (Test-Path -LiteralPath $_) }
+if ($missing) { throw "Required HTML missing: $($missing -join ', ')" }
 $titles = foreach ($page in $expected) {
   $html = Get-Content -Raw -Encoding UTF8 $page
   if ($html -notmatch '<title>([^<]+)</title>') { throw "$page title missing" }
@@ -431,7 +431,7 @@ $hash = (Get-FileHash -Algorithm SHA256 app.js).Hash.ToLowerInvariant()
 if ($hash -ne '7363c83fbdab95dbe5ab3c78087e15cddaf795deb73defbd0494475623134ef8') { throw 'app.js changed' }
 ```
 
-Expected: PASS，无输出。
+Expected: PASS，无输出。历史中的 `csdn-post.html` 即使出现在隔离工作树，也不计入这 13 页，不修改、不提交。
 
 - [ ] **Step 2: 检查八个缓存徽章的位置**
 
