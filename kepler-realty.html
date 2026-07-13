@@ -5,15 +5,15 @@
 <title>开普勒地产 · 星际置业</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0d150a;color:#d4d8d0;font-family:'PingFang SC','Microsoft YaHei',serif}
+body{background:#0d150a;color:#d4d8d0;font-family:'PingFang SC','Microsoft YaHei',serif;line-height:2}
 .hero{position:relative;padding:100px 20px;text-align:center;background:linear-gradient(180deg,rgba(0,30,10,.8),rgba(0,20,5,.9)),radial-gradient(ellipse at 50% 30%,rgba(80,200,100,.08),transparent 60%)}
 .hero .tag{display:inline-block;border:1px solid rgba(80,200,100,.3);color:rgba(80,200,100,.7);padding:4px 16px;font-size:11px;letter-spacing:3px;margin-bottom:20px}
 .hero h1{font-size:52px;color:#a0e0b0;font-weight:300;letter-spacing:4px}
 .hero .sub{font-size:16px;color:rgba(160,220,180,.5);margin-top:12px}
 .property-grid{max-width:1000px;margin:48px auto;padding:0 20px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.property{background:#111a10;border:1px solid rgba(255,255,255,.04);overflow:hidden;border-radius:2px;transition:transform .2s}
-.property:hover{transform:translateY(-3px)}
-.property .img{height:160px;background:linear-gradient(135deg,rgba(60,140,80,.2),rgba(40,100,60,.1));display:flex;align-items:center;justify-content:center;font-size:40px}
+.property{background:#111a10;border:1px solid rgba(255,255,255,.06);overflow:hidden;border-radius:2px;transition:border-color .2s}
+.property:hover{border-color:rgba(128,200,152,.45)}
+.property .img{height:160px;background:linear-gradient(135deg,rgba(60,140,80,.2),rgba(40,100,60,.1));display:flex;align-items:center;justify-content:center;font:11px/1 Consolas,'Courier New',monospace;letter-spacing:2px;color:#80c898}
 .property .info{padding:16px}
 .property .info h4{font-size:14px;color:#c0dcc0;margin-bottom:4px}
 .property .info .loc{font-size:11px;color:#668866;margin-bottom:8px}
@@ -21,12 +21,14 @@ body{background:#0d150a;color:#d4d8d0;font-family:'PingFang SC','Microsoft YaHei
 .property .info .price span{font-size:10px;color:#888}
 .property .info .tag-line{font-size:10px;color:rgba(130,200,150,.5);margin-top:4px}
 .broker{max-width:600px;margin:48px auto;padding:32px;background:#111a10;border:1px solid rgba(255,255,255,.04);text-align:center}
-.broker .avatar{width:60px;height:60px;border-radius:50%;background:#2a4a30;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:24px;color:#80c898}
+.broker .avatar{width:84px;height:42px;border-radius:2px;background:#2a4a30;border:1px solid rgba(128,200,152,.3);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font:10px/1 Consolas,'Courier New',monospace;letter-spacing:1px;color:#80c898}
 .broker h4{color:#c0dcc0;margin-bottom:4px}
 .broker .title{font-size:11px;color:#668866;margin-bottom:12px}
 .broker .quote{font-size:13px;color:rgba(180,210,190,.6);font-style:italic;line-height:1.8}
 footer{text-align:center;padding:40px 20px;font-size:11px;color:rgba(160,200,180,.15);border-top:1px solid rgba(255,255,255,.03)}
-footer a{color:rgba(160,200,180,.2)}
+footer a{color:rgba(160,220,180,.5)}
+footer a:hover{color:#a0e0b0}
+footer a:focus-visible{outline:1px solid #80c898;outline-offset:3px}
 </style>
 </head>
 <body>
@@ -39,7 +41,7 @@ footer a{color:rgba(160,200,180,.2)}
 
 <div class="property-grid">
 <div class="property">
-<div class="img">&#127966;</div>
+<div class="img">COAST // 01</div>
 <div class="info">
 <h4>海岸线一号</h4><div class="loc">北纬 34° · 东海岸 · 距海 0m</div>
 <div class="price">0.005<span> / m&#178;</span></div>
@@ -47,7 +49,7 @@ footer a{color:rgba(160,200,180,.2)}
 </div>
 </div>
 <div class="property">
-<div class="img">&#127795;</div>
+<div class="img">PLATEAU // 02</div>
 <div class="info">
 <h4>高原台地</h4><div class="loc">南纬 12° · 内陆高原 · 海拔 800m</div>
 <div class="price">0.002<span> / m&#178;</span></div>
@@ -55,7 +57,7 @@ footer a{color:rgba(160,200,180,.2)}
 </div>
 </div>
 <div class="property">
-<div class="img">&#127794;</div>
+<div class="img">VALLEY // 03</div>
 <div class="info">
 <h4>河谷平层</h4><div class="loc">赤道 · 河谷三角洲 · 三面环水</div>
 <div class="price">0.003<span> / m&#178;</span></div>
@@ -65,7 +67,7 @@ footer a{color:rgba(160,200,180,.2)}
 </div>
 
 <div class="broker">
-<div class="avatar">&#9993;</div>
+<div class="avatar">AGENT // CF</div>
 <h4>专属置业顾问 · 陈芳</h4>
 <div class="title">曙光号通讯官 · 兼职星际地产经纪</div>
 <div class="quote">"我去过永恒号。在舰桥见过那个人的最后一面。他留了一张纸条——'花种在海边。别忘了。'<br><br>所以我开始卖海边的地。不是想赚钱。是想让更多人记住——有人花了六百年，只为了把一颗种子送到一片海。如果你买了海岸线一号——种点什么吧。算是替他种的。"</div>

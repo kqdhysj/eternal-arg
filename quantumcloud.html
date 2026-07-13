@@ -5,15 +5,15 @@
 <title>量子云 · 意识备份保险</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a0a14;color:#ddd;font-family:'PingFang SC','Microsoft YaHei',sans-serif;line-height:1.8}
+body{background:#0a0a14;color:#ddd;font-family:'PingFang SC','Microsoft YaHei',sans-serif;line-height:2}
 .hero{text-align:center;padding:80px 20px 60px;background:radial-gradient(ellipse at 50% 30%,rgba(100,60,255,.15),transparent 70%)}
-.hero h1{font-size:48px;background:linear-gradient(90deg,#a080ff,#6080ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:900}
+.hero h1{font-size:48px;color:#a080ff;font-weight:900;letter-spacing:4px}
 .hero p{color:#888;font-size:18px;margin-top:8px}
 .trust-bar{display:flex;justify-content:center;gap:48px;padding:32px 0;border-top:1px solid rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.05);margin:0 20px;color:#666;font-size:12px}
 .trust-bar span{text-align:center}
 .trust-bar strong{display:block;color:#a0a0c0;font-size:22px}
-.pricing{max-width:900px;margin:48px auto;padding:0 20px;display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
-.plan{flex:1;min-width:220px;max-width:280px;background:#111122;border:1px solid rgba(255,255,255,.06);padding:32px 24px;border-radius:4px;text-align:center;transition:border-color .3s}
+.pricing{max-width:900px;margin:48px auto;padding:0 20px;display:flex;gap:16px;flex-wrap:nowrap;justify-content:center}
+.plan{flex:1;min-width:220px;max-width:280px;background:#111122;border:1px solid rgba(255,255,255,.08);padding:32px 24px;border-radius:2px;text-align:center;transition:border-color .2s}
 .plan:hover{border-color:rgba(120,100,255,.4)}
 .plan.featured{border-color:rgba(120,100,255,.5);background:#14142a}
 .plan h3{font-size:16px;color:#a0a0d0;margin-bottom:4px}
@@ -23,14 +23,17 @@ body{background:#0a0a14;color:#ddd;font-family:'PingFang SC','Microsoft YaHei',s
 .plan ul{list-style:none;text-align:left;margin:20px 0;font-size:12px;color:#999}
 .plan ul li{padding:6px 0;border-bottom:1px solid rgba(255,255,255,.03)}
 .plan ul li::before{content:'+ ';color:#6050d0}
-.plan .btn{display:block;background:#5040c0;color:#fff;padding:10px;border-radius:2px;text-decoration:none;font-size:13px;margin-top:12px}
+.plan .btn{display:block;background:#5040c0;color:#fff;padding:10px;border:1px solid #6b5ada;border-radius:2px;text-decoration:none;font-size:13px;margin-top:12px}
+.plan .btn:hover{background:#5d4dcc}
+.plan .btn:focus-visible,footer a:focus-visible{outline:1px solid #c0b0ff;outline-offset:3px}
 .reviews{max-width:700px;margin:48px auto;padding:0 20px}
 .reviews h3{font-size:13px;color:#666;letter-spacing:2px;margin-bottom:16px}
-.review{background:#111122;padding:16px 20px;margin-bottom:8px;border-radius:2px;font-size:13px;color:rgba(200,200,230,.7)}
+.review{background:#111122;padding:16px 20px;margin-bottom:8px;border:1px solid rgba(255,255,255,.05);border-radius:2px;font-size:14px;color:rgba(200,200,230,.74)}
 .review .name{color:#888;font-size:11px;margin-top:6px}
 .review .stars{color:#c0b000}
 footer{text-align:center;padding:40px 20px;font-size:11px;color:rgba(200,200,240,.2);border-top:1px solid rgba(255,255,255,.03)}
-footer a{color:rgba(200,200,240,.3)}
+footer a{color:rgba(200,200,240,.55)}
+footer a:hover{color:#c0b0ff}
 </style>
 </head>
 <body>
@@ -76,9 +79,9 @@ footer a{color:rgba(200,200,240,.3)}
 
 <div class="reviews">
 <h3>用户评价</h3>
-<div class="review"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 上传之后没什么感觉——跟活着一样。我老婆说我脾气变好了。可能是校验的时候把坏情绪筛掉了。<div class="name">—— 永恒号 · 生物学组 周建国</div></div>
-<div class="review"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 我哥说我备份之后打游戏还是那么菜。这说明意识上传真的很准。<div class="name">—— 永恒号 · 数据管理 林汐</div></div>
-<div class="review"><span class="stars">&#9733;&#9733;&#9733;&#9733;</span> 扣一星。上次校验的时候把我齿轮标签的 3D 模型弄丢了。修复之后补偿了 100 年免费。还行。<div class="name">—— 永恒号 · 机械工程 陈远</div></div>
+<div class="review"><span class="stars">[5/5]</span> 上传之后没什么感觉——跟活着一样。我老婆说我脾气变好了。可能是校验的时候把坏情绪筛掉了。<div class="name">—— 永恒号 · 生物学组 周建国</div></div>
+<div class="review"><span class="stars">[5/5]</span> 我哥说我备份之后打游戏还是那么菜。这说明意识上传真的很准。<div class="name">—— 永恒号 · 数据管理 林汐</div></div>
+<div class="review"><span class="stars">[4/5]</span> 扣一星。上次校验的时候把我齿轮标签的 3D 模型弄丢了。修复之后补偿了 100 年免费。还行。<div class="name">—— 永恒号 · 机械工程 陈远</div></div>
 </div>
 
 <footer>
