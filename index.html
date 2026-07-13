@@ -82,15 +82,19 @@ body{background:var(--bg);color:var(--text);font-family:'Consolas','Courier New'
   const prompt = document.getElementById('prompt');
   if (!terminal || !prompt || typeof MutationObserver === 'undefined') return;
 
-  const sourceFromBatch = (lines) => {
-    const cwd = prompt.textContent || '';
-    if (/\/mnt\/0x2B/i.test(cwd)) return 'source-node-2b';
-    if (/\/mnt\/7F-A3/i.test(cwd)) return 'source-node-7f';
-
-    const text = lines.map((line) => line.textContent || '').join('\n');
+  const sourceFromText = (text) => {
+    if (/\/mnt\/0x2B/i.test(text)) return 'source-node-2b';
+    if (/\/mnt\/7F-A3/i.test(text)) return 'source-node-7f';
     if (/建立安全连接到:\s*隔离节点\s*0x2B|文件系统已挂载至\s*\/mnt\/0x2B|已跳转至\s*\/mnt\/0x2B/i.test(text)) return 'source-node-2b';
     if (/建立安全连接到:.*7F-A3|文件系统已挂载至\s*\/mnt\/7F-A3|已跳转至\s*\/mnt\/7F-A3/i.test(text)) return 'source-node-7f';
     if (/船舰网页缓存系统|正在打开系统缓存|深空通讯链路中恢复的历史网页/i.test(text)) return 'source-cache';
+    return '';
+  };
+
+  const sourceFromPrompt = () => {
+    const cwd = prompt.textContent || '';
+    if (/\/mnt\/0x2B/i.test(cwd)) return 'source-node-2b';
+    if (/\/mnt\/7F-A3/i.test(cwd)) return 'source-node-7f';
     return '';
   };
 
@@ -101,9 +105,17 @@ body{background:var(--bg);color:var(--text);font-family:'Consolas','Courier New'
         if (node instanceof HTMLElement) lines.push(node);
       }
     }
-    const source = sourceFromBatch(lines);
-    if (!source) return;
-    for (const line of lines) line.classList.add(source);
+    let activeSource = '';
+    const classified = lines.map((line) => {
+      const directSource = sourceFromText(line.textContent || '');
+      if (directSource) activeSource = directSource;
+      return { line, source: directSource || activeSource };
+    });
+    const fallbackSource = sourceFromPrompt();
+    for (const item of classified) {
+      const source = item.source || fallbackSource;
+      if (source) item.line.classList.add(source);
+    }
   });
 
   observer.observe(terminal, { childList: true });
