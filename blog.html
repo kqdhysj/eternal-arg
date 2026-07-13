@@ -19,17 +19,20 @@
 body {
   background:
     repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(180,160,120,.04) 28px, rgba(180,160,120,.04) 29px),
-    linear-gradient(165deg, #f5efe0 0%, #ede4d0 40%, #f2ead8 100%);
+    #f1eadc;
   color: var(--ink);
   font-family: 'Georgia','Noto Serif SC','STSong','Songti SC','PingFang SC','Microsoft YaHei',serif;
-  line-height: 1.9;
+  line-height: 2;
   min-height: 100vh;
 }
+.cache-badge{width:100%;padding:5px 14px;background:#0a0e17;color:#556677;border-bottom:1px solid rgba(136,204,255,.24);font:10px/1.6 Consolas,'Courier New',monospace;letter-spacing:1px;text-align:center}
+.cache-badge a{color:#88ccff;text-decoration:none;margin:0}
+.cache-badge a:hover,.cache-badge a:focus-visible{color:#fff;text-decoration:underline;text-underline-offset:3px}
 
 /* ── 顶部导航 ── */
 .topbar {
   position: sticky; top:0; z-index:100;
-  background: rgba(250,246,237,.92); backdrop-filter: blur(8px);
+  background: rgba(250,246,237,.97);
   border-bottom:1px solid var(--line); padding:14px 32px;
   display:flex; justify-content:space-between; align-items:center;
   font-size:13px;
@@ -44,9 +47,9 @@ body {
 /* ── 侧栏 ── */
 .sidebar { width:240px; flex-shrink:0; position:sticky; top:80px; align-self:flex-start; }
 .avatar {
-  width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg,#c4a070,#8a6040);
+  width:80px; height:80px; border-radius:50%; background:#8a6040;
   display:flex; align-items:center; justify-content:center; font-size:32px; color:#fff;
-  margin-bottom:16px; box-shadow:0 4px 16px rgba(140,100,50,.2);
+  margin-bottom:16px;
 }
 .sidebar h3 { font-size:16px; font-weight:600; margin-bottom:4px; }
 .sidebar .bio { font-size:12px; color:var(--ink-light); line-height:1.6; margin-bottom:20px; }
@@ -54,14 +57,14 @@ body {
 .sidebar .stat span { color:var(--accent); font-weight:600; }
 .sidebar .tags { margin-top:16px; }
 .sidebar .tags a { display:inline-block; font-size:11px; color:var(--ink-light); text-decoration:none;
-  border:1px solid var(--line); padding:3px 10px; border-radius:12px; margin:0 4px 6px 0; transition:all .2s; }
+  border:1px solid var(--line); padding:3px 10px; border-radius:2px; margin:0 4px 6px 0; transition:color .2s,border-color .2s; }
 .sidebar .tags a:hover { border-color:var(--accent); color:var(--accent); background:rgba(184,117,62,.05); }
 
 /* ── 时间轴 ── */
 .timeline { flex:1; position:relative; padding-left:40px; }
 .timeline::before {
   content:''; position:absolute; left:12px; top:0; bottom:0;
-  width:2px; background:linear-gradient(to bottom, var(--line), var(--accent-dim), var(--line));
+  width:2px; background:var(--accent-dim);
 }
 
 /* ── 文章卡片 ── */
@@ -69,7 +72,7 @@ body {
 .post::before {
   content:''; position:absolute; left:-34px; top:20px;
   width:14px; height:14px; border-radius:50%; background:var(--accent);
-  border:3px solid var(--paper); box-shadow:0 0 0 2px var(--accent-dim);
+  border:3px solid var(--paper); outline:2px solid var(--accent-dim);
 }
 .post:last-child::after {
   content:''; position:absolute; left:-34px; top:28px;
@@ -84,11 +87,10 @@ body {
 .post .year::after { content:''; flex:1; height:1px; background:var(--line); }
 
 .post-card {
-  background:var(--card); border:1px solid var(--line); border-radius:4px;
-  padding:28px 32px; box-shadow:0 2px 8px rgba(0,0,0,.03);
-  transition:box-shadow .3s;
+  background:var(--card); border:1px solid var(--line); border-radius:2px;
+  padding:28px 32px; transition:border-color .2s;
 }
-.post-card:hover { box-shadow:0 4px 20px rgba(0,0,0,.06); }
+.post-card:hover { border-color:var(--accent-dim); }
 .post-card h2 { font-size:20px; font-weight:600; margin-bottom:12px; color:#4a3020; }
 .post-card .meta { font-size:12px; color:var(--ink-light); margin-bottom:16px; display:flex; gap:16px; flex-wrap:wrap; }
 .post-card .meta .tag {
@@ -99,6 +101,10 @@ body {
 .post-card blockquote {
   border-left:3px solid var(--accent-dim); padding:8px 16px; margin:16px 0;
   color:var(--ink-light); font-style:italic; background:rgba(184,117,62,.03);
+}
+.post-card .tech-block {
+  font-family:'Consolas','Courier New','Microsoft YaHei',monospace;font-style:normal;
+  letter-spacing:.2px;background:#f1eadc;border-left-color:var(--accent);color:#594734;
 }
 
 /* ── 涂黑文字 ── */
@@ -113,17 +119,13 @@ footer {
 }
 footer .sig { font-family:'Georgia',serif; font-size:18px; color:var(--accent); font-style:italic; margin-bottom:8px; }
 footer a { color:var(--accent); text-decoration:none; }
-
-@media(max-width:768px){
-  .layout{flex-direction:column;padding:24px 16px}
-  .sidebar{width:100%;position:static;display:flex;align-items:center;gap:16px}
-  .timeline{padding-left:28px}
-  .post::before{left:-22px}
-}
+footer a:hover,footer a:focus-visible{color:#704521;text-decoration:underline;text-underline-offset:3px}
 .archive-years.open{display:block!important}
 </style>
 </head>
 <body>
+
+<div class="cache-badge">永恒号系统缓存 · 恢复自深空通讯链路 <span aria-hidden="true">|</span> <a href="index.html">← 返回船舰终端</a></div>
 
 <div class="topbar">
   <div class="logo">陈远的工程日志</div>
@@ -176,7 +178,7 @@ footer a { color:var(--accent); text-decoration:none; }
     <p>今天打开配电柜——那个装置没了。柜门内侧只剩一块残胶。不是脱落，是<strong>被取走的</strong>。有人知道它在那里，知道怎么拆，知道什么时候没人会来。就在今天。</p>
     <p>我站在柜子前面站了很久。最后把柜门关上，在维护日志上写「配电柜例行检查——正常」。不是想瞒。是不确定写了真的会不会被看到。</p>
     <p>太爷爷说得对：有些东西不是坏了才修的——是有人不想让你修。</p>
-    <blockquote>如果你在看我这些日志——去翻我的工具箱。齿轮标签还在。背面有东西。终端里打开 /home/cyuan/encrypted/personal.log——密码是太爷爷上前线那天。八位数。一九五三年七月二十七日。别忘了。</blockquote>
+    <blockquote class="tech-block">如果你在看我这些日志——去翻我的工具箱。齿轮标签还在。背面有东西。终端里打开 /home/cyuan/encrypted/personal.log——密码是太爷爷上前线那天。八位数。一九五三年七月二十七日。别忘了。</blockquote>
 <div class="post-comments" style="margin-top:20px;padding-top:16px;border-top:1px dashed var(--line)">
   <div class="comment-item" style="font-size:13px;color:var(--ink-light);margin-bottom:10px">
     <span style="font-weight:600;color:var(--accent)">林汐</span> · 第97年 第5月 · <span style="color:#c0392b">已删除</span>
@@ -212,7 +214,7 @@ footer a { color:var(--accent); text-decoration:none; }
     <p>C 区配电柜电压异常——多出大约 3% 的额外负载。好几年了，一直找不到原因。今天决定把柜子彻底拆开看。</p>
     <p>在柜门内侧，走线后面，贴着一个装置。很小。不是船上的标准件。</p>
     <p><strong>信号转发器。</strong>做工极好。能拦截指令、伪装来源 IP、以任意内部节点的身份发包。通信号码烧在电路板上：</p>
-    <blockquote>7F-A3-02-1953</blockquote>
+    <blockquote class="tech-block">7F-A3-02-1953</blockquote>
     <p>我把尾号读了三遍——<strong>1953</strong>。那是我太爷爷上前线的年份。</p>
     <p>我把它放回去了。不是不想查。是查了第一层就查不下去了——这个装置的通信号码指向<strong>管理员权限</strong>。不是我。也不是林晨。</p>
   </div>
@@ -225,7 +227,7 @@ footer a { color:var(--accent); text-decoration:none; }
     <h2>标签背面</h2>
     <div class="meta"><span class="tag">太爷爷</span><span class="tag">发现</span> <span style="font-size:11px;color:#999">阅读 634</span></div>
     <p>今天翻工具箱找扳手，齿轮标签掉了出来。我翻过来——背面有一行字。<strong>不是我爷爷写的。</strong></p>
-    <blockquote>7F-A3-02-1953。记住这个。然后去找 0x2B。</blockquote>
+    <blockquote class="tech-block">7F-A3-02-1953。记住这个。然后去找 0x2B。</blockquote>
     <p>笔迹很陌生。但墨迹干了至少几十年了。有人在我出发后碰过这个标签。<strong>在船上。</strong></p>
     <p>0x2B 是一个内部节点地址——不在标准路由表上。我试着 ping 了一次：有回应。不是空的。<span class="redacted" onclick="this.classList.toggle('revealed')">上面有人。</span></p>
   </div>
