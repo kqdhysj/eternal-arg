@@ -83,8 +83,10 @@ body{background:var(--bg);color:var(--text);font-family:'Consolas','Courier New'
   if (!terminal || !prompt || typeof MutationObserver === 'undefined') return;
 
   const sourceFromText = (text) => {
-    if (/\/mnt\/0x2B/i.test(text)) return 'source-node-2b';
-    if (/\/mnt\/7F-A3/i.test(text)) return 'source-node-7f';
+    const promptPath = text.match(/:(\/mnt\/(?:0x2B|7F-A3))\$\s/i);
+    if (promptPath) {
+      return /0x2B/i.test(promptPath[1]) ? 'source-node-2b' : 'source-node-7f';
+    }
     if (/建立安全连接到:\s*隔离节点\s*0x2B|文件系统已挂载至\s*\/mnt\/0x2B|已跳转至\s*\/mnt\/0x2B/i.test(text)) return 'source-node-2b';
     if (/建立安全连接到:.*7F-A3|文件系统已挂载至\s*\/mnt\/7F-A3|已跳转至\s*\/mnt\/7F-A3/i.test(text)) return 'source-node-7f';
     if (/船舰网页缓存系统|正在打开系统缓存|深空通讯链路中恢复的历史网页/i.test(text)) return 'source-cache';
