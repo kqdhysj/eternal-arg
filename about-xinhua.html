@@ -6,14 +6,14 @@
 <title>关于我们 · 新华星际社</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#f4f5f6;color:#1a1a1a;font-family:'PingFang SC','Microsoft YaHei','Noto Serif SC',serif;line-height:1.8}
+body{background:#eef0f2;color:#20252b;font-family:'PingFang SC','Microsoft YaHei','Noto Serif SC',serif;line-height:2}
 .topbar{background:#1a1a2e;color:#fff;font-size:12px;padding:6px 0;text-align:center;letter-spacing:1px}
-.navbar{background:#fff;border-bottom:1px solid #e0e0e0}
+.navbar{background:#f8f9fa;border-bottom:1px solid #d9dde1}
 .navbar .inner{max-width:900px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding:12px 20px}
 .navbar .brand{font-size:22px;font-weight:900;letter-spacing:2px;color:#1a1a2e}
 .navbar .brand span{color:#c44;font-weight:400}
 .navbar nav a{color:#555;text-decoration:none;margin-left:24px;font-size:13px;transition:color .2s}
-.navbar nav a:hover{color:#c44}
+.navbar nav a:hover,.navbar nav a:focus-visible{color:#9e302f;outline:none;text-decoration:underline;text-underline-offset:3px}
 main{max-width:800px;margin:0 auto;padding:48px 20px 80px}
 .hero-about{text-align:center;padding:48px 0;border-bottom:1px solid #ddd;margin-bottom:40px}
 .hero-about h1{font-size:36px;font-weight:900;letter-spacing:2px}
@@ -22,8 +22,9 @@ main{max-width:800px;margin:0 auto;padding:48px 20px 80px}
 .section h2{font-size:20px;font-weight:700;border-left:3px solid #c44;padding-left:16px;margin-bottom:16px}
 .section p{margin-bottom:14px;text-align:justify;font-size:15px}
 .team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-top:16px}
-.team-card{background:#fff;padding:20px;border:1px solid #e8e8e8;border-radius:2px;text-align:center}
-.team-card .avatar{width:56px;height:56px;border-radius:50%;background:#1a1a2e;color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 12px}
+.team-card{background:#f8f9fa;padding:20px;border:1px solid #dfe3e6;border-radius:2px;text-align:center}
+.team-card .avatar{width:56px;height:56px;border-radius:2px;background:#28313b;color:#fff;display:flex;align-items:center;justify-content:center;font-size:0;margin:0 auto 12px}
+.team-card .avatar::before{content:'STAFF';font:10px/1 Consolas,'Courier New',monospace;letter-spacing:1px}
 .team-card .name{font-weight:600;font-size:14px}
 .team-card .title{font-size:12px;color:#888;margin-top:2px}
 .timeline{margin:20px 0}
@@ -32,8 +33,9 @@ main{max-width:800px;margin:0 auto;padding:48px 20px 80px}
 .timeline .entry .desc{font-size:14px}
 .timeline .entry .desc strong{display:block;margin-bottom:2px}
 footer{background:#1a1a2e;color:rgba(255,255,255,.4);padding:32px 20px;text-align:center;font-size:12px}
-footer a{color:rgba(255,255,255,.3);text-decoration:none}
-.note{background:#fffbe8;border:1px solid #e8dca0;padding:16px 20px;margin:24px 0;font-size:13px;color:#665020;border-radius:2px}
+footer a{color:rgba(255,255,255,.55);text-decoration:none}
+footer a:hover,footer a:focus-visible{color:#fff;text-decoration:underline;text-underline-offset:3px}
+.note{background:#e7e9eb;border:1px solid #cfd4d9;padding:16px 20px;margin:24px 0;font-size:13px;color:#49515a;border-radius:2px}
 </style>
 </head>
 <body>
