@@ -5,138 +5,209 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>曙光号救援报告 · ETRN-0097-RB</title>
 <style>
+:root{
+  --paper:#fff;
+  --desk:#d9d9d5;
+  --ink:#111;
+  --muted:#5f5f5f;
+  --official-red:#d40000;
+  --terminal:#0a0e17;
+  --terminal-line:#315064;
+  --terminal-accent:#88ccff;
+}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#f4f5f3;color:#1a1a1a;font-family:'SimSun','STSong','PingFang SC','Microsoft YaHei',serif;font-size:14px;line-height:2;max-width:720px;margin:0 auto;padding:42px 20px 48px}
-.cache-badge{position:absolute;top:0;left:0;right:0;padding:5px 14px;background:#0a0e17;color:#556677;border-bottom:1px solid rgba(136,204,255,.24);font:10px/1.6 Consolas,'Courier New',monospace;letter-spacing:1px;text-align:center}
-.cache-badge a{color:#88ccff;text-decoration:none}
+html{background:var(--desk)}
+body{min-width:0;background:var(--desk);color:var(--ink);font-family:'FangSong','STFangsong','FZFSJW','SimSun',serif;font-size:16px;line-height:1.9}
+a:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+.visually-hidden{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* 缓存界面，不属于公文正文 */
+.cache-badge{position:relative;z-index:2;padding:6px 14px;background:var(--terminal);color:#647789;border-bottom:1px solid rgba(136,204,255,.24);font:11px/1.6 Consolas,'Courier New',monospace;letter-spacing:1px;text-align:center}
+.cache-badge a{color:var(--terminal-accent);text-decoration:none}
 .cache-badge a:hover,.cache-badge a:focus-visible{color:#fff;text-decoration:underline;text-underline-offset:3px}
-/* 绝密顶标 */
-.top-secret{text-align:center;padding:20px 0 8px}
-.top-secret span{display:inline-block;border:2px solid #c00;color:#c00;padding:6px 28px;font-size:20px;font-weight:900;letter-spacing:10px}
-/* 红头 */
-.red-head{background:#c00;color:#fff;text-align:center;padding:18px 20px;margin-top:4px;position:relative}
-.red-head::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:#800}
-.red-head::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:#800}
-.red-head .dept{font-size:22px;font-weight:700;letter-spacing:8px}
-.red-head .sub{font-size:11px;opacity:.7;margin-top:6px;letter-spacing:3px}
-/* 发文字号 */
-.doc-no{border-bottom:2px solid #c00;padding:10px 0;margin:0 0 20px;font-size:12px;color:#333;display:flex;justify-content:space-between}
-.doc-no span{font-family:'KaiTi','STKaiti',serif}
-/* 标题 */
-.doc-title{text-align:center;padding:24px 0 12px}
-.doc-title h1{font-size:22px;font-weight:700;font-family:'SimHei','STHeiti',sans-serif}
-/* 密级 */
-.level-box{text-align:right;font-size:12px;color:#c00;font-weight:700;padding:0 0 12px;letter-spacing:4px}
+
+/* A4 公文纸张 */
+.document-shell{width:min(210mm,calc(100% - 32px));margin:26px auto}
+.official-document{min-height:297mm;padding:21mm 27mm 20mm;background:var(--paper);box-shadow:0 5px 24px rgba(0,0,0,.17)}
+.document-header{position:relative}
+.document-flags{display:flex;align-items:flex-start;justify-content:space-between;min-height:34px;font-family:'SimSun','STSong',serif;font-size:13px;line-height:1.35}
+.copy-number{letter-spacing:1px}
+.document-flags strong{color:var(--official-red);font-weight:400;letter-spacing:1px}
+.agency-mark{margin:9px -8mm 15px;color:var(--official-red);font-family:'FZXiaoBiaoSong-B05S','方正小标宋简体','STZhongsong','SimSun',serif;font-size:34px;font-weight:700;line-height:1.25;letter-spacing:.1em;text-align:center;white-space:nowrap}
+.red-rule{position:relative;height:7px;border-top:4px solid var(--official-red);border-bottom:1px solid var(--official-red)}
+.red-rule span{position:absolute;top:50%;left:50%;padding:0 7px;background:var(--paper);color:var(--official-red);font:18px/1 'SimSun',serif;transform:translate(-50%,-52%)}
+.document-meta{display:flex;justify-content:space-between;gap:16px;padding:10px 4px 7px;font-family:'FangSong','STFangsong','SimSun',serif;font-size:15px;line-height:1.5}
+.document-meta strong{font-family:'KaiTi','STKaiti','SimSun',serif;font-weight:400}
+.document-title{padding:25px 0 20px;text-align:center}
+.document-title h1{font-family:'FZXiaoBiaoSong-B05S','方正小标宋简体','STZhongsong','SimSun',serif;font-size:25px;font-weight:700;line-height:1.55;letter-spacing:.03em}
+.recipient{margin:0 0 2px;text-indent:0}
+
 /* 正文 */
-.section{margin-bottom:24px}
-.section h2{font-size:15px;font-weight:700;font-family:'SimHei','STHeiti',sans-serif;text-align:center;margin:24px 0 12px}
-.section p{margin-bottom:12px;font-size:14px;text-indent:2em}
-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
-td{padding:6px 10px;border:1px solid #999}
-td:first-child{background:#f5f5f5;font-weight:600;width:160px}
-/* 印章 */
-.stamp-area{text-align:right;padding:20px 0 0}
-.stamp{display:inline-block;width:120px;height:120px;border:3px solid #c00;border-radius:50%;color:#c00;font-size:14px;font-weight:900;text-align:center;line-height:40px;transform:rotate(-15deg);letter-spacing:4px;opacity:.85;position:relative;padding-top:24px}
-.stamp::before{content:'';position:absolute;inset:8px;border:1px solid #c00;border-radius:50%}
-/* 水印 */
-.watermark{position:fixed;inset:0;pointer-events:none;z-index:999;overflow:hidden}
-.watermark .grid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(8,1fr);gap:40px 60px;padding:40px}
-.watermark .grid span{display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:900;color:rgba(204,0,0,.10);transform:rotate(-20deg);font-family:'SimHei','STHeiti',sans-serif}
-/* 页脚 */
-.note{font-size:14px;line-height:2;margin-top:32px;padding:20px;background:#fafafa;border:1px solid #e0e0e0}
-.note p{text-indent:0}
-.note .hand{font-family:'KaiTi','STKaiti',serif;color:#224}
-footer{margin-top:40px;padding-top:16px;border-top:1px solid #ddd;font-size:11px;color:#999;text-align:center}
-footer a{color:#666;text-decoration:none}
-.terminal-return{margin-top:14px;padding:14px 0 0;border-top:1px solid #c8c8c5;text-align:center}
-.terminal-return a{display:inline-block;padding:5px 10px;color:#315b73;border:1px solid #7893a3}
-.terminal-return a:hover,.terminal-return a:focus-visible{border-color:#315b73;color:#132e3d;outline:none}
+.document-body{font-size:16px;line-height:1.92}
+.section{margin:0}
+.section h2{margin:.55em 0 0;font-family:'SimHei','STHeiti','Microsoft YaHei',sans-serif;font-size:16px;font-weight:700;line-height:1.92;text-align:left}
+.section p{margin:0;text-indent:2em}
+.section strong{font-family:'SimHei','STHeiti','Microsoft YaHei',sans-serif}
+table{width:100%;margin:15px 0 13px;border-collapse:collapse;table-layout:fixed;font-size:15px;line-height:1.65}
+td{padding:7px 9px;border:1px solid #555;vertical-align:top;overflow-wrap:anywhere}
+td:first-child{width:9.2em;background:transparent;font-family:'SimHei','STHeiti','Microsoft YaHei',sans-serif;font-weight:700}
+
+/* 落款与虚构印章 */
+.signing-block{position:relative;width:300px;min-height:145px;margin:31px 12px 0 auto;padding-top:12px;text-align:center}
+.signing-block p{position:relative;z-index:1;margin:0;text-indent:0}
+.official-seal{position:absolute;z-index:0;top:-12px;right:14px;width:148px;height:148px;overflow:visible;color:var(--official-red);opacity:.76;transform:rotate(-10deg);mix-blend-mode:multiply}
+.official-seal circle{fill:none;stroke:currentColor;stroke-width:4}
+.official-seal path{fill:none}
+.official-seal text{fill:currentColor;font-family:'SimSun',serif;font-size:14px;font-weight:700;letter-spacing:2px}
+.official-seal .seal-year{font-size:12px;letter-spacing:1px}
+.official-seal polygon{fill:currentColor}
+
+/* 勘查附注 */
+.field-note{margin-top:22px;padding-top:15px;border-top:1px solid #333;font-size:15px;line-height:1.9}
+.field-note p{margin:0;text-indent:2em}
+.field-note .attachment-title{font-family:'SimHei','STHeiti','Microsoft YaHei',sans-serif;font-weight:700;text-indent:0}
+.field-note .byline{margin:3px 0 4px;font-family:'KaiTi','STKaiti','SimSun',serif;text-align:right;text-indent:0}
+
+/* 公文版记 */
+.imprint{margin-top:34px;border-top:2px solid #333;border-bottom:2px solid #333;font-family:'FangSong','STFangsong','SimSun',serif;font-size:13px;line-height:1.55}
+.imprint p{padding:5px 4px}
+.imprint p+p{border-top:1px solid #555}
+.imprint-row{display:flex;justify-content:space-between;gap:16px}
+.archive-number{text-align:right;color:var(--muted);font-size:12px}
+
+/* 终端操作区，不属于公文正文 */
+.terminal-chrome{width:min(210mm,calc(100% - 32px));margin:0 auto 34px;padding:15px 18px;background:var(--terminal);border:1px solid var(--terminal-line);color:#8293a2;font:12px/1.75 Consolas,'Courier New',monospace}
+.terminal-chrome p{overflow-wrap:anywhere}
+.terminal-return{margin-top:10px;padding-top:10px;border-top:1px solid var(--terminal-line);text-align:center}
+.terminal-return a{display:inline-block;padding:5px 12px;border:1px solid #7893a3;color:var(--terminal-accent);text-decoration:none}
+.terminal-return a:hover,.terminal-return a:focus-visible{border-color:var(--terminal-accent);color:#fff}
+
+@media (max-width:600px){
+  html,body{background:var(--paper)}
+  .cache-badge{padding-inline:10px;font-size:10px;letter-spacing:.5px}
+  .document-shell{width:100%;margin:0}
+  .official-document{min-height:0;padding:25px 24px 34px;box-shadow:none}
+  .document-flags{min-height:29px;font-size:12px}
+  .agency-mark{margin:8px -8px 13px;font-size:clamp(20px,5.2vw,24px);letter-spacing:.06em}
+  .document-meta{gap:8px;padding-inline:0;font-size:13px}
+  .document-title{padding:22px 0 17px}
+  .document-title h1{font-size:21px}
+  .document-body{font-size:15px;line-height:1.88}
+  .section h2{font-size:15px;line-height:1.88}
+  table{font-size:13px;line-height:1.55}
+  td{padding:6px 7px}
+  td:first-child{width:7.2em}
+  .signing-block{width:270px;max-width:100%;margin-right:0}
+  .field-note{font-size:14px}
+  .imprint{font-size:12px}
+  .imprint-row{gap:8px}
+  .terminal-chrome{width:100%;margin:0;padding:14px 16px;border-right:0;border-left:0}
+}
+
+@media print{
+  @page{size:A4;margin:0}
+  html,body{background:#fff}
+  .cache-badge,.terminal-chrome{display:none!important}
+  .document-shell{width:210mm;margin:0}
+  .official-document{min-height:297mm;box-shadow:none}
+}
 </style>
 </head>
 <body>
 
 <div class="cache-badge">永恒号系统缓存 · 恢复自深空通讯链路 <span aria-hidden="true">|</span> <a href="index.html">← 返回船舰终端</a></div>
 
-<div class="watermark">
-  <div class="grid">
-    <span>绝</span><span>密</span><span>绝</span><span>密</span><span>绝</span>
-    <span>密</span><span>绝</span><span>密</span><span>绝</span><span>密</span>
-    <span>绝</span><span>密</span><span>绝</span><span>密</span><span>绝</span>
-    <span>密</span><span>绝</span><span>密</span><span>绝</span><span>密</span>
-    <span>绝</span><span>密</span><span>绝</span><span>密</span><span>绝</span>
-    <span>密</span><span>绝</span><span>密</span><span>绝</span><span>密</span>
-    <span>绝</span><span>密</span><span>绝</span><span>密</span><span>绝</span>
-    <span>密</span><span>绝</span><span>密</span><span>绝</span><span>密</span>
-  </div>
-</div>
+<main class="document-shell">
+  <article class="official-document" aria-labelledby="report-title">
+    <header class="document-header">
+      <div class="document-flags">
+        <span class="copy-number">0001</span>
+        <strong>绝密★长期</strong>
+      </div>
+      <div class="agency-mark">深空航行事故联合调查组文件</div>
+      <div class="red-rule" aria-hidden="true"><span>★</span></div>
+      <div class="document-meta">
+        <span>深空联调〔97〕9号</span>
+        <span>签发人：<strong>曙光号舰长</strong></span>
+      </div>
+    </header>
 
-<div class="top-secret"><span>绝 密</span></div>
+    <div class="document-title">
+      <h1 id="report-title">关于永恒号事故现场勘查情况的报告</h1>
+    </div>
 
-<div class="red-head">
-  <div class="dept">深空航行事故联合调查组</div>
-  <div class="sub">JU LIAN SHEN KONG JIU YUAN JU</div>
-</div>
+    <div class="document-body">
+      <p class="recipient">联合深空调查局：</p>
 
-<div class="doc-no">
-  <span>曙光号发〔第97年〕第 0097 号</span>
-  <span>签发：曙光号舰长</span>
-</div>
+      <section class="section">
+        <h2>一、任务概述</h2>
+        <p>救援飞船「曙光号」于第97年第9月抵达永恒号最后一次发出信号的坐标。任务目标：搜救幸存者、评估船舰状态、回收航行数据。</p>
+        <p>永恒号被发现时处于漂流状态。主反应堆关闭。生命维持系统以最低功耗运行——仅维持舰桥及一个隔离节点的供电。</p>
+      </section>
 
-<div class="level-box">机密等级：绝密 · 仅限联合深空调查局</div>
+      <section class="section">
+        <h2>二、现场发现</h2>
+        <table>
+          <tbody>
+            <tr><td>舰桥状态</td><td>灯光全灭。操作台前发现一名男性，靠坐于椅上，面容安详。生命体征：无。</td></tr>
+            <tr><td>身份确认</td><td>林晨（LINCHEN）· 永恒号管理员。死因：能源耗尽导致生命维持终止。</td></tr>
+            <tr><td>随身物品</td><td>老旧平板一台，屏幕碎裂，电量耗尽。充电后恢复数据——含维修日志、航行记录、咖啡摄入量统计，以及一个名为「小汐」的文件夹。</td></tr>
+            <tr><td>平板最后内容</td><td>一条未发送的消息：「小汐，记得看星星。」时间戳：能源耗尽前 17 秒。</td></tr>
+            <tr><td>休眠舱区</td><td>12 个休眠舱。11 个显示「意识数据丢失。容器空置。」1 个标签为「陈远 · 机械工程师」——舱内男性面容平静，手指微蜷。未唤醒。</td></tr>
+            <tr><td>隔离节点 7F</td><td>独立供电。运行中。终端在线——显示林汐意识体正常。</td></tr>
+            <tr><td>C区第三配电柜</td><td>柜门内侧残留粘合剂痕迹。尺寸匹配已知设备 7F-A3-02-1953。设备未在现场找到。</td></tr>
+          </tbody>
+        </table>
+      </section>
 
-<div class="doc-title">
-  <h1>关于永恒号事故现场勘查情况的报告</h1>
-</div>
+      <section class="section">
+        <h2>三、数据恢复</h2>
+        <p>从永恒号系统缓存中恢复了以下数据：船舰终端日志（index.html）、工程博客（blog.html）、项目档案、Tick 系统日志、新华星际社新闻缓存、陈远设备拆解记录。恢复数据已归档至调查终端。</p>
+        <p>未恢复数据：主数据库 50 名船员的意识数据——已确认全部丢失。射线暴抵达前数据库保护层被手动关闭。关闭操作持续 14 秒。来源：内部节点 0x2B。</p>
+      </section>
 
-<div class="section">
-  <h2>一、任务概述</h2>
-  <p>救援飞船「曙光号」于第97年第9月抵达永恒号最后一次发出信号的坐标。任务目标：搜救幸存者、评估船舰状态、回收航行数据。</p>
-  <p>永恒号被发现时处于漂流状态。主反应堆关闭。生命维持系统以最低功耗运行——仅维持舰桥及一个隔离节点的供电。</p>
-</div>
+      <section class="section">
+        <h2>四、初步结论</h2>
+        <p>射线暴非自然宇宙现象。数据库保护系统的关闭为人为操作，动机与来源已从恢复数据中确认。结论：<strong>蓄意攻击</strong>。攻击方位于地球。船舰内部存在配合者——节点 0x2B 中未注册的意识体。</p>
+        <p>建议：将案件移交联合深空调查局。事故编号 ETRN-0097-RB 保持开放。</p>
+      </section>
+    </div>
 
-<div class="section">
-  <h2>二、现场发现</h2>
-  <table>
-    <tr><td>舰桥状态</td><td>灯光全灭。操作台前发现一名男性，靠坐于椅上，面容安详。生命体征：无。</td></tr>
-    <tr><td>身份确认</td><td>林晨（LINCHEN）· 永恒号管理员。死因：能源耗尽导致生命维持终止。</td></tr>
-    <tr><td>随身物品</td><td>老旧平板一台，屏幕碎裂，电量耗尽。充电后恢复数据——含维修日志、航行记录、咖啡摄入量统计，以及一个名为「小汐」的文件夹。</td></tr>
-    <tr><td>平板最后内容</td><td>一条未发送的消息：「小汐，记得看星星。」时间戳：能源耗尽前 17 秒。</td></tr>
-    <tr><td>休眠舱区</td><td>12 个休眠舱。11 个显示「意识数据丢失。容器空置。」1 个标签为「陈远 · 机械工程师」——舱内男性面容平静，手指微蜷。未唤醒。</td></tr>
-    <tr><td>隔离节点 7F</td><td>独立供电。运行中。终端在线——显示林汐意识体正常。</td></tr>
-    <tr><td>C区第三配电柜</td><td>柜门内侧残留粘合剂痕迹。尺寸匹配已知设备 7F-A3-02-1953。设备未在现场找到。</td></tr>
-  </table>
-</div>
+    <div class="signing-block">
+      <p>深空航行事故联合调查组</p>
+      <p>第97年9月9日</p>
+      <span class="visually-hidden">深空航行事故联合调查组印章</span>
+      <svg class="official-seal" aria-hidden="true" viewBox="0 0 160 160">
+        <defs>
+          <path id="seal-text-path" d="M 26 100 A 60 60 0 0 1 134 100"></path>
+        </defs>
+        <circle cx="80" cy="80" r="66"></circle>
+        <text><textPath href="#seal-text-path" startOffset="50%" text-anchor="middle">深空航行事故联合调查组</textPath></text>
+        <polygon points="80,52 87,70 106,71 91,83 96,102 80,91 64,102 69,83 54,71 73,70"></polygon>
+        <text class="seal-year" x="80" y="126" text-anchor="middle">第97年</text>
+      </svg>
+    </div>
 
-<div class="section">
-  <h2>三、数据恢复</h2>
-  <p>从永恒号系统缓存中恢复了以下数据：船舰终端日志（index.html）、工程博客（blog.html）、项目档案、Tick 系统日志、新华星际社新闻缓存、陈远设备拆解记录。恢复数据已归档至调查终端。</p>
-  <p>未恢复数据：主数据库 50 名船员的意识数据——已确认全部丢失。射线暴抵达前数据库保护层被手动关闭。关闭操作持续 14 秒。来源：内部节点 0x2B。</p>
-</div>
+    <aside class="field-note" aria-labelledby="field-note-title">
+      <p class="attachment-title" id="field-note-title">附件：现场勘查人员补记</p>
+      <p class="byline">曙光号通讯官 陈芳 · 手写</p>
+      <p>他脸上带着笑。不是那种安详——是等到了什么的表情。平板上那个叫「小汐」的文件夹——打开之后是几万条聊天记录。从她刚上传那年开始，一条都没删。最后一页是一行没发出去的字：「花种在海边。别忘了。」</p>
+      <p>我在舰桥站了很久。然后回到曙光号，往中继站-7发了一条加密链路请求。不知道她能不能收到。但他说了——三天后到。我不能让他这句话白说。</p>
+      <p>他留了一张纸条在键盘下面。字迹很轻，像是用最后一点力气写的。只四个字——「我等到她了。」</p>
+    </aside>
 
-<div class="section">
-  <h2>四、初步结论</h2>
-  <p>射线暴非自然宇宙现象。数据库保护系统的关闭为人为操作，动机与来源已从恢复数据中确认。结论：<strong>蓄意攻击</strong>。攻击方位于地球。船舰内部存在配合者——节点 0x2B 中未注册的意识体。</p>
-  <p>建议：将案件移交联合深空调查局。事故编号 ETRN-0097-RB 保持开放。</p>
-  <p style="text-align:right;margin-top:28px;font-family:'KaiTi','STKaiti',serif;text-indent:0">曙光号舰长（签章）</p>
-</div>
+    <footer class="imprint">
+      <p><span>抄送：</span>联合深空调查局。</p>
+      <p class="imprint-row"><span>深空航行事故联合调查组办公室</span><span>第97年9月9日印发</span></p>
+      <p class="archive-number">归档编号：DSR-0097-ETRN</p>
+    </footer>
+  </article>
+</main>
 
-<div class="stamp-area">
-  <div class="stamp">深空航行<br>事故联合<br>调查组</div>
-</div>
-
-<div class="note">
-  <p class="hand">勘查附注 · 曙光号通讯官 陈芳 · 手写</p>
-  <p>他脸上带着笑。不是那种安详——是等到了什么的表情。平板上那个叫「小汐」的文件夹——打开之后是几万条聊天记录。从她刚上传那年开始，一条都没删。最后一页是一行没发出去的字：「花种在海边。别忘了。」</p>
-  <p>我在舰桥站了很久。然后回到曙光号，往中继站-7发了一条加密链路请求。不知道她能不能收到。但他说了——三天后到。我不能让他这句话白说。</p>
-  <p>他留了一张纸条在键盘下面。字迹很轻，像是用最后一点力气写的。只四个字——「我等到她了。」</p>
-</div>
-
-<footer>
-  <p>深空航行事故联合调查组 · 曙光号 · 第97年第9月</p>
-  <p>报告编号：DSR-0097-ETRN · 状态：已归档 · 抄送：联合深空调查局</p>
-  <p style="margin-top:12px">→ 终端操作：登录 index.html，/su LINCHEN，密码线索见 /etc/password_hint.txt，/logs 查看完整通讯记录</p>
+<section class="terminal-chrome" aria-label="终端操作提示">
+  <p>→ 终端操作：登录 index.html，/su LINCHEN，密码线索见 /etc/password_hint.txt，/logs 查看完整通讯记录</p>
   <p class="terminal-return"><a href="index.html">← 返回船舰终端</a></p>
-</footer>
+</section>
 
 </body>
 </html>
