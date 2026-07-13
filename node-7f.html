@@ -6,7 +6,10 @@
 <title>林汐 · 隔离节点 7F</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a0f1a;color:#c0c8d4;font-family:'PingFang SC','Microsoft YaHei',serif;line-height:2;max-width:600px;margin:0 auto;padding:48px 24px}
+body{background:#0a0e17;color:#c0c8d4;font-family:'PingFang SC','Microsoft YaHei',serif;font-size:14px;line-height:2;max-width:600px;margin:0 auto;padding:74px 24px 48px}
+.cache-badge{position:absolute;top:0;left:0;right:0;padding:5px 14px;background:#0a0e17;color:#556677;border-bottom:1px solid rgba(136,204,255,.24);font:10px/1.6 Consolas,'Courier New',monospace;letter-spacing:1px;text-align:center}
+.cache-badge a{color:#88ccff;text-decoration:none}
+.cache-badge a:hover,.cache-badge a:focus-visible{color:#fff;text-decoration:underline;text-underline-offset:3px}
 .status{text-align:center;padding:32px 0;margin-bottom:40px;border-bottom:1px solid rgba(136,204,255,.1)}
 .status .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#88ccff;margin-right:8px;animation:pulse 3s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
@@ -19,10 +22,15 @@ body{background:#0a0f1a;color:#c0c8d4;font-family:'PingFang SC','Microsoft YaHei
 .entry .line .highlight{color:#88ccff}
 .empty-line{color:rgba(200,210,230,.15);font-style:italic;margin:20px 0;text-align:center;font-size:13px}
 footer{text-align:center;padding:40px 0;font-size:11px;color:rgba(136,204,255,.2)}
-footer a{color:rgba(136,204,255,.3);text-decoration:none}
+footer a{color:rgba(136,204,255,.65);text-decoration:none}
+.terminal-return{margin-top:24px;padding:14px 0 0;border-top:1px solid rgba(136,204,255,.18);text-align:center}
+.terminal-return a{display:inline-block;padding:5px 10px;color:#88ccff;border:1px solid rgba(136,204,255,.35)}
+.terminal-return a:hover,.terminal-return a:focus-visible{border-color:#88ccff;color:#fff;outline:none}
 </style>
 </head>
 <body>
+
+<div class="cache-badge">永恒号系统缓存 · 恢复自深空通讯链路 <span aria-hidden="true">|</span> <a href="index.html">← 返回船舰终端</a></div>
 
 <div class="status">
   <div><span class="dot"></span>隔离节点 7F · 运行中</div>
@@ -112,7 +120,7 @@ footer a{color:rgba(136,204,255,.3);text-decoration:none}
   <p>隔离节点 7F · 林汐</p>
   <p>所有日志文件前缀：HSDK。别问为什么。</p>
 <p style="font-size:12px;color:rgba(136,204,255,.3)">→ 终端内查看我藏起来的文件：/home/lxi/hidden/message.txt。密码是两串数字拼起来——碎片记录里有。</p>
-  <p><a href="index.html">← 船舰终端</a></p>
+  <p class="terminal-return"><a href="index.html">← 返回船舰终端</a></p>
 </footer>
 </body>
 </html>

@@ -6,7 +6,10 @@
 <title>永恒号 · 项目档案</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#f8f9fa;color:#1a1a1a;font-family:'PingFang SC','Microsoft YaHei',sans-serif;line-height:1.7;max-width:800px;margin:0 auto;padding:60px 20px}
+body{background:#f1f3f4;color:#1a1a1a;font-family:'PingFang SC','Microsoft YaHei',sans-serif;font-size:14px;line-height:2;max-width:800px;margin:0 auto;padding:78px 20px 60px}
+.cache-badge{position:absolute;top:0;left:0;right:0;padding:5px 14px;background:#0a0e17;color:#556677;border-bottom:1px solid rgba(136,204,255,.24);font:10px/1.6 Consolas,'Courier New',monospace;letter-spacing:1px;text-align:center}
+.cache-badge a{color:#88ccff;text-decoration:none;border:0}
+.cache-badge a:hover,.cache-badge a:focus-visible{color:#fff;text-decoration:underline;text-underline-offset:3px}
 .stamp{position:fixed;top:40px;right:40px;border:3px solid #c00;color:#c00;font-size:18px;font-weight:700;padding:8px 20px;transform:rotate(15deg);opacity:0.6;pointer-events:none}
 .header{border-bottom:3px double #333;padding-bottom:20px;margin-bottom:40px}
 .header .label{font-size:12px;color:#666;letter-spacing:4px;text-transform:uppercase}
@@ -19,13 +22,13 @@ body{background:#f8f9fa;color:#1a1a1a;font-family:'PingFang SC','Microsoft YaHei
 .section h2{font-size:18px;font-weight:700;border-bottom:1px solid #ccc;padding-bottom:8px;margin-bottom:16px}
 .section h3{font-size:15px;font-weight:600;margin:16px 0 8px}
 table{width:100%;border-collapse:collapse;margin:12px 0}
-th,td{border:1px solid #ddd;padding:8px 12px;font-size:13px;text-align:left}
+th,td{border:1px solid #d5d8db;padding:8px 12px;font-size:14px;text-align:left}
 th{background:#eee;font-weight:600}
 td.num{text-align:right;font-family:monospace}
 tr.deleted td{color:#999;text-decoration:line-through}
 tr.flagged td{background:#fff9f0}
 .crew-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin:12px 0}
-.crew-card{background:#fff;border:1px solid #e0e0e0;padding:10px 14px;font-size:13px;border-radius:2px}
+.crew-card{background:#f7f8f8;border:1px solid #d8dcdf;padding:10px 14px;font-size:14px;border-radius:2px}
 .crew-card .name{font-weight:600}
 .crew-card .role{color:#666;font-size:12px}
 .crew-card .cabin{color:#999;font-size:11px}
@@ -33,9 +36,16 @@ tr.flagged td{background:#fff9f0}
 .footnote p{margin-bottom:8px}
 a{color:#333;text-decoration:none;border-bottom:1px dotted #999}
 a:hover{color:#000}
+a:focus-visible{outline:1px solid #333;outline-offset:3px}
+.section ol{font-size:14px!important;line-height:2}
+.terminal-return{margin-top:24px;padding:14px 0 0;border-top:1px solid #b7bdc2;text-align:center}
+.terminal-return a{display:inline-block;padding:5px 10px;color:#315b73;border:1px solid #7893a3;text-decoration:none}
+.terminal-return a:hover,.terminal-return a:focus-visible{border-color:#315b73;color:#132e3d;outline:none}
 </style>
 </head>
 <body>
+
+<div class="cache-badge">永恒号系统缓存 · 恢复自深空通讯链路 <span aria-hidden="true">|</span> <a href="index.html">← 返回船舰终端</a></div>
 
 <div class="stamp">内部档案 · 机密</div>
 
@@ -177,7 +187,7 @@ a:hover{color:#000}
 <p>档案编制：系统自动归档</p>
   <p>最后修改：第97年 第9小时 · 修改者：林晨（管理员）</p>
   <p>备注：该档案的多处关键信息在暴发后被修改或删除。修改操作均具有管理员权限。当前版本恢复自系统缓存。</p>
-  <p><a href="index.html">← 返回船舰终端</a> · <a href="blog.html">陈远工程日志 →</a></p>
+  <p class="terminal-return"><a href="index.html">← 返回船舰终端</a> · <a href="blog.html">陈远工程日志 →</a></p>
 </div>
 
 </body>
