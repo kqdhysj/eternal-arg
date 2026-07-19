@@ -3,11 +3,11 @@
 // ══════════════════════════════════════════════
 
 
-function _h(s){ let h=0; for(let i=0;i<s.length;i++){ h=((h<<5)-h)+s.charCodeAt(i); h|=0; } return h.toString(16); }
+function _h(s){ let h=0; for(let i=0;i<s.length;i++){ h=((h<<5)-h)+s.charCodeAt(i); h|=0; } return (h>>>0).toString(16); }
 const ACCOUNTS = {
   'guest':   {pass:'', name:'访客', role:'只读权限', home:'/'},
   'LINCHEN': {passHash:'6235142', name:'林晨', role:'管理员', home:'/home/lchen'},
-  'LINXI':   {passHash:'fc93c4f7', name:'林汐', role:'意识体·隔离节点', home:'/home/lxi'},
+  'LINXI':   {passHash:'693e23a', name:'林汐', role:'意识体·隔离节点', home:'/home/lxi'},
   'CHENYUAN':{passHash:'56521cd5', name:'陈远', role:'机械工程师', home:'/home/cyuan'},
 };
 
@@ -98,7 +98,7 @@ const FILESYSTEM = {
 
 又及：2:17。每次都是2:17。这不是巧合。陈远的转发器笔记锁了权限——chmod +r 要他自己来。但里面的东西可能跟这串时间有关系。`},
           'hidden/message.txt':{type:'file',perms:'---',owner:'LINXI',desc:'隐藏文件（需要密码）',
-            locked:true, passHash:'c60e4255',
+            locked:true, passHash:'1693a8',
             content:`这些是我发现但没放在公开日志里的东西。
 
 1. 数据库保护系统被关闭的操作签名，不是林晨。是伪造的管理员凭证。
@@ -359,7 +359,7 @@ cyuan:x:1002:1002:陈远:/home/cyuan:/bin/sh
 
 林晨（LINCHEN）：他最在意的人。全部小写。
 林汐（LINXI）：Tick 的英文单词。加一个数字——她在隔离节点等了几年。
-陈远（CHENYUAN）：齿轮标签上的年份。全部数字。`
+陈远（CHENYUAN）：齿轮标签上的年份。前面加上「gear」。`
           },
           'crew_manifest.txt':{type:'file',perms:'r--',desc:'永恒号船员名单（出发时）',
           content:`═══════════════════════════════════
@@ -384,7 +384,8 @@ cyuan:x:1002:1002:陈远:/home/cyuan:/bin/sh
 # Uvf svefg jbeqf nsgre hcybnq: "V'z abg fhccbfrq gb or urer."
 ═══════════════════════════════════`},
       }},
-      'var/log':{type:'dir',perms:'r-x',desc:'系统日志',children:{
+      'var':{type:'dir',perms:'r-x',desc:'系统变量',children:{
+        'log':{type:'dir',perms:'r-x',desc:'系统日志',children:{
           'prelaunch_anomaly.log':{type:'file',perms:'r--',desc:'出发前异常报告',
             content:`[出发前72小时 03:15] 上传队列异常：计数显示51。预期值：50。复核三次——确认多出一条。
 [出发前72小时 03:17] 第51号条目详情——来源：外部终端。目标节点：0x2B。上传类型：完整意识映射。
@@ -405,7 +406,7 @@ cyuan:x:1002:1002:陈远:/home/cyuan:/bin/sh
 注意：lchen（林晨）在第97年一直处于休眠状态。本次登录使用的凭证为第1年生成的旧token。
 该token从未被使用过——直到十七秒前。`},
         'shadow.log':{type:'file',perms:'---',desc:'隐藏日志（需要密码）',
-          locked:true, passHash:'bacfe6c2',
+          locked:true, passHash:'177903',
           dynamic:true,
           content:`不要相信我。
 
@@ -516,6 +517,7 @@ cyuan:x:1002:1002:陈远:/home/cyuan:/bin/sh
         }},
       }},
     }},
+  }},
 };
 
 // ══════════════════════════════════
