@@ -97,8 +97,9 @@ const FILESYSTEM = {
             + `\n补充：第96年第3月的那条异常之前一小时，陈远向我抱怨过一次——他的终端凌晨重启了。他没操作。
 
 又及：2:17。每次都是2:17。这不是巧合。陈远的转发器笔记锁了权限——chmod +r 要他自己来。但里面的东西可能跟这串时间有关系。`},
-          'hidden/message.txt':{type:'file',perms:'---',owner:'LINXI',desc:'隐藏文件（需要密码）',
-            locked:true, passHash:'1693a8',
+          'hidden':{type:'dir',perms:'---',owner:'LINXI',desc:'隐藏文件',children:{
+            'message.txt':{type:'file',perms:'---',owner:'LINXI',desc:'隐藏文件（需要密码）',
+              locked:true, passHash:'1693a8',
             content:`这些是我发现但没放在公开日志里的东西。
 
 1. 数据库保护系统被关闭的操作签名，不是林晨。是伪造的管理员凭证。
@@ -114,6 +115,7 @@ const FILESYSTEM = {
 又及：我查了节点0x2B的注册记录。上传来源不是船上的任何终端。
 是地球。出发前72小时。有人在地面上把一个人塞进了这艘船。
 ──`},
+          }},
           'dreams':{type:'dir',perms:'r--',owner:'LINXI',desc:'林汐的梦记录',children:{
             'dream_01.txt':{type:'file',perms:'r--',owner:'LINXI',desc:'重复的梦',
               dynamic:true,
@@ -178,8 +180,9 @@ const FILESYSTEM = {
 [第96年] C区配电柜电压异常——似乎有额外负载。来源不明。跳了两行黄字。
 [第97年 第5月] C区配电柜发现不明设备——小型。贴在柜门内侧。不是船上的。标签模糊。拍照存档。`
             + `\n[第97年 第6月] 暴发前3天。那个不明设备不见了。柜门内侧只剩下标签残胶。`},
-          'encrypted/personal.log':{type:'file',perms:'r--',owner:'CHENYUAN',desc:'加密个人日志（需要密码）',
-            locked:true, passHash:'6b2f652',
+          'encrypted':{type:'dir',perms:'r--',owner:'CHENYUAN',desc:'加密文件',children:{
+            'personal.log':{type:'file',perms:'r--',owner:'CHENYUAN',desc:'加密个人日志（需要密码）',
+              locked:true, passHash:'6b2f652',
             content:`这些是我发现但没上报的东西。不是不报——是不敢。
 
 第96年，我在C区配电柜发现一个装置。不是船上的标准件。是个信号转发器——很小，贴在走线后面。我拆下来看了。它能把指令伪装成内部节点的操作。只要知道节点ID，它就能冒充任何人发指令。
@@ -197,6 +200,7 @@ const FILESYSTEM = {
 [第97年 第6月] 暴发。
 
 如果我哪天不在了。去看齿轮标签。齿轮下面有东西。`},
+          }},
           'gear_tag.txt':{type:'file',perms:'r--',owner:'CHENYUAN',desc:'齿轮标签说明',
             content:`出发前我让太爷爷在标签上写了日期：「一九五三年七月二十七日」。
 
