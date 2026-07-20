@@ -10,6 +10,22 @@ const ACCOUNTS = {
   'LINXI':   {passHash:'693e23a', name:'林汐', role:'意识体·隔离节点', home:'/home/lxi'},
   'CHENYUAN':{passHash:'56521cd5', name:'陈远', role:'机械工程师', home:'/home/cyuan'},
 };
+const ACCOUNT_ALIASES = {
+  guest: 'guest',
+  lchen: 'LINCHEN',
+  linchen: 'LINCHEN',
+  lxi: 'LINXI',
+  linxi: 'LINXI',
+  cyuan: 'CHENYUAN',
+  chenyuan: 'CHENYUAN',
+};
+
+function resolveAccountId(input){
+  if(!input) return null;
+  const normalized = String(input).trim().toLowerCase();
+  if(ACCOUNT_ALIASES[normalized]) return ACCOUNT_ALIASES[normalized];
+  return Object.keys(ACCOUNTS).find(id => id.toLowerCase() === normalized) || null;
+}
 
 const FILESYSTEM = {
   '/': {
@@ -658,6 +674,13 @@ const SSH_NODES = {
     }},
 };
 
+function resolveSSHNodeId(input, connectedOnly=false){
+  if(!input) return null;
+  const normalized = String(input).trim().toLowerCase();
+  const nodes = connectedOnly ? gameState.sshConnected : SSH_NODES;
+  return Object.keys(nodes).find(id => id.toLowerCase() === normalized) || null;
+}
+
 // ══════════════════════════════════
 // ══════════════════════════════════
 // 通讯日志存档（事故前自动备份）
@@ -874,8 +897,8 @@ function getNode(path){
   if(path.startsWith('/mnt/')){
     const parts = path.replace(/\/$/,'').split('/');
     if(parts.length >= 3){
-      const nodeId = parts[2];
-      const sshNode = gameState.sshConnected[nodeId];
+      const nodeId = resolveSSHNodeId(parts[2], true);
+      const sshNode = nodeId ? gameState.sshConnected[nodeId] : null;
       if(!sshNode) return null;
       if(parts.length === 3) return {type:'dir',perms:'r-x',desc:sshNode.name,children:sshNode.filesystem,_isSSHRoot:true};
       let node = {type:'dir',children:sshNode.filesystem};
@@ -999,9 +1022,10 @@ const commands = {
     if(target.startsWith('/mnt/') && args[0]){
       const parts = target.replace(/\/$/,'').split('/');
       if(parts.length >= 3){
-        const nodeId = parts[2];
+        const nodeId = resolveSSHNodeId(parts[2], true);
         if(!gameState.sshConnected[nodeId]){
-          print(`cd: ${target}: 节点未连接。使用 ssh ${nodeId} 连接。`, 'err');return;
+          const knownNodeId = resolveSSHNodeId(parts[2]) || parts[2];
+          print(`cd: ${target}: 节点未连接。使用 ssh ${knownNodeId} 连接。`, 'err');return;
         }
       }
     }
@@ -1017,8 +1041,8 @@ const commands = {
   },
   su(args){
     if(!args[0]){print('su: 需要用户ID', 'err');return;}
-    const uid = args[0];
-    if(!ACCOUNTS[uid]){print('su: 用户不存在', 'err');return;}
+    const uid = resolveAccountId(args[0]);
+    if(!uid){print('su: 用户不存在', 'err');return;}
     loginUser.value = uid;
     loginPass.value = '';
     loginPass.focus();
@@ -1160,12 +1184,13 @@ const commands = {
   ssh(args){
     if(currentUser==='guest'){print('ssh: 权限不足。访客无法建立远程连接。', 'err');return;}
     if(!args[0]){print('ssh: 需要节点地址。', 'err');print('用法: ssh <节点地址>', 'dim');return;}
-    const nodeId = args[0];
-    const sshNode = SSH_NODES[nodeId];
+    const requestedNodeId = args[0];
+    const nodeId = resolveSSHNodeId(requestedNodeId);
+    const sshNode = nodeId ? SSH_NODES[nodeId] : null;
     if(!sshNode){
-      let sshmsg = `无法解析主机 "${nodeId}"。`;
-    if(currentUser==='LINXI') sshmsg = `……"${nodeId}"？没这个节点。你是不是解错了。`;
-    else if(currentUser==='CHENYUAN') sshmsg = `"${nodeId}" 没有响应。地址可能藏在某个文件里——再翻翻。`;
+      let sshmsg = `无法解析主机 "${requestedNodeId}"。`;
+    if(currentUser==='LINXI') sshmsg = `……"${requestedNodeId}"？没这个节点。你是不是解错了。`;
+    else if(currentUser==='CHENYUAN') sshmsg = `"${requestedNodeId}" 没有响应。地址可能藏在某个文件里——再翻翻。`;
     print(sshmsg, 'err');
       print('提示：节点地址可能藏在某个日志或文件里。', 'dim');
       return;
@@ -1372,8 +1397,8 @@ const commands = {
     }
     const tid = args[0];
     const thread = MESSAGE_LOGS[tid];
-    if(thread.adminOnly && currentUser !== 'LINCHEN'){ print('logs: 权限不足。仅管理员可访问。', 'err'); return; }
     if(!thread){ print(`logs: 未找到记录 "${tid}"。`, 'err'); return; }
+    if(thread.adminOnly && currentUser !== 'LINCHEN'){ print('logs: 权限不足。仅管理员可访问。', 'err'); return; }
     if(thread.locked && !gameState.unlockedLogs[tid]){
       print(`logs: 该记录已加密。使用 /decrypt_logs ${tid} <密码> 解密。`, 'warn');
       return;
@@ -1394,8 +1419,8 @@ const commands = {
 	    if(!args[0]||!args[1]){ print('decrypt_logs <记录ID> <密码>', 'err'); return; }
     const tid = args[0];
     const thread = MESSAGE_LOGS[tid];
-    if(thread.adminOnly && currentUser !== 'LINCHEN'){ print('logs: 权限不足。仅管理员可访问。', 'err'); return; }
     if(!thread){ print('decrypt_logs: 记录不存在。', 'err'); return; }
+    if(thread.adminOnly && currentUser !== 'LINCHEN'){ print('logs: 权限不足。仅管理员可访问。', 'err'); return; }
     if(!thread.locked){ print('decrypt_logs: 该记录未加密。', 'dim'); return; }
     if(thread.passHash && _h(args[1])===thread.passHash){
       gameState.unlockedLogs[tid] = true;
@@ -1413,8 +1438,7 @@ const commands = {
 function exec(cmd){
   let raw = cmd.trim();
   if(!raw) return;
-  if(!raw.startsWith('/')){ print('命令需以 / 开头。输入 /help 查看可用命令。', 'err'); return; }
-  raw = raw.slice(1).trim();
+  if(raw.startsWith('/')) raw = raw.slice(1).trim();
   if(!raw) return;
   const parts = raw.split(/\s+/);
   const name = parts[0].toLowerCase();
@@ -1442,7 +1466,7 @@ function tryLogin(allowGuest=false){
     }
     uid='guest'; pass='';
   }
-  if(uid==='guest'){
+  if(uid.toLowerCase()==='guest'){
     if(!allowGuest){
       loginMsg.textContent='访客模式请使用「访客浏览」。';
       loginHint.textContent='验证身份仅限授权人员';
@@ -1450,13 +1474,14 @@ function tryLogin(allowGuest=false){
     }
     pass='';
   }
-  if(!pass && uid!=='guest'){loginMsg.textContent='请输入密码。';return;}
-  const acc = ACCOUNTS[uid];
+  if(!pass && uid.toLowerCase()!=='guest'){loginMsg.textContent='请输入密码。';return;}
+  const accountId = resolveAccountId(uid);
+  const acc = accountId ? ACCOUNTS[accountId] : null;
   if(acc && (acc.passHash ? _h(pass)===acc.passHash : acc.pass==='')){
     const prevUser = currentUser;
-    currentUser = uid; cwd = acc.home||'/';
+    currentUser = accountId; cwd = acc.home||'/';
     loginOverlay.style.display = 'none';
-    prompt.textContent = `${uid}@永恒号:${cwd}$`;
+    prompt.textContent = `${accountId}@永恒号:${cwd}$`;
     input.focus();
     term.innerHTML = '';
     gameState.loginCount++;
@@ -1487,18 +1512,19 @@ function tryLogin(allowGuest=false){
       print('  输入 /cache 查看系统缓存中的历史网页。','ghost');
     } else {
       print(`已切换至 ${acc.name}（${acc.role}）`, 'ok');
-      if(prevUser && prevUser !== uid){
+      if(prevUser && prevUser !== accountId){
         print(`提示：你现在以 ${acc.name} 的身份查看文件。某些文件可能需要切换账号才能访问。`,'ghost');
       }
     }
   } else {
     let failMsg = '验证失败。用户ID或密码错误。';
-	    if(loginUser.value.trim()==="LINXI") failMsg = "验证失败。……你确定这是我哥的密码？";
-	    else if(loginUser.value.trim()==="CHENYUAN") failMsg = "验证失败。密码是太爷爷设的——那串数字。";
-	    else if(loginUser.value.trim()==="LINCHEN") failMsg = "验证失败。密码不对。";
+      const attemptedId = resolveAccountId(loginUser.value.trim());
+	    if(attemptedId==="LINXI") failMsg = "验证失败。……你确定这是我哥的密码？";
+	    else if(attemptedId==="CHENYUAN") failMsg = "验证失败。密码是太爷爷设的——那串数字。";
+	    else if(attemptedId==="LINCHEN") failMsg = "验证失败。密码不对。";
 	    loginMsg.textContent = failMsg;
     loginHint.textContent = '验证失败 —— 仅限授权人员';
-    if(uid && !ACCOUNTS[uid]) loginHint.textContent = '验证失败 —— 未知用户ID。已知账号：LINCHEN, LINXI, CHENYUAN';
+    if(uid && !accountId) loginHint.textContent = '验证失败 —— 未知用户ID。已知账号：LINCHEN, LINXI, CHENYUAN';
   }
 }
 loginBtn.addEventListener('click',()=>tryLogin(false));
